@@ -32,20 +32,21 @@ use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
 /*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+ * |--------------------------------------------------------------------------
+ * | Web Routes
+ * |--------------------------------------------------------------------------
+ * |
+ * | Here is where you can register web routes for your application. These
+ * | routes are loaded by the RouteServiceProvider and all of them will
+ * | be assigned to the "web" middleware group. Make something great!
+ * |
+ */
 
-Route::get('/', [AuthController::class, 'index'])->name('login');
+Route::get('/', function () {
+    return redirect()->route('login');
+});
 
-
-//admin Route 
+// admin Route
 Route::group(['middleware' => ['auth', 'ceklevel:admin']], function () {
     Route::get('dashboard-admin', [DashboardAdminController::class, 'index']);
     // Route::get('manage-mahasiswa', [AdminStudentController::class, 'index']);
@@ -65,7 +66,7 @@ Route::group(['middleware' => ['auth', 'ceklevel:admin']], function () {
     Route::put('konfirmasi', [IndustrialAdviserController::class, 'konfirmasi']);
 });
 
-//Pembimbing Route
+// Pembimbing Route
 Route::group(['middleware' => ['auth', 'ceklevel:pembimbing']], function () {
     Route::get('dashboard-pembimbing', [SupervisorDashboardController::class, 'index']);
     Route::get('penilaian', [SupervisorAssessmentController::class, 'index']);
@@ -85,7 +86,7 @@ Route::group(['middleware' => ['auth', 'ceklevel:pembimbing']], function () {
 });
 
 // Pembimbing Industri Route
-Route::group(['middleware' => ['auth', "ceklevel:pembimbing industri"]], function () {
+Route::group(['middleware' => ['auth', 'ceklevel:pembimbing industri']], function () {
     Route::get('dashboard-pembimbing-industri', [IndustrialDashboardController::class, 'index']);
     Route::get('penilaian-industri', [IndustrialAssessmentController::class, 'index']);
     Route::get('penilaian-industri/{registration_number}', [IndustrialAssessmentController::class, 'show']);
@@ -117,11 +118,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('print-logbook/{registration_number}', [SupervisorLogbookController::class, 'printLogbook']);
 });
 
-//auth Controller
+// auth Controller
 Route::get('login', [AuthController::class, 'index'])->name('login')->middleware('guest');
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout']);
-
 
 // Register Pembimbing Route
 Route::get('daftar-pembimbing-industri', [IndustrialAdviserRegisterController::class, 'index']);
