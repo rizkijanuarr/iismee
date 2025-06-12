@@ -42,9 +42,7 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
  * |
  */
 
-Route::get('/', function () {
-    return redirect('/login');
-});
+Route::get('/', [AuthController::class, 'index'])->name('home');
 
 // admin Route
 Route::group(['middleware' => ['auth', 'ceklevel:admin']], function () {
