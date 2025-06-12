@@ -96,7 +96,7 @@
                                 <span class="input-group-text" id="basic-addon3">Pembimbing</span>
                                 <input type="text" class="form-control" id="basic-url"
                                     aria-describedby="basic-addon3 basic-addon4"
-                                    value="{{ $data->internship->lecturer->name }}" readonly>
+                                    value="{{ $data->internship->lecturer->name ?? 'Belum ada Pembimbing' }}" readonly>
                             </div>
                         </div>
                     </div>

@@ -1,7 +1,7 @@
 @php
     use App\Helpers\CustomHelper;
     $customHelper = new CustomHelper();
-    
+
 @endphp
 
 @extends('layout.user')
@@ -89,6 +89,17 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon3">Pembimbing</span>
+                                <input type="text" class="form-control" id="basic-url"
+                                    aria-describedby="basic-addon3 basic-addon4"
+                                    value="{{ $data->internship->lecturer->name ?? 'Belum ada Pembimbing' }}" readonly>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <hr>
                 <div class="row align-items-center">
@@ -200,3 +211,30 @@
     </div> <!-- end of container -->
     <!-- end of header -->
 @endsection
+
+<script>
+    // Pastikan DOM sudah ready
+    window.addEventListener('load', function() {
+        const fileInput = document.getElementById('formFile');
+        const submitBtn = document.querySelector('.btn.btn-primary');
+
+        if (fileInput && submitBtn) {
+            // Set disabled awal
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Chose File';
+
+            fileInput.addEventListener('change', function() {
+
+                if (this.files && this.files.length > 0) {
+                    // Enable button
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Submit';
+                } else {
+                    // Disable button
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = 'Chose File';
+                }
+            });
+        }
+    });
+</script>
