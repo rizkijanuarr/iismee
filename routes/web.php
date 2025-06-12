@@ -43,7 +43,7 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
  */
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return redirect('/login');
 });
 
 // admin Route
