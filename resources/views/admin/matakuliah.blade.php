@@ -48,57 +48,67 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $data)
+                            @if (count($data) == 0)
                                 <tr>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->subject_name }}
-                                            </h6>
+                                    <td colspan="5" class="text-center">
+                                        <div class="alert alert-danger bg-gradient-danger" role="alert">
+                                            <h6 class="mb-0 text-white">Belum Ada Data</h6>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->sks }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->lecturer['lecturer_id_number'] }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->lecturer['name'] }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <a href="manage-matakuliah/{{ $data->subject_name }}/edit"
-                                            class="edit btn font-weight-bold text-xs" data-original-title="Edit user"
-                                            id="edit">
-                                            Edit
-                                        </a>
-                                        @if ($penilaian->is_enable == false)
-                                            <form action="manage-matakuliah/{{ $data->subject_name }}" method="post"
-                                                class="d-inline">
-                                                @method('delete')
-                                                @csrf
-                                                <button class="btn btn-danger font-weight-bold text-xs"
-                                                    data-toggle="tooltip" data-original-title="Hapus"
-                                                    onclick="return confirm('Apakah anda yakin?')">
-                                                    Hapus
-                                                </button>
-                                            </form>
-                                        @endif
                                     </td>
                                 </tr>
-                            @endforeach
+                            @else
+                                @foreach ($data as $data)
+                                    <tr>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->subject_name }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->sks }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->lecturer['lecturer_id_number'] }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->lecturer['name'] }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <a href="manage-matakuliah/{{ $data->subject_name }}/edit"
+                                                class="edit btn font-weight-bold text-xs" data-original-title="Edit user"
+                                                id="edit">
+                                                Edit
+                                            </a>
+                                            @if ($penilaian->is_enable == false)
+                                                <form action="manage-matakuliah/{{ $data->subject_name }}" method="post"
+                                                    class="d-inline">
+                                                    @method('delete')
+                                                    @csrf
+                                                    <button class="btn btn-danger font-weight-bold text-xs"
+                                                        data-toggle="tooltip" data-original-title="Hapus"
+                                                        onclick="return confirm('Apakah anda yakin?')">
+                                                        Hapus
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>

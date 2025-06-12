@@ -37,48 +37,59 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $data)
+                            @if (count($data) == 0)
                                 <tr>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->lecturer['lecturer_id_number'] }}
-                                            </h6>
+                                    <td colspan="5" class="text-center">
+                                        <div class="alert alert-danger bg-gradient-danger" role="alert">
+                                            <h6 class="mb-0 text-white">Belum Ada Data</h6>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->lecturer['name'] }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->lecturer['email'] }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->lecturer['phone_number'] }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <form action="manage-dpl/{{ $data->id }}" method="post" class="d-inline">
-                                            @method('delete')
-                                            @csrf
-                                            <button class="btn btn-danger font-weight-bold text-xs" data-toggle="tooltip"
-                                                data-original-title="Hapus" onclick="return confirm('Apakah anda yakin?')">
-                                                Hapus
-                                            </button>
-                                        </form>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @else
+                                @foreach ($data as $data)
+                                    <tr>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->lecturer['lecturer_id_number'] }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->lecturer['name'] }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->lecturer['email'] }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->lecturer['phone_number'] }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <form action="manage-dpl/{{ $data->id }}" method="post" class="d-inline">
+                                                @method('delete')
+                                                @csrf
+                                                <button class="btn btn-danger font-weight-bold text-xs"
+                                                    data-toggle="tooltip" data-original-title="Hapus"
+                                                    onclick="return confirm('Apakah anda yakin?')">
+                                                    Hapus
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>

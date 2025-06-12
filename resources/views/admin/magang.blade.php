@@ -17,6 +17,16 @@
             <button type="button" class="btn-close text-light" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+    @if ($errors->any())
+        <div class="alert alert-danger fw-bold alert-dismissible fade show text-white" role="alert">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close text-light" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
     <div class="col-12">
         <div class="card mb-4">
             <div class="card-header pb-0">
@@ -37,45 +47,55 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $data)
+                            @if (count($data) == 0)
                                 <tr>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->lecturer['lecturer_id_number'] }}
-                                            </h6>
+                                    <td colspan="6" class="text-center">
+                                        <div class="alert alert-danger bg-gradient-danger" role="alert">
+                                            <h6 class="mb-0 text-white">Belum Ada Data</h6>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->lecturer['name'] }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->lecturer['email'] }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->lecturer['phone_number'] }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <a href="manage-magang/{{ $data->id }}"
-                                            class="edit btn font-weight-bold text-xs" data-original-title="Edit user"
-                                            id="edit">
-                                            Lihat Detail
-                                        </a>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @else
+                                @foreach ($data as $data)
+                                    <tr>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->lecturer['lecturer_id_number'] }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->lecturer['name'] }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->lecturer['email'] }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->lecturer['phone_number'] }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <a href="manage-magang/{{ $data->id }}"
+                                                class="edit btn font-weight-bold text-xs" data-original-title="Edit user"
+                                                id="edit">
+                                                Lihat Detail
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -83,3 +103,36 @@
         </div>
     </div>
 @endsection
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form'); // Sesuaikan selector dengan form kamu
+
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const lecturerSelect = document.querySelector('select[name="lecturer_id"]');
+                const studentCheckboxes = document.querySelectorAll(
+                    'input[name="student_id[]"]:checked');
+
+                let errors = [];
+
+                // Validasi lecturer
+                if (!lecturerSelect || !lecturerSelect.value) {
+                    errors.push('Dosen pembimbing harus dipilih!');
+                }
+
+                // Validasi student
+                if (studentCheckboxes.length === 0) {
+                    errors.push('Minimal satu mahasiswa harus dipilih!');
+                }
+
+                if (errors.length > 0) {
+                    e.preventDefault();
+                    alert(errors.join(
+                        '\n')); // Simple alert, bisa diganti dengan SweetAlert jika sudah ada
+                    return false;
+                }
+            });
+        }
+    });
+</script>

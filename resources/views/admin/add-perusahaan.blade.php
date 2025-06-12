@@ -4,18 +4,23 @@
     <form action="{{ url('manage-perusahaan') }}" method="POST">
         @csrf
         <div class="row">
-            <div class="col-6">
+            <div class="col-12">
                 <div class="mb-3">
-                    <label for="company_name" class="form-label">Nama Perusahaan</label>
-                    <input type="text" class="form-control" name="company_name" id="company_name">
+                    <label for="company_name" class="form-label">Nama Perusahaan <span class="text-red-500">*</span></label>
+                    <input type="text" class="form-control" name="company_name" id="company_name" placeholder="PT. Gojek"
+                        required>
                 </div>
                 <div class="mb-3">
-                    <label for="company_number" class="form-label">No. Telepon Perusahaan</label>
-                    <input type="number" class="form-control" name="company_number" id="company_number">
+                    <label for="company_number" class="form-label">No. Telepon Perusahaan <span
+                            class="text-red-500">*</span></label>
+                    <input type="number" class="form-control" name="company_number" id="company_number"
+                        placeholder="08123456789" required>
                 </div>
                 <div class="mb-3">
-                    <label for="company_address" class="form-label">Alamat Perusahaan</label>
-                    <textarea class="form-control" name="company_address" id="company_address" rows="3"></textarea>
+                    <label for="company_address" class="form-label">Alamat Perusahaan <span
+                            class="text-red-500">*</span></label>
+                    <textarea class="form-control" name="company_address" id="company_address" rows="3"
+                        placeholder="Jl. Jend. Sudirman No. 20, Jakarta Pusat" required></textarea>
                 </div>
             </div>
         </div>

@@ -18,7 +18,7 @@
                 <div class="mb-3">
                     <label for="name" class="form-label">Nama Lengkap</label>
                     <input type="text" class="form-control" name="name" id="name"
-                        value="{{ old('name', $pembimbingIndustri->name) }}">
+                        value="{{ old('name', $pembimbingIndustri->name) }}" placeholder="Budi Utomo">
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
@@ -28,12 +28,12 @@
                 <div class="mb-3">
                     <label for="position" class="form-label">Jabatan</label>
                     <input type="text" class="form-control" name="position" id="position"
-                        value="{{ old('position', $pembimbingIndustri->position) }}">
+                        value="{{ old('position', $pembimbingIndustri->position) }}" placeholder="Lead Engineer">
                 </div>
                 <div class="mb-3">
                     <label for="phone_number" class="form-label">No. Telepon</label>
                     <input type="number" class="form-control" name="phone_number" id="phone_number"
-                        value="{{ old('phone_number', $pembimbingIndustri->phone_number) }}">
+                        value="{{ old('phone_number', $pembimbingIndustri->phone_number) }}" placeholder="08123456789">
                 </div>
             </div>
             <div class="col-6">

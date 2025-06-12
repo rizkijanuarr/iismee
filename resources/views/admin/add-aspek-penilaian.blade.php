@@ -4,7 +4,7 @@
     <form action="{{ url('aspek-penilaian') }}" method="POST">
         @csrf
         <div class="row">
-            <div class="col-6">
+            <div class="col-12">
                 <div class="mb-3">
                     <label for="subject_id" class="form-label">Mata Kuliah</label>
                     <select class="form-select" name="subject_id" id="subject_id" aria-label="Default select example">
@@ -16,12 +16,14 @@
                 </div>
                 <div class="mb-3">
                     <label for="name" class="form-label">Aspek Penilaian</label>
-                    <input type="text" class="form-control" name="name" id="name">
+                    <input type="text" class="form-control" name="name" id="name"
+                        placeholder="Kesetimbangan Benda Tagar">
                 </div>
                 <div class="mb-3">
                     <label for="name" class="form-label">Deskripsi Penilaian</label>
                     <input id="description" type="hidden" name="description">
-                    <trix-editor input="description"></trix-editor>
+                    <trix-editor input="description"
+                        placeholder="Mahasiswa diharapkan mampu menguasai Kesetimbangan Benda Tagar dengan detail."></trix-editor>
                 </div>
             </div>
         </div>

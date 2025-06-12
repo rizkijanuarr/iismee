@@ -64,86 +64,98 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($mhs as $data)
+                                @if (count($mhs) == 0)
                                     <tr>
-                                        <td>
-                                            <div class="my-auto">
-                                                <h6 class="mb-0 text-sm">
-                                                    {{ $data->registration_number }}
-                                                </h6>
+                                        <td colspan="10" class="text-center">
+                                            <div class="alert alert-danger bg-gradient-danger" role="alert">
+                                                <h6 class="mb-0 text-white">Belum Ada Data</h6>
                                             </div>
-                                        </td>
-                                        <td>
-                                            <div class="my-auto">
-                                                <h6 class="mb-0 text-sm">
-                                                    {{ $data->name }}
-                                                </h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="my-auto">
-                                                <h6 class="mb-0 text-sm">
-                                                    {{ $data->class }}
-                                                </h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="my-auto">
-                                                <h6 class="mb-0 text-sm">
-                                                    {{ $data->company->company_name }}
-                                                </h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="my-auto">
-                                                <h6 class="mb-0 text-sm">
-                                                    {{ $data->division }}
-                                                </h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="my-auto">
-                                                <h6 class="mb-0 text-sm">
-                                                    {{ $data->company->company_address }}
-                                                </h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="my-auto">
-                                                <h6 class="mb-0 text-sm">
-                                                    {{ $data->date_start }}
-                                                </h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="my-auto">
-                                                <h6 class="mb-0 text-sm">
-                                                    {{ $data->date_end }}
-                                                </h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="my-auto">
-                                                <h6 class="mb-0 text-sm">
-                                                    {{ $data->internship_type }}
-                                                </h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="mb-3">
-                                                <label class="visually-hidden" for="inputName">Hidden input label</label>
-                                                <input type="hidden" class="form-control" name="student_id[]"
-                                                    id="student_id" placeholder="" value="{{ $data->id }}"
-                                                    style="display: none !important">
-                                            </div>
-                                            <button class="btn btn-primary font-weight-bold text-xs" data-toggle="tooltip"
-                                                data-original-title="Tambah" onclick="return confirm('Apakah anda yakin?')"
-                                                value="{{ $data->id }}" name="tambahkan">
-                                                Tambahkan
-                                            </button>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @else
+                                    @foreach ($mhs as $data)
+                                        <tr>
+                                            <td>
+                                                <div class="my-auto">
+                                                    <h6 class="mb-0 text-sm">
+                                                        {{ $data->registration_number }}
+                                                    </h6>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="my-auto">
+                                                    <h6 class="mb-0 text-sm">
+                                                        {{ $data->name }}
+                                                    </h6>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="my-auto">
+                                                    <h6 class="mb-0 text-sm">
+                                                        {{ $data->class }}
+                                                    </h6>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="my-auto">
+                                                    <h6 class="mb-0 text-sm">
+                                                        {{ $data->company->company_name }}
+                                                    </h6>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="my-auto">
+                                                    <h6 class="mb-0 text-sm">
+                                                        {{ $data->division }}
+                                                    </h6>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="my-auto">
+                                                    <h6 class="mb-0 text-sm">
+                                                        {{ $data->company->company_address }}
+                                                    </h6>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="my-auto">
+                                                    <h6 class="mb-0 text-sm">
+                                                        {{ $data->date_start }}
+                                                    </h6>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="my-auto">
+                                                    <h6 class="mb-0 text-sm">
+                                                        {{ $data->date_end }}
+                                                    </h6>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="my-auto">
+                                                    <h6 class="mb-0 text-sm">
+                                                        {{ $data->internship_type }}
+                                                    </h6>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="mb-3">
+                                                    <label class="visually-hidden" for="inputName">Hidden input
+                                                        label</label>
+                                                    <input type="hidden" class="form-control" name="student_id[]"
+                                                        id="student_id" placeholder="" value="{{ $data->id }}"
+                                                        style="display: none !important">
+                                                </div>
+                                                <button class="btn btn-primary font-weight-bold text-xs"
+                                                    data-toggle="tooltip" data-original-title="Tambah"
+                                                    onclick="return confirm('Apakah anda yakin?')"
+                                                    value="{{ $data->id }}" name="tambahkan">
+                                                    Tambahkan
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>

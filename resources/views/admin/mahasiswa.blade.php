@@ -45,89 +45,100 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $data)
+                            @if (count($data) == 0)
                                 <tr>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->registration_number }}
-                                            </h6>
+                                    <td colspan="10" class="text-center">
+                                        <div class="alert alert-danger bg-gradient-danger" role="alert">
+                                            <h6 class="mb-0 text-white">Belum Ada Data</h6>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->name }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->class }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->company->company_name }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->division }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->company->company_address }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->date_start }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->date_end }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->internship_type }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <a href="manage-mahasiswa/{{ $data->name }}/edit"
-                                            class="edit btn font-weight-bold text-xs" data-original-title="Edit user"
-                                            id="edit">
-                                            Edit
-                                        </a>
-                                        <form action="manage-mahasiswa/{{ $data->name }}" method="post"
-                                            class="d-inline">
-                                            @method('delete')
-                                            @csrf
-                                            <button class="btn btn-danger font-weight-bold text-xs" data-toggle="tooltip"
-                                                data-original-title="Hapus" onclick="return confirm('Apakah anda yakin?')">
-                                                Hapus
-                                            </button>
-                                        </form>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @else
+                                @foreach ($data as $data)
+                                    <tr>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->registration_number }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->name }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->class }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->company->company_name }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->division }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->company->company_address }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->date_start }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->date_end }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-auto">
+                                                <h6 class="mb-0 text-sm">
+                                                    {{ $data->internship_type }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <a href="manage-mahasiswa/{{ $data->name }}/edit"
+                                                class="edit btn font-weight-bold text-xs" data-original-title="Edit user"
+                                                id="edit">
+                                                Edit
+                                            </a>
+                                            <form action="manage-mahasiswa/{{ $data->name }}" method="post"
+                                                class="d-inline">
+                                                @method('delete')
+                                                @csrf
+                                                <button class="btn btn-danger font-weight-bold text-xs"
+                                                    data-toggle="tooltip" data-original-title="Hapus"
+                                                    onclick="return confirm('Apakah anda yakin?')">
+                                                    Hapus
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>

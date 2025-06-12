@@ -28,7 +28,6 @@ class InternshipController extends Controller
      */
     public function create()
     {
-
         return view('admin.add-magang', [
             'title' => 'Tambahkan Data Magang',
             'dosen' => Supervisor::all(),
@@ -43,25 +42,29 @@ class InternshipController extends Controller
      */
     public function store(Request $request)
     {
-
+        // Validasi dengan pesan custom
         $request->validate([
-            'lecturer_id' => 'required',
+            'lecturer_id' => 'required|exists:lecturers,id',
             'student_id' => 'required|array|min:1'
+        ], [
+            'lecturer_id.required' => 'Dosen pembimbing harus dipilih!',
+            'lecturer_id.exists' => 'Dosen yang dipilih tidak valid!',
+            'student_id.required' => 'Minimal satu mahasiswa harus dipilih!',
+            'student_id.min' => 'Minimal satu mahasiswa harus dipilih!'
         ]);
 
-        $input = $request->all();
-        $lecturerId = $input['lecturer_id'];
-        $studentIds = $request->input('tambahkan');
+        $lecturerId = $request->lecturer_id;
+        $studentIds = $request->student_id;
 
-        $data = [
-            'lecturer_id' => $lecturerId,
-            'student_id' => $studentIds
-        ];
+        // Insert satu record internship untuk setiap student
+        foreach ($studentIds as $studentId) {
+            Internship::create([
+                'lecturer_id' => $lecturerId,
+                'student_id' => $studentId  // Single student ID per record
+            ]);
+        }
 
-        // dd($validatedData['student_id']);
-
-        Internship::create($data);
-        return redirect()->intended('/manage-magang/create')->with('success', 'Data Berhasil Ditambahkan !');
+        return redirect()->intended('/manage-magang/')->with('success', 'Data Berhasil Ditambahkan !');
     }
 
     /**
@@ -75,7 +78,6 @@ class InternshipController extends Controller
             ->join('companies', 'companies.id', '=', 'students.company_id')
             ->where('internships.lecturer_id', $manage_magang->lecturer_id)
             ->get();
-
 
         return view('admin.magang-details', [
             'title' => 'Detail Magang',

@@ -16,19 +16,21 @@
             <div class="col-6">
                 <div class="mb-3">
                     <label for="name" class="form-label">Nama Lengkap</label>
-                    <input type="text" class="form-control" name="name" id="name">
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Gumilar Agung">
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" name="email" id="email">
+                    <input type="email" class="form-control" name="email" id="email"
+                        placeholder="gumilaragung@gmailcom">
                 </div>
                 <div class="mb-3">
                     <label for="position" class="form-label">Jabatan</label>
-                    <input type="text" class="form-control" name="position" id="position">
+                    <input type="text" class="form-control" name="position" id="position" placeholder="Lead Engineer">
                 </div>
                 <div class="mb-3">
                     <label for="phone_number" class="form-label">No. Telepon</label>
-                    <input type="number" class="form-control" name="phone_number" id="phone_number">
+                    <input type="number" class="form-control" name="phone_number" id="phone_number"
+                        placeholder="08123456789">
                 </div>
             </div>
             <div class="col-6">
@@ -43,11 +45,13 @@
                 </div>
                 <div class="mb-3">
                     <label for="company_number" class="form-label">No. Telepon Perusahaan</label>
-                    <input type="number" class="form-control" name="company_number" id="company_number" readonly disabled>
+                    <input type="number" class="form-control" name="company_number" id="company_number" disabled
+                        placeholder="Secara sistem otomatis terisi, setelah memilih perusahaan">
                 </div>
                 <div class="mb-3">
                     <label for="company_address" class="form-label">Alamat Perusahaan</label>
-                    <textarea class="form-control" name="company_address" id="company_address" rows="3" readonly disabled></textarea>
+                    <textarea class="form-control" name="company_address" id="company_address" rows="3" disabled
+                        placeholder="Secara sistem otomatis terisi, setelah memilih perusahaan"></textarea>
                 </div>
             </div>
         </div>
