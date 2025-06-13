@@ -75,21 +75,45 @@ class LogbookController extends Controller
      */
     public function store(Request $request)
     {
-        $mhs = Student::where('email', '=', auth()->user()->email)->firstOrFail();
-        $helper = new CustomHelper();
+        try {
+            $mhs = Student::where('email', '=', auth()->user()->email)->firstOrFail();
+            $helper = new CustomHelper();
 
-        $validatedData = $request->validate([
-            'activity_name' => 'required',
-            'img' => 'required|image',
-            'description' => 'required'
-        ]);
+            $validatedData = $request->validate([
+                'activity_name' => 'required',
+                'img' => 'required|image',
+                'description' => 'required'
+            ], [
+                'activity_name.required' => 'Nama Kegiatan harus diisi!',
+                'img.required' => 'Foto Kegiatan harus diupload!',
+                'img.image' => 'File yang diupload harus berupa gambar!',
+                'description.required' => 'Deskripsi Kegiatan harus diisi!'
+            ]);
 
-        $validatedData['student_id'] = $mhs->id;
-        $validatedData['activity_date'] = $helper->defaultDateTime('tanggalDb');
-        $validatedData['img'] = $request->file('img')->store('logbook');
+            $validatedData['student_id'] = $mhs->id;
+            $validatedData['activity_date'] = $helper->defaultDateTime('tanggalDb');
+            $validatedData['img'] = $request->file('img')->store('logbook');
 
-        Logbook::create($validatedData);
-        return redirect()->intended('/logbook')->with('success', 'Data Berhasil Ditambahkan !');
+            Logbook::create($validatedData);
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Data Logbook hari ini berhasil disimpan, untuk tanggapan bimbingan silahkan ditunggu'
+                ]);
+            }
+
+            return redirect()->intended('/logbook')->with('success', 'Data Berhasil Ditambahkan !');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validasi gagal!',
+                    'errors' => $e->errors()
+                ], 422);
+            }
+            throw $e;
+        }
     }
 
     /**
@@ -116,24 +140,47 @@ class LogbookController extends Controller
      */
     public function update(Request $request, Logbook $logbook)
     {
-        $mhs = Student::where('email', '=', auth()->user()->email)->firstOrFail();
+        try {
+            $mhs = Student::where('email', '=', auth()->user()->email)->firstOrFail();
 
-        $validatedData = $request->validate([
-            'activity_name' => 'required',
-            'img' => 'image',
-            'description' => 'required'
-        ]);
+            $validatedData = $request->validate([
+                'activity_name' => 'required',
+                'img' => 'image',
+                'description' => 'required'
+            ], [
+                'activity_name.required' => 'Nama Kegiatan harus diisi!',
+                'img.image' => 'File yang diupload harus berupa gambar!',
+                'description.required' => 'Deskripsi Kegiatan harus diisi!'
+            ]);
 
-        $validatedData['student_id'] = $mhs->id;
-        if ($request->file('img')) {
-            if ($request->oldimg) {
-                Storage::delete($request->oldimg);
+            $validatedData['student_id'] = $mhs->id;
+            if ($request->file('img')) {
+                if ($request->oldimg) {
+                    Storage::delete($request->oldimg);
+                }
+                $validatedData['img'] = $request->file('img')->store('logbook');
             }
-            $validatedData['img'] = $request->file('img')->store('logbook');
-        }
 
-        Logbook::where('id', $logbook->id)->update($validatedData);
-        return redirect()->intended('/logbook')->with('success', 'Data Berhasil Diubah !');
+            Logbook::where('id', $logbook->id)->update($validatedData);
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Data Logbook berhasil diperbarui!'
+                ]);
+            }
+
+            return redirect()->intended('/logbook')->with('success', 'Data Berhasil Diubah !');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validasi gagal!',
+                    'errors' => $e->errors()
+                ], 422);
+            }
+            throw $e;
+        }
     }
 
     /**
@@ -141,10 +188,28 @@ class LogbookController extends Controller
      */
     public function destroy(Logbook $logbook)
     {
-        if ($logbook->img) {
-            Storage::delete($logbook->img);
+        try {
+            if ($logbook->img) {
+                Storage::delete($logbook->img);
+            }
+            Logbook::destroy($logbook->id);
+
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Data Logbook berhasil dihapus!'
+                ]);
+            }
+
+            return redirect()->intended('/logbook')->with('success', 'Data Berhasil Dihapus !');
+        } catch (\Exception $e) {
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal menghapus data Logbook!'
+                ], 500);
+            }
+            throw $e;
         }
-        Logbook::destroy($logbook->id);
-        return redirect()->intended('/logbook')->with('success', 'Data Berhasil Dihapus !');
     }
 }

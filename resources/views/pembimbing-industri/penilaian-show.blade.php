@@ -102,6 +102,15 @@
                             </tr>
                         </thead>
                         <tbody>
+                        @if (count($matakuliah) == 0)
+                                <tr>
+                                    <td colspan="5" class="text-center">
+                                        <div class="alert alert-danger bg-gradient-danger" role="alert">
+                                            <h6 class="mb-0 text-white">Belum Ada Data</h6>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @else
                             @foreach ($matakuliah as $key => $item)
                                 <tr>
                                     <td>
@@ -186,6 +195,7 @@
                                     </td>
                                 </tr>
                             @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>

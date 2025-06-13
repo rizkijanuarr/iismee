@@ -6,6 +6,7 @@ use App\Http\Requests\StoreDocumentRequest;
 use App\Http\Requests\UpdateDocumentRequest;
 use App\Models\Document;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
 {
@@ -30,16 +31,80 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
+        // Log MIME type for debugging
+        if ($request->hasFile('document_path')) {
+            \Log::info('UPLOAD MIME TYPE: ' . $request->file('document_path')->getMimeType());
+        }
+        // Validasi dengan pesan custom
         $validatedData = $request->validate([
-            'document_path' => 'file|mimes:pdf'
+            'document_path' => [
+                'required',
+                'file',
+                'max:5120',
+                function ($attribute, $value, $fail) use ($request) {
+                    $allowed = ['pdf', 'png', 'jpg', 'jpeg', 'svg'];
+                    $ext = strtolower($request->file('document_path')->getClientOriginalExtension());
+                    if (!in_array($ext, $allowed)) {
+                        $fail('Dokumen harus berformat PDF, PNG, JPG, JPEG, atau SVG!');
+                    }
+                }
+            ],
+            'student_id' => 'required|exists:students,id',
+            'type' => 'required|string'
+        ], [
+            'document_path.required' => 'Dokumen harus ditambahkan!',
+            'document_path.file' => 'File yang diupload harus berupa dokumen!',
+            'document_path.max' => 'Ukuran dokumen maksimal 5MB!',
+            'student_id.required' => 'Student ID tidak valid!',
+            'student_id.exists' => 'Data mahasiswa tidak ditemukan!',
+            'type.required' => 'Tipe dokumen harus diisi!'
         ]);
 
-        $validatedData['student_id'] = $request->student_id;
-        $validatedData['type'] = $request->type;
-        $validatedData['document_path'] = $request->file('document_path')->store('dokumen');
+        try {
+            $existingDocument = Document::where('student_id', $request->student_id)
+                                       ->where('type', $request->type)
+                                       ->first();
 
-        Document::create($validatedData);
-        return redirect()->intended('/logbook')->with('success', 'Data Berhasil Ditambahkan !');
+            $file = $request->file('document_path');
+            $ext = $file->getClientOriginalExtension();
+            $prefix = $request->type === 'Sertifikat Magang' ? 'sertifikat_magang_' : 'surat_persetujuan_';
+            $filename = $prefix . uniqid() . '.' . $ext;
+            $path = $file->storeAs('dokumen', $filename);
+
+            if ($existingDocument) {
+                if (\Storage::exists($existingDocument->document_path)) {
+                    \Storage::delete($existingDocument->document_path);
+                }
+                $existingDocument->update([
+                    'document_path' => $path
+                ]);
+                $message = 'Dokumen berhasil diperbarui!';
+            } else {
+                Document::create([
+                    'student_id' => $request->student_id,
+                    'type' => $request->type,
+                    'document_path' => $path
+                ]);
+                $message = 'Dokumen berhasil diupload!';
+            }
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => $message
+                ]);
+            }
+            return redirect()->back()->with('success', $message);
+        } catch (\Exception $e) {
+            \Log::error('Error uploading document: ' . $e->getMessage());
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal mengupload dokumen. Silakan coba lagi!'
+                ], 500);
+            }
+            return redirect()->back()->with('error', 'Gagal mengupload dokumen. Silakan coba lagi!');
+        }
     }
 
     /**

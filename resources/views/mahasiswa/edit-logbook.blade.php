@@ -5,7 +5,7 @@
         <a name="" id="" class="btn btn-danger text-decoration-none" href="{{ url('logbook') }}"
             role="button"><i class="fas fa-arrow-left"></i>
             Kembali</a>
-        <div class="card bg-warning text-dark my-4">
+        <div class="card bg-success text-light my-4">
             <div class="card-body fw-bold">
                 Edit {{ $title }}
             </div>
@@ -19,18 +19,19 @@
                 </ul>
             </div>
         @endif
-        <form action="{{ url('logbook/') . $logbook->id }}" method="post" enctype="multipart/form-data">
+        <form action="{{ url('logbook/' . $logbook->id) }}" method="post" enctype="multipart/form-data" id="editLogbookForm">
             @method('put')
             @csrf
             <div class="mb-3">
                 <label for="activity_name" class="form-label">Nama Kegiatan</label>
                 <input type="text" class="form-control" name="activity_name" id="activity_name"
                     value="{{ old('activity_name', $logbook->activity_name) }}" placeholder="Nama Kegiatan">
-                <input type="hidden" class="form-control" name="oldimg" id="oldimg" value="{{ $logbook->img }}">
             </div>
             <div class="mb-3">
                 <label for="img" class="form-label">Foto Kegiatan</label>
                 <input type="file" class="form-control" name="img" id="img" placeholder="Foto Kegiatan">
+                <input type="hidden" name="oldimg" value="{{ $logbook->img }}">
+                <small class="text-muted">Kosongkan jika tidak ingin mengubah foto</small>
             </div>
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Deskripsi Kegiatan</label>
@@ -40,4 +41,62 @@
         </form>
     </div> <!-- end of container -->
     <!-- end of header -->
+
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.getElementById('editLogbookForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: data.message,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/logbook';
+                        }
+                    });
+                } else {
+                    // Handle validation errors
+                    let errorMessage = '';
+                    for (let field in data.errors) {
+                        errorMessage += data.errors[field][0] + '\n';
+                    }
+                    
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Wajib di isi!',
+                        text: errorMessage,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan saat memperbarui logbook!',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+            });
+        });
+    </script>
 @endsection

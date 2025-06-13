@@ -14,7 +14,7 @@
     <div class="row">
         @foreach ($mahasiswa as $item)
             <div class="col-sm-4">
-                <div class="card mb-3" style="width: 30rem;">
+                <div class="card mb-3" >
                     <div class="card-body">
                         @php
                             if (Carbon::now()->greaterThan(Carbon::parse($item->date_start)) && Carbon::now()->lessThan(Carbon::parse($item->date_end))) {

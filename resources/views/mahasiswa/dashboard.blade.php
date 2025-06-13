@@ -5,6 +5,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 col-xl-5">
+                    
+                    <!-- End Informasi Magang -->
                     <div class="text-container">
                         <div class="section-title">Welcome {{ auth()->user()->name }}</div>
                         <h3 class="h3-large">Internship Information System of Mechanical Enginering Education</h3>
@@ -25,8 +27,44 @@
                         <img class="img-fluid" src="{{ URL::asset('img/header-illustration.svg') }}" alt="alternative">
                     </div> <!-- end of image-container -->
                 </div> <!-- end of col -->
+
+               
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </header> <!-- end of header -->
     <!-- end of header -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'info',
+                title: 'Informasi Penggunaan Aplikasi',
+                html: `
+                    <div style='text-align:left;'>
+                        <b>Selama Magang</b>
+                        <ul>
+                            <li>Klik <b>Absensi/Logbook</b> untuk absen</li>
+                            <li>Absen <b>Datang</b> setiap hari</li>
+                            <li>Isi <b>Logbook</b> harian</li>
+                            <li>Klik <b>Absensi Pulang</b> (<span class='badge bg-warning text-dark'>kuning</span>)</li>
+                            <li>Ulangi tiap hari magang</li>
+                            <li>Wajib isi <b>Surat Persetujuan</b></li>
+                        </ul>
+                        <b>Setelah Magang</b>
+                        <ul>
+                            <li>Klik <b>Laporan</b></li>
+                            <li>Upload file laporan</li>
+                            <li>Tunggu validasi dospem</li>
+                            <li>Upload <b>Sertifikat Magang</b></li>
+                            <li>Nilai konversi menunggu dosen industri</li>
+                        </ul>
+                    </div>
+                `,
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'swal-wide'
+                }
+            });
+        });
+    </script>
 @endsection

@@ -52,11 +52,14 @@
     <!-- end of back to top button -->
 
     <!-- Scripts -->
-    <script src="{{ URL::asset('/js/bootstrap.min.js') }}"></script> <!-- Bootstrap framework -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ URL::asset('/js/swiper.min.js') }}"></script> <!-- Swiper for image and text sliders -->
     <script src="{{ URL::asset('/js/purecounter.min.js') }}"></script> <!-- Purecounter counter for statistics numbers -->
     <script src="{{ URL::asset('/js/isotope.pkgd.min.js') }}"></script> <!-- Isotope for filter -->
     <script src="{{ URL::asset('/js/scripts.js') }}"></script> <!-- Custom scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @stack('script')
 </body>
 

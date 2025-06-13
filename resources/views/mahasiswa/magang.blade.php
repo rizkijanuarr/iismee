@@ -1,240 +1,182 @@
 @php
     use App\Helpers\CustomHelper;
     $customHelper = new CustomHelper();
-
 @endphp
 
 @extends('layout.user')
 
 @section('konten')
-    <div class="container mb-4" style="margin-top: 100px">
-        <div class="card mb-3">
+    <div class="container py-5" style="margin-top: 50px">
+        @if (session()->has('success'))
+            <div class="alert alert-success alert-dismissible fade show fw-bold" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
+            </div>
+        @endif
+
+        @if (session()->has('error'))
+            <div class="alert alert-danger alert-dismissible fade show fw-bold" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
+            </div>
+        @endif
+
+        <!-- Data Magang -->
+        <div class="card mb-4">
             <div class="card-header">
-                Data Magang Anda
+                <h5 class="mb-0">Informasi Magang</h5>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <div class="input-group">
-                                <span class="input-group-text" id="basic-addon3">NIM</span>
-                                <input type="text" class="form-control" id="basic-url"
-                                    aria-describedby="basic-addon3 basic-addon4" value="{{ $data->registration_number }}"
-                                    readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <div class="input-group">
-                                <span class="input-group-text" id="basic-addon3">Nama</span>
-                                <input type="text" class="form-control" id="basic-url"
-                                    aria-describedby="basic-addon3 basic-addon4" value="{{ $data->name }}" readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <div class="input-group">
-                                <span class="input-group-text" id="basic-addon3">Kelas</span>
-                                <input type="text" class="form-control" id="basic-url"
-                                    aria-describedby="basic-addon3 basic-addon4" value="{{ $data->class }}" readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <div class="input-group">
-                                <span class="input-group-text" id="basic-addon3">Perusahaan</span>
-                                <input type="text" class="form-control" id="basic-url"
-                                    aria-describedby="basic-addon3 basic-addon4" value="{{ $data->company->company_name }}"
-                                    readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <div class="input-group">
-                                <span class="input-group-text" id="basic-addon3">Divisi</span>
-                                <input type="text" class="form-control" id="basic-url"
-                                    aria-describedby="basic-addon3 basic-addon4" value="{{ $data->division }}" readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <div class="input-group">
-                                <span class="input-group-text" id="basic-addon3">Tipe Magang</span>
-                                <input type="text" class="form-control" id="basic-url"
-                                    aria-describedby="basic-addon3 basic-addon4" value="{{ $data->internship_type }}"
-                                    readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <div class="input-group">
-                                <span class="input-group-text" id="basic-addon3">Tgl. Mulai</span>
-                                <input type="text" class="form-control" id="basic-url"
-                                    aria-describedby="basic-addon3 basic-addon4" value="{{ $data->date_start }}" readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <div class="input-group">
-                                <span class="input-group-text" id="basic-addon3">Tgl. Selesai</span>
-                                <input type="text" class="form-control" id="basic-url"
-                                    aria-describedby="basic-addon3 basic-addon4" value="{{ $data->date_end }}" readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <div class="input-group">
-                                <span class="input-group-text" id="basic-addon3">Pembimbing</span>
-                                <input type="text" class="form-control" id="basic-url"
-                                    aria-describedby="basic-addon3 basic-addon4"
-                                    value="{{ $data->internship->lecturer->name ?? 'Belum ada Pembimbing' }}" readonly>
-                            </div>
-                        </div>
-                    </div>
+                <div class="row g-3">
+                    @php
+                        $fields = [
+                            'NIM' => $data->registration_number ?? 'Belum ada NIM',
+                            'Nama' => $data->name ?? 'Belum ada Nama',
+                            'Kelas' => $data->class ?? 'Belum ada Kelas',
+                            'Perusahaan' => $data->company->company_name ?? 'Belum ada Perusahaan',
+                            'Divisi' => $data->division ?? 'Belum ada Divisi',
+                            'Tipe Magang' => $data->internship_type ?? 'Belum ada Tipe Magang',
+                            'Tgl. Mulai' => $data->date_start ?? 'Belum ada Tanggal Mulai',
+                            'Tgl. Selesai' => $data->date_end ?? 'Belum ada Tanggal Selesai',
+                            'Pembimbing' => $data->internship->lecturer->name ?? 'Belum ada Pembimbing',
+                        ];
+                    @endphp
 
-                </div>
-                <hr>
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <form action="{{ url('upload-dokumen') }}" method="post" enctype="multipart/form-data">
-                            @csrf
-                            <label for="formFile" class="form-label">Upload Sertifikat Magang</label>
-                            <div class="input-group mb-3">
-                                <input class="form-control d-inline" type="hidden" value="{{ $data->id }}"
-                                    name="student_id">
-                                <input class="form-control d-inline" type="hidden" value="Sertifikat Magang"
-                                    name="type">
-                                <input class="form-control d-inline" type="file" id="formFile" name="document_path">
-                                <button type="submit" class="btn btn-primary d-inline-block ms-3">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="input-group mb-3">
-                            <a name="#" class="btn btn-danger mt-4 text-decoration-none ms-auto"
-                                href="{{ url('laporan') }}" role="button"><i class="far fa-file"></i> Laporan</a>
+                    @foreach ($fields as $label => $value)
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">{{ $label }}</label>
+                            <input type="text" class="form-control" value="{{ $value }}" readonly>
                         </div>
-                    </div>
+                    @endforeach
+                </div>
+
+                <hr class="my-4">
+
+                <!-- Upload Sertifikat -->
+                <div class="col-md-12 mb-3">
+                    <form action="{{ url('upload-dokumen') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
+                        @csrf
+                        <label for="formFile" class="form-label fw-semibold">Upload Sertifikat Magang</label>
+                        <div class="input-group">
+                            <input type="hidden" name="student_id" value="{{ $data->id }}">
+                            <input type="hidden" name="type" value="Sertifikat Magang">
+                            <input type="file" name="document_path" id="formFile" class="form-control" accept=".pdf,.png,.jpg,.jpeg,.svg">
+                            <button type="submit" class="btn btn-primary ms-3" id="submitBtn">Submit</button>
+                        </div>
+                        <small class="text-muted">Format yang didukung: PDF, PNG, JPG, SVG (Max: 5MB)</small>
+                    </form>
+                    @php
+                        $sertifikat = \App\Models\Document::where('student_id', $data->id)->where('type', 'Sertifikat Magang')->first();
+                    @endphp
+                    @if ($sertifikat)
+                        <a target="_blank" href="{{ asset('storage/' . $sertifikat->document_path) }}" class="btn btn-info mt-2">
+                            <i class="fas fa-file-pdf"></i> Lihat Sertifikat Magang
+                        </a>
+                    @endif
+                </div>
+
+                <div class="col-md-12">
+                    <a href="{{ url('laporan') }}" class="btn btn-danger w-100">
+                        <i class="far fa-file"></i> Lihat Laporan
+                    </a>
                 </div>
             </div>
         </div>
 
-        <div class="card mb-4">
-            <div class="card-header pb-0">
-                <h6>Daftar Matakuliah Konversi Magang </h6>
+        <!-- Tabel Konversi Mata Kuliah -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Daftar Mata Kuliah Konversi Magang</h6>
             </div>
-            <div class="card-body px-0 pt-0 pb-2">
-                <div class="table-responsive table-bordered border-dark p-3">
-                    <table class="table align-items-center mb-0" id="datatable">
-                        <thead>
+            <div class="card-body table-responsive">
+                <table class="table table-bordered align-middle" id="datatable">
+                    <thead class="table-light">
+                        <tr>
+                            <th>No.</th>
+                            <th>Nama Mata Kuliah</th>
+                            <th>DPMK</th>
+                            <th class="text-center">SKS</th>
+                            <th class="text-center">Nilai Angka</th>
+                            <th class="text-center">Nilai Huruf</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($mpk as $key => $item)
                             <tr>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No.</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama
-                                    Mata
-                                    Kuliah</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">DPMK
-                                </th>
-                                <th
-                                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
-                                    SKS
-                                </th>
-                                <th
-                                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
-                                    nilai angka
-                                </th>
-                                <th
-                                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
-                                    Nilai huruf
-                                </th>
+                                <td>{{ $key + 1 }}</td>
+                                <td>{{ $item->subject_name }}</td>
+                                <td>{{ $item->name }}</td>
+                                <td class="text-center">{{ $item->sks }}</td>
+                                <td class="text-center">{{ $item->nilai }}</td>
+                                <td class="text-center">{{ $customHelper->konversiNilai($item->nilai) }}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($mpk as $key => $data)
-                                <tr>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $key + 1 }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->subject_name }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm">
-                                                {{ $data->name }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm text-center">
-                                                {{ $data->sks }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm text-center">
-                                                {{ $data->nilai }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-auto">
-                                            <h6 class="mb-0 text-sm text-center">
-                                                {{ $customHelper->konversiNilai($data->nilai) }}
-                                            </h6>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    <div class="alert alert-danger m-0">
+                                        Belum ada data.
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
-    </div> <!-- end of container -->
-    <!-- end of header -->
-@endsection
+    </div>
 
-<script>
-    // Pastikan DOM sudah ready
-    window.addEventListener('load', function() {
-        const fileInput = document.getElementById('formFile');
-        const submitBtn = document.querySelector('.btn.btn-primary');
-
-        if (fileInput && submitBtn) {
-            // Set disabled awal
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = 'Chose File';
-
-            fileInput.addEventListener('change', function() {
-
-                if (this.files && this.files.length > 0) {
-                    // Enable button
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = 'Submit';
-                } else {
-                    // Disable button
-                    submitBtn.disabled = true;
-                    submitBtn.innerHTML = 'Chose File';
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Konfirmasi sebelum upload
+            document.getElementById('uploadForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const fileInput = document.getElementById('formFile');
+                if (!fileInput.files.length) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Peringatan!',
+                        text: 'Silakan pilih file terlebih dahulu!',
+                        confirmButtonColor: '#3085d6'
+                    });
+                    return;
                 }
+
+                Swal.fire({
+                    title: 'Konfirmasi Upload',
+                    text: 'Apakah Anda yakin ingin mengupload dokumen ini?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Upload!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Submit form langsung tanpa loading
+                        this.submit();
+                    }
+                });
             });
-        }
-    });
-</script>
+
+            // Handle success/error messages dengan SweetAlert
+            @if (session()->has('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: '{{ session('success') }}',
+                    confirmButtonColor: '#3085d6'
+                });
+            @endif
+
+            @if (session()->has('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: '{{ session('error') }}',
+                    confirmButtonColor: '#3085d6'
+                });
+            @endif
+        });
+    </script>
+@endsection

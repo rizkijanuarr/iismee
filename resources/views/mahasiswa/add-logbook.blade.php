@@ -19,7 +19,7 @@
                 </ul>
             </div>
         @endif
-        <form action="{{ url('logbook') }}" method="post" enctype="multipart/form-data">
+        <form action="{{ url('logbook') }}" method="post" enctype="multipart/form-data" id="logbookForm">
             @csrf
             <div class="mb-3">
                 <label for="activity_name" class="form-label">Nama Kegiatan</label>
@@ -38,4 +38,62 @@
         </form>
     </div> <!-- end of container -->
     <!-- end of header -->
+
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.getElementById('logbookForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: data.message,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/logbook';
+                        }
+                    });
+                } else {
+                    // Handle validation errors
+                    let errorMessage = '';
+                    for (let field in data.errors) {
+                        errorMessage += data.errors[field][0] + '\n';
+                    }
+                    
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Wajib di isi!',
+                        text: errorMessage,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan saat menyimpan logbook!',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+            });
+        });
+    </script>
 @endsection

@@ -125,6 +125,15 @@
                             </tr>
                         </thead>
                         <tbody>
+                        @if (count($laporan) == 0)
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        <div class="alert alert-danger bg-gradient-danger" role="alert">
+                                            <h6 class="mb-0 text-white">Belum Ada Data</h6>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @else
                             @foreach ($laporan as $key => $item)
                                 <tr>
                                     <td>
@@ -176,6 +185,7 @@
                                     </td>
                                 </tr>
                             @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>

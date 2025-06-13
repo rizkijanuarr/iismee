@@ -27,9 +27,9 @@ class AttendanceController extends Controller
             ->where('students.id', '=', $mhs->id)
             ->first();
 
-
         $cekAbsensi = Student::selectRaw('IF(students.id IN (SELECT attendances.student_id FROM attendances WHERE DATE(attendances.absent_entry) = "' . $tanggalNow . '" AND DATE(attendances.absent_out) = "' . $tanggalNow . '"), true, false) AS is_absen')
-            ->where('id', '=', $mhs->id)->first();
+            ->where('id', '=', $mhs->id)
+            ->first();
 
         if ($cekAbsensi->is_absen == true) {
             return view('errors.403');
@@ -58,8 +58,10 @@ class AttendanceController extends Controller
     public function store(Request $request)
     {
         $customHelper = new CustomHelper();
+
+        // Validasi dengan format file yang diperluas
         $validatedData = $request->validate([
-            'entry_proof' => 'required|image'
+            'entry_proof' => 'required|file|mimes:pdf,png,jpg,jpeg,svg|max:5120'  // max 5MB
         ]);
 
         $validatedData['student_id'] = $request->student_id;
@@ -68,7 +70,14 @@ class AttendanceController extends Controller
 
         Attendance::create($validatedData);
 
-        return redirect()->intended('/logbook');
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Absensi datang berhasil disimpan!'
+            ]);
+        }
+
+        return redirect()->intended('/logbook')->with('success', 'Absensi datang berhasil disimpan!');
     }
 
     /**
@@ -102,8 +111,9 @@ class AttendanceController extends Controller
             ->where('students.id', '=', $mhs->id)
             ->first();
 
+        // Validasi dengan format file yang diperluas
         $validatedData = $request->validate([
-            'out_proof' => 'image'
+            'out_proof' => 'required|file|mimes:pdf,png,jpg,jpeg,svg|max:5120'  // max 5MB
         ]);
 
         $validatedData['absent_out'] = $customHelper->defaultDateTime('default');
@@ -114,7 +124,14 @@ class AttendanceController extends Controller
             'out_proof' => $validatedData['out_proof']
         ]);
 
-        return redirect()->intended('/logbook');
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Absensi pulang berhasil disimpan!'
+            ]);
+        }
+
+        return redirect()->intended('/logbook')->with('success', 'Absensi pulang berhasil disimpan!');
     }
 
     /**
