@@ -66,7 +66,7 @@ class AdminStudentController extends Controller
             'email' => 'required|email|unique:users'
         ]);
 
-        $validateCreateUser['password'] = bcrypt($validatedData['registration_number']);
+        $validateCreateUser['password'] = bcrypt('1234');
         $validateCreateUser['level'] = 'mahasiswa';
         $validateCreateUser['is_active'] = true;
 

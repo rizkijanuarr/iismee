@@ -43,11 +43,11 @@ class AdminLecturerController extends Controller
 
         $validateCreateUser = $request->validate([
             'name' => 'required',
-            'email' => 'required|email'
+            'email' => 'required|email|unique:users'
         ]);
 
         $validateCreateUser['is_active'] = true;
-        $validateCreateUser['password'] = bcrypt($validatedData['lecturer_id_number']);
+        $validateCreateUser['password'] = bcrypt('1234');
         $validateCreateUser['level'] = 'dosen';
 
         Lecturer::create($validatedData);

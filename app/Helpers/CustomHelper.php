@@ -23,7 +23,7 @@ class CustomHelper
             User::create([
                 'name' => $student->name,
                 'email' => $student->email,
-                'password' => bcrypt($student->registration_number),
+                'password' => bcrypt('1234'),
                 'level' => 'mahasiswa',
                 'is_active' => true
             ]);
@@ -35,7 +35,7 @@ class CustomHelper
             User::create([
                 'name' => $lecturer->name,
                 'email' => $lecturer->email,
-                'password' => bcrypt($lecturer->lecturer_id_number),
+                'password' => bcrypt('1234'),
                 'level' => 'dosen',
                 'is_active' => true
             ]);

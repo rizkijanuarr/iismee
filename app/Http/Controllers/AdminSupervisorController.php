@@ -46,7 +46,8 @@ class AdminSupervisorController extends Controller
         $email = $request->email;
         Supervisor::create($validatedData);
         User::where('email', $email)->update([
-            'level' => 'pembimbing'
+            'level' => 'pembimbing',
+            'password' => bcrypt('1234')
         ]);
         return redirect()->intended('/manage-dpl/create')->with('success', 'Data Berhasil Ditambahkan');
     }
