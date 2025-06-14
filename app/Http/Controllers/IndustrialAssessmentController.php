@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreIndustrialAssessmentRequest;
-use App\Http\Requests\UpdateIndustrialAssessmentRequest;
 use App\Models\IndustrialAdviser;
 use App\Models\IndustrialAssessment;
-use App\Models\Internship;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\WebSetting;
@@ -14,9 +11,6 @@ use Illuminate\Http\Request;
 
 class IndustrialAssessmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $email = auth()->user()->email;
@@ -42,45 +36,40 @@ class IndustrialAssessmentController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    public function create() {}
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'industrial_adviser_id' => 'required',
-            'student_id' => 'required',
-            'subject_id' => 'required',
-            'assesment_aspect_id' => 'required',
-            'score' => 'required'
-        ]);
+        $data = $request->all();
 
-        // dd($validatedData['subject_id']);
+        if (
+            empty($data['student_id']) ||
+            empty($data['industrial_adviser_id']) ||
+            empty($data['subject_id']) || !is_array($data['subject_id']) ||
+            empty($data['assesment_aspect_id']) || !is_array($data['assesment_aspect_id']) ||
+            empty($data['score']) || !is_array($data['score'])
+        ) {
+            return redirect()->back()->with('error', 'Semua field wajib diisi dengan benar!');
+        }
 
-        foreach ($validatedData['score'] as $score => $value) {
+        foreach ($data['score'] as $key => $value) {
+            if ($value === null || $value === '') {
+                return redirect()->back()->with('error', 'Nilai score tidak boleh kosong!');
+            }
+
             $item = new IndustrialAssessment();
-            $item->industrial_adviser_id = $validatedData['industrial_adviser_id'];
-            $item->student_id = $validatedData['student_id'];
-            $item->subject_id = $validatedData['subject_id'][$score];
-            $item->assesment_aspect_id = $validatedData['assesment_aspect_id'][$score];
-            $item->score = $validatedData['score'][$score];
+            $item->industrial_adviser_id = $data['industrial_adviser_id'];
+            $item->student_id = $data['student_id'];
+            $item->subject_id = $data['subject_id'][$key] ?? null;
+            $item->assesment_aspect_id = $data['assesment_aspect_id'][$key] ?? null;
+            $item->score = $value;
             $item->save();
         }
 
-        return redirect()->intended('/penilaian-industri');
+
+        return redirect()->intended('/penilaian-industri')->with('success', 'Data penilaian berhasil disimpan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($registration_number)
     {
         $email = auth()->user()->email;
@@ -126,9 +115,6 @@ class IndustrialAssessmentController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($registration_number)
     {
         $mhs = Student::where('registration_number', '=', $registration_number)->firstOrFail();
@@ -152,26 +138,37 @@ class IndustrialAssessmentController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request)
     {
         $data = $request->all();
+
+        if (
+            empty($data['student_id']) ||
+            empty($data['assessment_id']) || !is_array($data['assessment_id']) ||
+            empty($data['subject_id']) || !is_array($data['subject_id']) ||
+            empty($data['assesment_aspect_id']) || !is_array($data['assesment_aspect_id']) ||
+            empty($data['score']) || !is_array($data['score'])
+        ) {
+            return redirect()->back()->with('error', 'Semua field wajib diisi dengan benar!');
+        }
+
         foreach ($data['score'] as $key => $score) {
             $assessment = IndustrialAssessment::find($data['assessment_id'][$key]);
-            if ($assessment->student_id == $data['student_id'] && $assessment->subject_id == $data['subject_id'][$key] && $assessment->assesment_aspect_id == $data['assesment_aspect_id'][$key]) {
+
+            if (!$assessment) continue;
+
+            if (
+                $assessment->student_id == $data['student_id'] &&
+                $assessment->subject_id == $data['subject_id'][$key] &&
+                $assessment->assesment_aspect_id == $data['assesment_aspect_id'][$key]
+            ) {
                 $assessment->update(['score' => $score]);
             }
         }
-        return redirect('/penilaian-industri');
+
+        return redirect('/penilaian-industri')->with('success', 'Data penilaian berhasil diperbarui!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(IndustrialAssessment $industrialAssessment)
-    {
-        //
-    }
+
+    public function destroy(IndustrialAssessment $industrialAssessment) {}
 }

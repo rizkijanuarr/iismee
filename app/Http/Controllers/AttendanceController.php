@@ -3,18 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\CustomHelper;
-use App\Http\Requests\StoreAttendanceRequest;
-use App\Http\Requests\UpdateAttendanceRequest;
 use App\Models\Attendance;
 use App\Models\Student;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $mhs = Student::with('internship.lecturer')->where('email', '=', auth()->user()->email)->firstOrFail();
@@ -44,101 +38,176 @@ class AttendanceController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    public function create() {}
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $customHelper = new CustomHelper();
+        try {
+            $customHelper = new CustomHelper();
 
-        // Validasi dengan format file yang diperluas
-        $validatedData = $request->validate([
-            'entry_proof' => 'required|file|mimes:pdf,png,jpg,jpeg,svg|max:5120'  // max 5MB
-        ]);
+            // Validasi manual satu per satu
 
-        $validatedData['student_id'] = $request->student_id;
-        $validatedData['absent_entry'] = $customHelper->defaultDateTime('default');
-        $validatedData['entry_proof'] = $request->file('entry_proof')->store('bukti-kehadiran');
+            // 1. Cek apakah file diupload
+            if (!$request->hasFile('entry_proof')) {
+                return redirect()->back()->with('error', 'Bukti kehadiran datang harus diupload!')->withInput();
+            }
 
-        Attendance::create($validatedData);
+            $file = $request->file('entry_proof');
 
-        if ($request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Absensi datang berhasil disimpan!'
-            ]);
+            // 2. Cek apakah file valid
+            if (!$file->isValid()) {
+                return redirect()->back()->with('error', 'File yang diupload tidak valid!')->withInput();
+            }
+
+            // 3. Cek ukuran file (maksimal 1MB = 1024KB = 1048576 bytes)
+            if ($file->getSize() > 1048576) {
+                return redirect()->back()->with('error', 'Ukuran bukti kehadiran maksimal 1MB!')->withInput();
+            }
+
+            // 4. Cek ekstensi file
+            $extension = strtolower($file->getClientOriginalExtension());
+            $allowedExtensions = ['png', 'jpg', 'jpeg'];
+            if (!in_array($extension, $allowedExtensions)) {
+                return redirect()->back()->with('error', 'Bukti kehadiran harus berformat PNG, JPG, atau JPEG!')->withInput();
+            }
+
+            // 5. Cek MIME type
+            $mimeType = $file->getMimeType();
+            $allowedMimes = ['image/png', 'image/jpeg', 'image/jpg'];
+            if (!in_array($mimeType, $allowedMimes)) {
+                return redirect()->back()->with('error', 'File yang diupload harus berupa gambar yang valid!')->withInput();
+            }
+
+            // 6. Cek signature file gambar
+            $fileContent = file_get_contents($file->getRealPath());
+            $isValidImage = false;
+
+            // Check PNG signature
+            if (substr($fileContent, 0, 8) === "\x89PNG\r\n\x1a\n") {
+                $isValidImage = true;
+            }
+            // Check JPEG signature
+            elseif (substr($fileContent, 0, 3) === "\xFF\xD8\xFF") {
+                $isValidImage = true;
+            }
+
+            if (!$isValidImage) {
+                return redirect()->back()->with('error', 'File yang diupload bukan gambar yang valid!')->withInput();
+            }
+
+            // 7. Cek apakah student_id ada
+            if (!$request->student_id) {
+                return redirect()->back()->with('error', 'Student ID tidak valid!')->withInput();
+            }
+
+            // Semua validasi lolos, proses upload
+            $validatedData = [];
+            $validatedData['student_id'] = $request->student_id;
+            $validatedData['absent_entry'] = $customHelper->defaultDateTime('default');
+            $validatedData['entry_proof'] = $file->store('bukti-kehadiran');
+
+            Attendance::create($validatedData);
+
+            return redirect()->intended('/logbook')->with('success', 'Absensi datang berhasil disimpan!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menyimpan absensi. Silakan coba lagi!')->withInput();
         }
-
-        return redirect()->intended('/logbook')->with('success', 'Absensi datang berhasil disimpan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Attendance $attendance)
-    {
-        //
-    }
+    public function show(Attendance $attendance) {}
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Attendance $attendance)
-    {
-        //
-    }
+    public function edit(Attendance $attendance) {}
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Attendance $attendance)
     {
-        $customHelper = new CustomHelper();
-        $mhs = Student::with('internship.lecturer')->where('email', '=', auth()->user()->email)->firstOrFail();
+        try {
+            $customHelper = new CustomHelper();
+            $mhs = Student::with('internship.lecturer')->where('email', '=', auth()->user()->email)->firstOrFail();
 
-        $tanggalNow = $customHelper->defaultDateTime('tanggalDb');
+            $tanggalNow = $customHelper->defaultDateTime('tanggalDb');
 
-        $cekAbsensiDatang = Student::selectRaw('IF(students.id IN (SELECT attendances.student_id FROM attendances WHERE DATE(attendances.absent_entry) = "' . $tanggalNow . '"), true, false) AS is_absen, attendances.id AS attendance_id')
-            ->join('attendances', 'attendances.student_id', '=', 'students.id')
-            ->where('students.id', '=', $mhs->id)
-            ->first();
+            // Perbaikan 1: Cek apakah sudah ada absensi datang hari ini
+            $attendanceToday = Attendance::where('student_id', $mhs->id)
+                ->whereDate('absent_entry', $tanggalNow)
+                ->first();
 
-        // Validasi dengan format file yang diperluas
-        $validatedData = $request->validate([
-            'out_proof' => 'required|file|mimes:pdf,png,jpg,jpeg,svg|max:5120'  // max 5MB
-        ]);
+            // Perbaikan 2: Validasi apakah sudah absen datang
+            if (!$attendanceToday) {
+                return redirect()->back()->with('error', 'Anda belum melakukan absensi datang hari ini!')->withInput();
+            }
 
-        $validatedData['absent_out'] = $customHelper->defaultDateTime('default');
-        $validatedData['out_proof'] = $request->file('out_proof')->store('bukti-kehadiran');
+            // Perbaikan 3: Cek apakah sudah absen pulang
+            if ($attendanceToday->absent_out) {
+                return redirect()->back()->with('error', 'Anda sudah melakukan absensi pulang hari ini!')->withInput();
+            }
 
-        Attendance::where('id', '=', $cekAbsensiDatang->attendance_id)->update([
-            'absent_out' => $validatedData['absent_out'],
-            'out_proof' => $validatedData['out_proof']
-        ]);
+            // Validasi manual satu per satu
 
-        if ($request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Absensi pulang berhasil disimpan!'
+            // 1. Cek apakah file diupload
+            if (!$request->hasFile('out_proof')) {
+                return redirect()->back()->with('error', 'Bukti kehadiran pulang harus diupload!')->withInput();
+            }
+
+            $file = $request->file('out_proof');
+
+            // 2. Cek apakah file valid
+            if (!$file->isValid()) {
+                return redirect()->back()->with('error', 'File yang diupload tidak valid!')->withInput();
+            }
+
+            // 3. Cek ukuran file (maksimal 1MB = 1024KB = 1048576 bytes)
+            if ($file->getSize() > 1048576) {
+                return redirect()->back()->with('error', 'Ukuran bukti kehadiran maksimal 1MB!')->withInput();
+            }
+
+            // 4. Cek ekstensi file
+            $extension = strtolower($file->getClientOriginalExtension());
+            $allowedExtensions = ['png', 'jpg', 'jpeg'];
+            if (!in_array($extension, $allowedExtensions)) {
+                return redirect()->back()->with('error', 'Bukti kehadiran harus berformat PNG, JPG, atau JPEG!')->withInput();
+            }
+
+            // 5. Cek MIME type
+            $mimeType = $file->getMimeType();
+            $allowedMimes = ['image/png', 'image/jpeg', 'image/jpg'];
+            if (!in_array($mimeType, $allowedMimes)) {
+                return redirect()->back()->with('error', 'File yang diupload harus berupa gambar yang valid!')->withInput();
+            }
+
+            // 6. Cek signature file gambar
+            $fileContent = file_get_contents($file->getRealPath());
+            $isValidImage = false;
+
+            // Check PNG signature
+            if (substr($fileContent, 0, 8) === "\x89PNG\r\n\x1a\n") {
+                $isValidImage = true;
+            }
+            // Check JPEG signature
+            elseif (substr($fileContent, 0, 3) === "\xFF\xD8\xFF") {
+                $isValidImage = true;
+            }
+
+            if (!$isValidImage) {
+                return redirect()->back()->with('error', 'File yang diupload bukan gambar yang valid!')->withInput();
+            }
+
+            // Semua validasi lolos, proses upload
+            $validatedData = [];
+            $validatedData['absent_out'] = $customHelper->defaultDateTime('default');
+            $validatedData['out_proof'] = $file->store('bukti-kehadiran');
+
+            // Perbaikan 4: Update menggunakan object yang sudah ditemukan
+            $attendanceToday->update([
+                'absent_out' => $validatedData['absent_out'],
+                'out_proof' => $validatedData['out_proof']
             ]);
+
+            return redirect()->intended('/logbook')->with('success', 'Absensi pulang berhasil disimpan!');
+        } catch (\Exception $e) {
+            // Perbaikan 5: Log error untuk debugging
+            return redirect()->back()->with('error', 'Gagal menyimpan absensi. Silakan coba lagi! Error: ' . $e->getMessage())->withInput();
         }
-
-        return redirect()->intended('/logbook')->with('success', 'Absensi pulang berhasil disimpan!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Attendance $attendance)
-    {
-        //
-    }
+    public function destroy(Attendance $attendance) {}
 }

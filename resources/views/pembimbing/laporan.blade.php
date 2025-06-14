@@ -1,15 +1,6 @@
 @extends('layout.admin')
 
 @section('konten')
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
     <div class="row justify-content-between">
         <div class="col">
             <div class="card mb-3">

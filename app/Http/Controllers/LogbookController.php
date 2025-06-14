@@ -10,13 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-
-
 class LogbookController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $customHelper = new CustomHelper();
@@ -30,7 +25,10 @@ class LogbookController extends Controller
             ->where('students.id', '=', $mhs->id)
             ->first();
 
-        // dd($cekAbsensiDatang->is_absen);
+        // Cek apakah sudah ada logbook hari ini
+        $hasLogbookToday = Logbook::where('student_id', '=', $mhs->id)
+            ->whereDate('created_at', $tanggalNow)
+            ->exists();
 
         if ($cekAbsensiDatang->is_absen ?? null) {
             return view('mahasiswa.logbook', [
@@ -39,6 +37,7 @@ class LogbookController extends Controller
                 'logbook' => Logbook::where('student_id', '=', $mhs->id)->get(),
                 'suratMagang' => $sptjm,
                 'cekAbsensiDatang' => $cekAbsensiDatang->is_absen,
+                'hasLogbookToday' => $hasLogbookToday, // Tambahkan ini
             ]);
         } else {
             return redirect()->intended('/absensi');
@@ -60,9 +59,6 @@ class LogbookController extends Controller
         return $pdf->stream('logbook.pdf');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('mahasiswa.add-logbook', [
@@ -70,63 +66,107 @@ class LogbookController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         try {
             $mhs = Student::where('email', '=', auth()->user()->email)->firstOrFail();
             $helper = new CustomHelper();
+            $tanggalNow = $helper->defaultDateTime('tanggalDb');
+            $hasLogbookToday = Logbook::where('student_id', '=', $mhs->id)
+                ->whereDate('created_at', $tanggalNow)
+                ->exists();
 
-            $validatedData = $request->validate([
-                'activity_name' => 'required',
-                'img' => 'required|image',
-                'description' => 'required'
-            ], [
-                'activity_name.required' => 'Nama Kegiatan harus diisi!',
-                'img.required' => 'Foto Kegiatan harus diupload!',
-                'img.image' => 'File yang diupload harus berupa gambar!',
-                'description.required' => 'Deskripsi Kegiatan harus diisi!'
-            ]);
+            if ($hasLogbookToday) {
+                return redirect()->back()->with('error', 'Anda sudah membuat logbook hari ini!');
+            }
 
-            $validatedData['student_id'] = $mhs->id;
-            $validatedData['activity_date'] = $helper->defaultDateTime('tanggalDb');
-            $validatedData['img'] = $request->file('img')->store('logbook');
+            // Validasi manual satu per satu
+            $errors = [];
+
+            // 1. Validasi activity_name
+            if (empty($request->activity_name)) {
+                $errors['activity_name'] = 'Nama Kegiatan harus diisi!';
+            }
+
+            // 2. Validasi description
+            if (empty($request->description)) {
+                $errors['description'] = 'Deskripsi Kegiatan harus diisi!';
+            }
+
+            // 3. Validasi file img
+            if (!$request->hasFile('img')) {
+                $errors['img'] = 'Foto Kegiatan harus diupload!';
+            } else {
+                $file = $request->file('img');
+
+                // Cek apakah file valid
+                if (!$file->isValid()) {
+                    $errors['img'] = 'File yang diupload tidak valid!';
+                } else {
+                    // Cek ukuran file (maksimal 1MB = 1024KB)
+                    if ($file->getSize() > 1048576) { // 1024 * 1024 bytes
+                        $errors['img'] = 'Ukuran gambar maksimal 1MB!';
+                    } else {
+                        // Cek MIME type
+                        $mimeType = $file->getMimeType();
+                        $allowedMimes = ['image/jpeg', 'image/jpg', 'image/png'];
+
+                        if (!in_array($mimeType, $allowedMimes)) {
+                            $errors['img'] = 'Foto harus berformat PNG, JPG, atau JPEG!';
+                        } else {
+                            // Cek ekstensi file
+                            $extension = strtolower($file->getClientOriginalExtension());
+                            $allowedExtensions = ['jpeg', 'jpg', 'png'];
+
+                            if (!in_array($extension, $allowedExtensions)) {
+                                $errors['img'] = 'File yang diupload harus berformat PNG, JPG, atau JPEG yang valid!';
+                            } else {
+                                // Validasi signature file gambar untuk memastikan file benar-benar gambar
+                                $fileContent = file_get_contents($file->getRealPath());
+                                $isValidImage = false;
+
+                                // Check PNG signature
+                                if (substr($fileContent, 0, 8) === "\x89PNG\r\n\x1a\n") {
+                                    $isValidImage = true;
+                                }
+                                // Check JPEG signature
+                                elseif (substr($fileContent, 0, 3) === "\xFF\xD8\xFF") {
+                                    $isValidImage = true;
+                                }
+
+                                if (!$isValidImage) {
+                                    $errors['img'] = 'File yang diupload bukan gambar yang valid!';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Jika ada error, redirect kembali dengan error
+            if (!empty($errors)) {
+                return redirect()->back()->withErrors($errors)->withInput();
+            }
+
+            // Jika semua validasi berhasil, lanjutkan proses simpan
+            $validatedData = [
+                'activity_name' => $request->activity_name,
+                'description' => $request->description,
+                'student_id' => $mhs->id,
+                'activity_date' => $helper->defaultDateTime('tanggalDb'),
+                'img' => $request->file('img')->store('logbook')
+            ];
 
             Logbook::create($validatedData);
 
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Data Logbook hari ini berhasil disimpan, untuk tanggapan bimbingan silahkan ditunggu'
-                ]);
-            }
-
             return redirect()->intended('/logbook')->with('success', 'Data Berhasil Ditambahkan !');
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validasi gagal!',
-                    'errors' => $e->errors()
-                ], 422);
-            }
-            throw $e;
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menyimpan data. Pastikan file gambar berformat PNG, JPG, atau JPEG dan ukuran di bawah 1MB!');
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Logbook $logbook)
-    {
-        //
-    }
+    public function show(Logbook $logbook) {}
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Logbook $logbook)
     {
         return view('mahasiswa.edit-logbook', [
@@ -135,9 +175,6 @@ class LogbookController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Logbook $logbook)
     {
         try {
@@ -145,16 +182,70 @@ class LogbookController extends Controller
 
             $validatedData = $request->validate([
                 'activity_name' => 'required',
-                'img' => 'image',
+                'img' => [
+                    'nullable',
+                    'file',
+                    'max:1024', // 1MB dalam KB
+                    'mimes:jpeg,jpg,png', // Validasi MIME type
+                    function ($attribute, $value, $fail) {
+                        // Validasi tambahan hanya jika ada file yang diupload
+                        if ($value && $value->isValid()) {
+                            $mimeType = $value->getMimeType();
+                            $extension = strtolower($value->getClientOriginalExtension());
+
+                            // Cek MIME type dan ekstensi
+                            $allowedMimes = ['image/jpeg', 'image/jpg', 'image/png'];
+                            $allowedExtensions = ['jpeg', 'jpg', 'png'];
+
+                            if (!in_array($mimeType, $allowedMimes) || !in_array($extension, $allowedExtensions)) {
+                                $fail('File yang diupload harus berformat PNG, JPG, atau JPEG yang valid.');
+                            }
+
+                            // Validasi signature file gambar
+                            $fileContent = file_get_contents($value->getRealPath());
+                            $isValidImage = false;
+
+                            // Check PNG signature
+                            if (substr($fileContent, 0, 8) === "\x89PNG\r\n\x1a\n") {
+                                $isValidImage = true;
+                            }
+                            // Check JPEG signature
+                            elseif (substr($fileContent, 0, 3) === "\xFF\xD8\xFF") {
+                                $isValidImage = true;
+                            }
+
+                            if (!$isValidImage) {
+                                $fail('File yang diupload bukan gambar yang valid.');
+                            }
+                        }
+                    }
+                ],
                 'description' => 'required'
             ], [
                 'activity_name.required' => 'Nama Kegiatan harus diisi!',
-                'img.image' => 'File yang diupload harus berupa gambar!',
+                'img.file' => 'File yang diupload harus berupa file!',
+                'img.max' => 'Ukuran gambar maksimal 1MB!',
+                'img.mimes' => 'Foto harus berformat PNG, JPG, atau JPEG!',
                 'description.required' => 'Deskripsi Kegiatan harus diisi!'
             ]);
 
             $validatedData['student_id'] = $mhs->id;
+
             if ($request->file('img')) {
+                // Double check file sebelum proses
+                $file = $request->file('img');
+                if (!$file->isValid()) {
+                    throw new \Exception('File tidak valid');
+                }
+
+                $ext = strtolower($file->getClientOriginalExtension());
+                $allowedExtensions = ['png', 'jpg', 'jpeg'];
+
+                if (!in_array($ext, $allowedExtensions)) {
+                    throw new \Exception('File harus berformat PNG, JPG, atau JPEG');
+                }
+
+                // Hapus gambar lama
                 if ($request->oldimg) {
                     Storage::delete($request->oldimg);
                 }
@@ -163,29 +254,15 @@ class LogbookController extends Controller
 
             Logbook::where('id', $logbook->id)->update($validatedData);
 
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Data Logbook berhasil diperbarui!'
-                ]);
-            }
-
             return redirect()->intended('/logbook')->with('success', 'Data Berhasil Diubah !');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validasi gagal!',
-                    'errors' => $e->errors()
-                ], 422);
-            }
-            throw $e;
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('error', 'Gagal mengupdate data. Pastikan file gambar berformat PNG, JPG, atau JPEG dan ukuran di bawah 1MB!');
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Logbook $logbook)
     {
         try {
@@ -194,22 +271,9 @@ class LogbookController extends Controller
             }
             Logbook::destroy($logbook->id);
 
-            if (request()->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Data Logbook berhasil dihapus!'
-                ]);
-            }
-
             return redirect()->intended('/logbook')->with('success', 'Data Berhasil Dihapus !');
         } catch (\Exception $e) {
-            if (request()->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Gagal menghapus data Logbook!'
-                ], 500);
-            }
-            throw $e;
+            return redirect()->back()->with('error', 'Gagal menghapus data Logbook!');
         }
     }
 }

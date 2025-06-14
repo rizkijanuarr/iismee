@@ -6,177 +6,131 @@
 @extends('layout.user')
 
 @section('konten')
-    <div class="container py-5" style="margin-top: 50px">
-        @if (session()->has('success'))
-            <div class="alert alert-success alert-dismissible fade show fw-bold" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
-            </div>
-        @endif
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-20">
 
-        @if (session()->has('error'))
-            <div class="alert alert-danger alert-dismissible fade show fw-bold" role="alert">
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
-            </div>
-        @endif
+        {{-- SECTION INFORMASI LOGBOOK --}}
+        <div class="bg-white shadow-2xl hover:shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-shadow rounded-2xl p-6 mb-4">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">📋 Informasi Magang</h2>
 
-        <!-- Data Magang -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0">Informasi Magang</h5>
-            </div>
-            <div class="card-body">
-                <div class="row g-3">
-                    @php
-                        $fields = [
-                            'NIM' => $data->registration_number ?? 'Belum ada NIM',
-                            'Nama' => $data->name ?? 'Belum ada Nama',
-                            'Kelas' => $data->class ?? 'Belum ada Kelas',
-                            'Perusahaan' => $data->company->company_name ?? 'Belum ada Perusahaan',
-                            'Divisi' => $data->division ?? 'Belum ada Divisi',
-                            'Tipe Magang' => $data->internship_type ?? 'Belum ada Tipe Magang',
-                            'Tgl. Mulai' => $data->date_start ?? 'Belum ada Tanggal Mulai',
-                            'Tgl. Selesai' => $data->date_end ?? 'Belum ada Tanggal Selesai',
-                            'Pembimbing' => $data->internship->lecturer->name ?? 'Belum ada Pembimbing',
-                        ];
-                    @endphp
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @php
+                    $fields = [
+                        'NIM' => $data->registration_number ?? 'Belum ada NIM',
+                        'Nama' => $data->name ?? 'Belum ada Nama',
+                        'Kelas' => $data->class ?? 'Belum ada Kelas',
+                        'Perusahaan' => $data->company->company_name ?? 'Belum ada Perusahaan',
+                        'Divisi' => $data->division ?? 'Belum ada Divisi',
+                        'Tipe Magang' => $data->internship_type ?? 'Belum ada Tipe Magang',
+                        'Tgl. Mulai' => $data->date_start ?? 'Belum ada Tanggal Mulai',
+                        'Tgl. Selesai' => $data->date_end ?? 'Belum ada Tanggal Selesai',
+                        'Pembimbing' => $data->internship->lecturer->name ?? 'Belum ada Pembimbing',
+                    ];
+                @endphp
 
-                    @foreach ($fields as $label => $value)
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">{{ $label }}</label>
-                            <input type="text" class="form-control" value="{{ $value }}" readonly>
-                        </div>
-                    @endforeach
-                </div>
-
-                <hr class="my-4">
-
-                <!-- Upload Sertifikat -->
-                <div class="col-md-12 mb-3">
-                    <form action="{{ url('upload-dokumen') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
-                        @csrf
-                        <label for="formFile" class="form-label fw-semibold">Upload Sertifikat Magang</label>
-                        <div class="input-group">
-                            <input type="hidden" name="student_id" value="{{ $data->id }}">
-                            <input type="hidden" name="type" value="Sertifikat Magang">
-                            <input type="file" name="document_path" id="formFile" class="form-control" accept=".pdf,.png,.jpg,.jpeg,.svg">
-                            <button type="submit" class="btn btn-primary ms-3" id="submitBtn">Submit</button>
-                        </div>
-                        <small class="text-muted">Format yang didukung: PDF, PNG, JPG, SVG (Max: 5MB)</small>
-                    </form>
-                    @php
-                        $sertifikat = \App\Models\Document::where('student_id', $data->id)->where('type', 'Sertifikat Magang')->first();
-                    @endphp
-                    @if ($sertifikat)
-                        <a target="_blank" href="{{ asset('storage/' . $sertifikat->document_path) }}" class="btn btn-info mt-2">
-                            <i class="fas fa-file-pdf"></i> Lihat Sertifikat Magang
-                        </a>
-                    @endif
-                </div>
-
-                <div class="col-md-12">
-                    <a href="{{ url('laporan') }}" class="btn btn-danger w-100">
-                        <i class="far fa-file"></i> Lihat Laporan
-                    </a>
-                </div>
+                @foreach ($fields as $label => $value)
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">{{ $label }}</label>
+                        <input type="text" value="{{ $value }}" readonly
+                            class="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-200 text-gray-800 focus:outline-none">
+                    </div>
+                @endforeach
             </div>
         </div>
 
-        <!-- Tabel Konversi Mata Kuliah -->
-        <div class="card">
-            <div class="card-header">
-                <h6 class="mb-0">Daftar Mata Kuliah Konversi Magang</h6>
+        {{-- SECTION UPLOAD SERTIFIKAT --}}
+        <div class="bg-white shadow-2xl hover:shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-shadow rounded-2xl p-6 mb-4">
+
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 border-b pb-2">
+                <h2 class="text-xl font-semibold text-gray-800">🏅 Sertifikat Magang</h2>
+                @php
+                    $sertifikat = \App\Models\Document::where('student_id', $data->id)
+                        ->where('type', 'Sertifikat Magang')
+                        ->first();
+                @endphp
+
+                @if ($sertifikat)
+                    <a target="_blank" href="{{ asset('storage/' . $sertifikat->document_path) }}"
+                        class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-md transition hover:no-underline hover:text-white">
+                        <i class="fas fa-eye"></i> Lihat Sertifikat Magang
+                    </a>
+                @endif
             </div>
-            <div class="card-body table-responsive">
-                <table class="table table-bordered align-middle" id="datatable">
-                    <thead class="table-light">
+
+            <p class="text-sm text-gray-700 bg-blue-100 border border-blue-200 rounded-lg p-3 mb-4">
+                <strong> 💡 Perhatian:</strong> Selama periode Magang berlangsung, mahasiswa
+                <span class="font-semibold">diwajibkan melampirkan Sertifikat Magang</span>
+                sebagai salah satu syarat administratif.
+            </p>
+
+            <form action="{{ url('upload-dokumen') }}" method="POST" enctype="multipart/form-data" id="uploadForm"
+                class="flex flex-col md:flex-row items-stretch gap-3">
+                @csrf
+                <input type="hidden" name="student_id" value="{{ $data->id }}">
+                <input type="hidden" name="type" value="Sertifikat Magang">
+
+                <input type="file" name="document_path" accept=".pdf,.png,.jpg,.jpeg,.svg"
+                    class="flex-1 text-sm text-gray-600 border border-gray-200 rounded-lg bg-gray-100 file:mr-4 file:py-2 file:px-4
+                   file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-white file:text-gray-700
+                   hover:file:bg-gray-50 cursor-pointer transition"
+                    required>
+
+                <button type="submit"
+                    class="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow transition">
+                    Submit
+                </button>
+            </form>
+
+            <p class="text-xs text-gray-400 mt-2">PDF — max 2MB</p>
+        </div>
+
+
+        {{-- SECTION KONVERSI MATAKULIAH --}}
+        <div class="bg-white shadow-2xl hover:shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-shadow rounded-2xl p-6 mb-4">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 border-b pb-2">
+                <h2 class="text-xl font-semibold text-gray-800 ">📚 Daftar MK</h2>
+            </div>
+            <p class="text-sm text-gray-700 bg-blue-100 border border-blue-200 rounded-lg p-3 mb-4">
+                <strong>💡 Perhatian:</strong> Jika Anda bertanya mengapa masih kosong data MK,
+                <strong>karena Dosen Pembimbing belum melakukan penilaian.</strong>
+                Harap <strong>cek secara berkala</strong> serta <strong>berkabar ke dosen pembimbing kalian</strong>!
+            </p>
+
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm text-left text-gray-700 border border-gray-200 rounded-lg">
+                    <thead class="bg-gray-100 text-xs uppercase text-gray-500">
                         <tr>
-                            <th>No.</th>
-                            <th>Nama Mata Kuliah</th>
-                            <th>DPMK</th>
-                            <th class="text-center">SKS</th>
-                            <th class="text-center">Nilai Angka</th>
-                            <th class="text-center">Nilai Huruf</th>
+                            <th class="px-4 py-3">No.</th>
+                            <th class="px-4 py-3">Nama Mata Kuliah</th>
+                            <th class="px-4 py-3">DPMK</th>
+                            <th class="px-4 py-3">Skor</th>
+                            <th class="px-4 py-3">Nilai Angka</th>
+                            <th class="px-4 py-3">Nilai Huruf</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @forelse ($mpk as $key => $item)
+                    <tbody class="divide-y divide-gray-200">
+                        @if ($mpk->count() > 0)
+                            @foreach ($mpk as $key => $item)
+                                <tr>
+                                    <td class="px-4 py-3">{{ $key + 1 }}</td>
+                                    <td class="px-4 py-3">{{ $item->subject_name }}</td>
+                                    <td class="px-4 py-3">{{ $item->name }}</td>
+                                    <td class="px-4 py-3">{{ $item->sks }}</td>
+                                    <td class="px-4 py-3">{{ $item->nilai }}</td>
+                                    <td class="px-4 py-3">{{ $customHelper->konversiNilai($item->nilai) }}</td>
+                                </tr>
+                            @endforeach
+                        @else
                             <tr>
-                                <td>{{ $key + 1 }}</td>
-                                <td>{{ $item->subject_name }}</td>
-                                <td>{{ $item->name }}</td>
-                                <td class="text-center">{{ $item->sks }}</td>
-                                <td class="text-center">{{ $item->nilai }}</td>
-                                <td class="text-center">{{ $customHelper->konversiNilai($item->nilai) }}</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center">
-                                    <div class="alert alert-danger m-0">
-                                        Belum ada data.
-                                    </div>
+                                <td colspan="6" class="px-4 py-6 text-center text-sm font-bold text-red-600">
+                                    Belum ada data yang tersedia.
                                 </td>
                             </tr>
-                        @endforelse
+                        @endif
                     </tbody>
                 </table>
             </div>
         </div>
+
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Konfirmasi sebelum upload
-            document.getElementById('uploadForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const fileInput = document.getElementById('formFile');
-                if (!fileInput.files.length) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Peringatan!',
-                        text: 'Silakan pilih file terlebih dahulu!',
-                        confirmButtonColor: '#3085d6'
-                    });
-                    return;
-                }
-
-                Swal.fire({
-                    title: 'Konfirmasi Upload',
-                    text: 'Apakah Anda yakin ingin mengupload dokumen ini?',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, Upload!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Submit form langsung tanpa loading
-                        this.submit();
-                    }
-                });
-            });
-
-            // Handle success/error messages dengan SweetAlert
-            @if (session()->has('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: '{{ session('success') }}',
-                    confirmButtonColor: '#3085d6'
-                });
-            @endif
-
-            @if (session()->has('error'))
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal!',
-                    text: '{{ session('error') }}',
-                    confirmButtonColor: '#3085d6'
-                });
-            @endif
-        });
-    </script>
 @endsection

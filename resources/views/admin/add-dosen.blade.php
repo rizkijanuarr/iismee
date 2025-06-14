@@ -1,10 +1,10 @@
 @extends('layout.admin')
 
 @section('konten')
-<div class="alert alert-info mt-3">
-            <i class="bi bi-info-circle-fill me-2"></i>
-            Password default untuk akun dosen adalah <strong>1234</strong>
-        </div>
+    <div class="alert alert-danger bg-gradient-danger mt-3 text-white">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        <strong>Password Dosen</strong> secara sistem generate <strong>1234</strong>
+    </div>
     <form action="{{ url('manage-dosen') }}" method="POST">
         @csrf
         <div class="row">

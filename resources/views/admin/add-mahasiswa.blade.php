@@ -1,19 +1,10 @@
 @extends('layout.admin')
 
 @section('konten')
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-    <div class="alert alert-info mt-3">
-            <i class="bi bi-info-circle-fill me-2"></i>
-            Password default untuk akun mahasiswa adalah <strong>1234</strong>
-        </div>
+    <div class="alert alert-danger bg-gradient-danger mt-3 text-white">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        <strong>Password Mahasiswa</strong> secara sistem generate <strong>1234</strong>
+    </div>
     <form action="{{ url('manage-mahasiswa') }}" method="POST">
         @csrf
         <div class="row">

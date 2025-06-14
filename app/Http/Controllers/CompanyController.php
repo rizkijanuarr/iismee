@@ -2,27 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreCompanyRequest;
-use App\Http\Requests\UpdateCompanyRequest;
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StoreCompanyRequest;
+use App\Http\Requests\UpdateCompanyRequest;
 
 class CompanyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return view('admin.perusahaan', [
             'title' => 'Perusahaan',
-            'data' => Company::all()
+            'data' => Company::orderByDesc('created_at')->get()
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('admin.add-perusahaan', [
@@ -30,11 +25,19 @@ class CompanyController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        if (empty($request->company_name)) {
+            return redirect()->back()->with('error', 'Nama Perusahaan wajib diisi!');
+        }
+
+        if (empty($request->company_address)) {
+            return redirect()->back()->with('error', 'Alamat Perusahaan wajib diisi!');
+        }
+
+        if (empty($request->company_number)) {
+            return redirect()->back()->with('error', 'Nomor Telepon Perusahaan wajib diisi!');
+        }
         $validatedData = $request->validate([
             'company_name' => 'required',
             'company_address' => 'required',
@@ -42,20 +45,11 @@ class CompanyController extends Controller
         ]);
 
         Company::create($validatedData);
-        return redirect()->intended('/manage-perusahaan')->with('success', 'Data Berhasil Ditambahkan');
+        return redirect()->intended('/manage-perusahaan')->with('success', 'Data Perusahaan berhasil ditambahkan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Company $company)
-    {
-        //
-    }
+    public function show(Company $company) {}
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Company $manage_perusahaan)
     {
         return view('admin.edit-perusahaan', [
@@ -64,11 +58,28 @@ class CompanyController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Company $manage_perusahaan)
     {
+        if (empty($request->company_name)) {
+            return redirect()->back()->with('error', 'Nama Perusahaan wajib diisi!');
+        }
+
+        if (empty($request->company_address)) {
+            return redirect()->back()->with('error', 'Alamat Perusahaan wajib diisi!');
+        }
+
+        if (empty($request->company_number)) {
+            return redirect()->back()->with('error', 'Nomor Telepon Perusahaan wajib diisi!');
+        }
+
+        $existingCompany = DB::select(
+            "SELECT * FROM companies WHERE company_name = ? AND id != ? LIMIT 1",
+            [$request->company_name, $manage_perusahaan->id]
+        );
+        if (!empty($existingCompany)) {
+            return redirect()->back()->with('error', 'Nama perusahaan dengan nama tersebut sudah ada!');
+        }
+
         $validatedData = $request->validate([
             'company_name' => 'required',
             'company_address' => 'required',
@@ -76,15 +87,12 @@ class CompanyController extends Controller
         ]);
 
         Company::where('id', $manage_perusahaan->id)->update($validatedData);
-        return redirect()->intended('/manage-perusahaan')->with('success', 'Data Berhasil Diubah');
+        return redirect()->intended('/manage-perusahaan')->with('success', 'Data Perusahaan Berhasil Diubah');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Company $manage_perusahaan)
     {
         Company::destroy($manage_perusahaan->id);
-        return redirect()->intended('/manage-perusahaan')->with('success', 'Data Berhasil Dihapus !');
+        return redirect()->intended('/manage-perusahaan')->with('success', 'Data Perusahaan Berhasil Dihapus !');
     }
 }

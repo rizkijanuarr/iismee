@@ -14,23 +14,17 @@ use Mockery\Matcher\Subset;
 
 class AssesmentAspectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $penilaian = WebSetting::where('name', '=', 'Periode Penilaian')->firstOrFail();
 
         return view('admin.aspek-penilaian', [
             'title' => 'Aspek Penilaian',
-            'matakuliah' => Subject::all(),
+            'matakuliah' => Subject::orderByDesc('created_at')->get(),
             'penilaian' => $penilaian
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $penilaian = WebSetting::where('name', '=', 'Periode Penilaian')->firstOrFail();
@@ -38,18 +32,28 @@ class AssesmentAspectController extends Controller
         if ($penilaian->is_enable == false) {
             return view('admin.add-aspek-penilaian', [
                 'title' => 'Tambahkan Aspek Penilaian',
-                'matakuliah' => Subject::all()
+                'matakuliah' => Subject::orderByDesc('created_at')->get()
             ]);
         } else {
             return view('errors.403');
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
+        if (empty($request->subject_id)) {
+            return redirect()->back()->with('error', 'Mata Kuliah wajib dipilih!');
+        }
+
+        if (empty($request->name)) {
+            return redirect()->back()->with('error', 'Nama Aspek Penilaian wajib diisi!');
+        }
+
+        if (empty($request->description)) {
+            return redirect()->back()->with('error', 'Deskripsi wajib diisi!');
+        }
+
         $validatedData = $request->validate([
             'name' => 'required',
             'subject_id' => 'required',
@@ -57,34 +61,34 @@ class AssesmentAspectController extends Controller
         ]);
 
         AssesmentAspect::create($validatedData);
-        return redirect()->intended('/aspek-penilaian')->with('success', 'Data Berhasil Ditambahkan !');
+        return redirect()->intended('/aspek-penilaian')->with('success', 'Data Aspek Penilaian Berhasil Ditambahkan !');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(AssesmentAspect $assesmentAspect)
-    {
-        //
-    }
+    public function show(AssesmentAspect $assesmentAspect) {}
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(AssesmentAspect $aspek_penilaian)
     {
         return view('admin.edit-aspek-penilaian', [
             'title' => 'Edit Aspek Penilaian',
-            'matakuliah' => Subject::all(),
+            'matakuliah' => Subject::orderByDesc('created_at')->get(),
             'aspek' => $aspek_penilaian
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, AssesmentAspect $aspek_penilaian)
     {
+        if (empty($request->name)) {
+            return redirect()->back()->with('error', 'Nama Aspek Penilaian wajib diisi!');
+        }
+
+        if (empty($request->subject_id)) {
+            return redirect()->back()->with('error', 'Mata Kuliah wajib dipilih!');
+        }
+
+        if (empty($request->description)) {
+            return redirect()->back()->with('error', 'Deskripsi wajib diisi!');
+        }
+
         $validatedData = $request->validate([
             'name' => 'required',
             'subject_id' => 'required',
@@ -92,12 +96,9 @@ class AssesmentAspectController extends Controller
         ]);
 
         AssesmentAspect::where('id', $aspek_penilaian->id)->update($validatedData);
-        return redirect()->intended('/aspek-penilaian')->with('success', 'Data Berhasil Diubah !');
+        return redirect()->intended('/aspek-penilaian')->with('success', 'Data Aspek Penilaian Berhasil Diubah !');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(AssesmentAspect $aspek_penilaian)
     {
         AssesmentAspect::destroy($aspek_penilaian->id);

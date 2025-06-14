@@ -11,12 +11,6 @@
             </a>
         </div>
     </div>
-    @if (session()->has('success'))
-        <div class="alert alert-success fw-bold alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close text-light" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
     <div class="col-12">
         <div class="card mb-4">
             <div class="card-header pb-0">
@@ -129,7 +123,7 @@
                                                 class="d-inline">
                                                 @method('delete')
                                                 @csrf
-                                                <button class="btn btn-danger font-weight-bold text-xs"
+                                                <button class="btn btn-danger bg-gradient-danger font-weight-bold text-xs"
                                                     data-toggle="tooltip" data-original-title="Hapus"
                                                     onclick="return confirm('Apakah anda yakin?')">
                                                     Hapus

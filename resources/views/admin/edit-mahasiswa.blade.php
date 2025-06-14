@@ -1,15 +1,6 @@
 @extends('layout.admin')
 
 @section('konten')
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
     <form action="{{ url('manage-mahasiswa/' . $mahasiswa->name) }}" method="POST">
         @method('put')
         @csrf
@@ -28,7 +19,7 @@
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control" name="email" id="email"
-                        value="{{ old('email', $mahasiswa->email) }}" disabled placeholder="budiutomo@gmailcom">
+                        value="{{ old('email', $mahasiswa->email) }}" placeholder="budiutomo@gmailcom">
                 </div>
                 <div class="mb-3">
                     <label for="class" class="form-label">Kelas</label>

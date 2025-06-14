@@ -9,9 +9,6 @@ use PDO;
 
 class AuthController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
 
@@ -39,60 +36,76 @@ class AuthController extends Controller
             'password' => ['required']
         ]);
 
-        $level = DB::table('users')->where('email', $inputan['email'])->value('level');
-        $aktif = DB::table('users')->where('email', $inputan['email'])->value('is_active');
-
-
-        if ($level == 'admin' && $aktif == true) {
-            if (Auth::attempt($inputan)) {
-                $request->session()->regenerate();
-                return redirect()->intended('/dashboard-admin');
-            }
-            return back()->with('errorLogin', 'Login Gagal !');
-        }
-        //  elseif ($level == 'user') {
-        //     if (Auth::attempt($inputan)) {
-        //         $request->session()->regenerate();
-        //         return redirect()->intended('/user');
-        //     }
-        //     return back()->with('errorLogin', 'Login Gagal !');
-        // } 
-        // elseif ($level == 'dosen') {
-        //     if (Auth::attempt($inputan)) {
-        //         $request->session()->regenerate();
-        //         return redirect()->intended('/dosen');
-        //     }
-        //     return back()->with('errorLogin', 'Login Gagal !');
-        // } 
-        elseif ($level == 'pembimbing' && $aktif == true) {
-            if (Auth::attempt($inputan)) {
-                $request->session()->regenerate();
-                return redirect()->intended('/dashboard-pembimbing');
-            }
-            return back()->with('errorLogin', 'Login Gagal !');
-        } elseif ($level == 'pembimbing industri' && $aktif == true) {
-            if (Auth::attempt($inputan)) {
-                $request->session()->regenerate();
-                return redirect()->intended('/dashboard-pembimbing-industri');
-            }
-            return back()->with('errorLogin', 'Login Gagal !');
-        } elseif ($level == 'mahasiswa' && $aktif == true) {
-            if (Auth::attempt($inputan)) {
-                $request->session()->regenerate();
-                return redirect()->intended('/mahasiswa');
-            }
-            return back()->with('errorLogin', 'Login Gagal !');
-        } else {
-            return back()->with('errorLogin', 'Login Gagal !');
+        // Cek apakah email terdaftar
+        $user = DB::table('users')->where('email', $inputan['email'])->first();
+        if (!$user) {
+            return back()->with('errorLogin', 'Email belum terdaftar!');
         }
 
-        // if (Auth::attempt($inputan)) {
-        //     $request->session()->regenerate();')
-        //     return redirect()->intended('/');
-        // }
+        $level = $user->level;
+        $aktif = $user->is_active;
 
-        return back()->with('errorLogin', 'Login Gagal !');
+        // Admin
+        if ($level == 'admin') {
+            if ($aktif == true) {
+                if (Auth::attempt($inputan)) {
+                    $request->session()->regenerate();
+                    return redirect()->intended('/dashboard-admin')->with('success', 'Berhasil login sebagai admin!');
+                } else {
+                    return back()->with('errorLogin', 'Password salah!');
+                }
+            } else {
+                return back()->with('errorLogin', 'Akun admin belum aktif!');
+            }
+        }
+
+        // Pembimbing
+        if ($level == 'pembimbing') {
+            if ($aktif == true) {
+                if (Auth::attempt($inputan)) {
+                    $request->session()->regenerate();
+                    return redirect()->intended('/dashboard-pembimbing')->with('success', 'Berhasil login sebagai pembimbing!');
+                } else {
+                    return back()->with('errorLogin', 'Password salah!');
+                }
+            } else {
+                return back()->with('errorLogin', 'Akun pembimbing belum aktif!');
+            }
+        }
+
+        // Pembimbing Industri
+        if ($level == 'pembimbing industri') {
+            if ($aktif == true) {
+                if (Auth::attempt($inputan)) {
+                    $request->session()->regenerate();
+                    return redirect()->intended('/dashboard-pembimbing-industri')->with('success', 'Berhasil login sebagai pembimbing industri!');
+                } else {
+                    return back()->with('errorLogin', 'Password salah!');
+                }
+            } else {
+                return back()->with('errorLogin', 'Akun pembimbing industri belum aktif!');
+            }
+        }
+
+        // Mahasiswa
+        if ($level == 'mahasiswa') {
+            if ($aktif == true) {
+                if (Auth::attempt($inputan)) {
+                    $request->session()->regenerate();
+                    return redirect()->intended('/mahasiswa')->with('success', 'Berhasil login sebagai mahasiswa!');
+                } else {
+                    return back()->with('errorLogin', 'Password salah!');
+                }
+            } else {
+                return back()->with('errorLogin', 'Akun mahasiswa belum aktif!');
+            }
+        }
+
+        // Jika level tidak dikenali
+        return back()->with('errorLogin', 'Login gagal, role tidak dikenali!');
     }
+
+
 
     public function logout(Request $request)
     {
@@ -105,51 +118,15 @@ class AuthController extends Controller
         return redirect('/');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    public function create() {}
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+    public function store(Request $request) {}
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+    public function show(string $id) {}
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+    public function edit(string $id) {}
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+    public function update(Request $request, string $id) {}
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    public function destroy(string $id) {}
 }

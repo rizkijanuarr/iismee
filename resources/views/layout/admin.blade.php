@@ -28,6 +28,9 @@
     <!-- CSS Files -->
     <link id="pagestyle" href="{{ URL::asset('/css/soft-ui-dashboard.css') }}" rel="stylesheet" />
 
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.min.css" rel="stylesheet">
+
     <style>
         trix-toolbar [data-trix-button-group="file-tools"] {
             display: none;
@@ -58,6 +61,9 @@
     <script src="{{ URL::asset('/js/plugins/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ URL::asset('/js/plugins/smooth-scrollbar.min.js') }}"></script>
 
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.all.min.js"></script>
+
     <script>
         var win = navigator.platform.indexOf('Win') > -1;
         if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -77,6 +83,73 @@
             $(target).toggle();
         });
     </script>
+
+    <!-- SweetAlert2 Success Notification -->
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                showConfirmButton: true,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#28a745',
+                timer: 3000,
+                timerProgressBar: true
+            });
+        </script>
+    @endif
+
+    <!-- SweetAlert2 Error Notification -->
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: '{{ session('error') }}',
+                showConfirmButton: true,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#dc3545'
+            });
+        </script>
+    @endif
+
+    <!-- SweetAlert2 Validation Error -->
+    @if ($errors->any())
+        <script>
+            let errorMessages = '';
+            @foreach ($errors->all() as $error)
+                errorMessages += '• {{ $error }}\n';
+            @endforeach
+
+            Swal.fire({
+                icon: 'warning',
+                title: 'Periksa Form Anda!',
+                text: errorMessages,
+                showConfirmButton: true,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#ffc107',
+                customClass: {
+                    content: 'text-left'
+                }
+            });
+        </script>
+    @endif
+
+    <!-- SweetAlert2 Info Notification -->
+    @if (session('info'))
+        <script>
+            Swal.fire({
+                icon: 'info',
+                title: 'Informasi',
+                text: '{{ session('info') }}',
+                showConfirmButton: true,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#17a2b8'
+            });
+        </script>
+    @endif
+
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->

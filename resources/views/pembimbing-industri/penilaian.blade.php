@@ -95,7 +95,6 @@
                                             href="{{ url('logbook-shows/' . $item->registration_number) }}">Lihat
                                             Logbook</a>
                                     </li>
-                                    {{-- <li><a class="dropdown-item" href="#">Lihat Laporan</a></li> --}}
                                     @if ($item->document_path)
                                         <li><a class="dropdown-item" href="{{ '/storage/' . $item->document_path }}"
                                                 target="_blank">Lihat Surat Balasan</a></li>

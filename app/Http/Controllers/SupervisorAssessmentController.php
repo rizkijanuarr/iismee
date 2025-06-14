@@ -2,19 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AssesmentAspect;
 use App\Models\Assessment;
-use App\Models\Document;
 use App\Models\Internship;
 use App\Models\Lecturer;
 use App\Models\Student;
 use App\Models\Subject;
-use App\Models\User;
 use App\Models\WebSetting;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class SupervisorAssessmentController extends Controller
 {
@@ -47,7 +42,6 @@ class SupervisorAssessmentController extends Controller
     public function cetakPenilaian()
     {
         $dosen = Lecturer::where('email', '=', auth()->user()->email)->firstOrFail();
-        // dd($dosen->id);
 
         $notEvaluated = Student::selectRaw("students.*, '-' AS matakuliah1, '-' AS matakuliah2, '-' AS matakuliah3")
             ->join('internships', 'internships.student_id', '=', 'students.id')
@@ -56,7 +50,6 @@ class SupervisorAssessmentController extends Controller
             ->groupBy('students.id')
             ->get();
 
-        // dd($notEvaluated);
 
         $data = Student::selectRaw("students.name, students.registration_number, 
         COALESCE(
@@ -148,11 +141,6 @@ class SupervisorAssessmentController extends Controller
     {
 
         $mhs = Student::where('registration_number', '=', $registration_number)->firstOrFail();
-        // $subjects = Subject::with(['assessment' => function ($query) use ($mhs) {
-        //     $query->where('student_id', '=', 1);
-        // }, 'assessment.assesmentAspect'])->whereIn('id', function ($query) {
-        //     $query->select('subject_id')->from('assesment_aspects');
-        // })->get();
 
         $subjects = Subject::with(['assessment' => function ($query) use ($mhs) {
             $query->where('student_id', $mhs->id);
@@ -175,15 +163,51 @@ class SupervisorAssessmentController extends Controller
 
     public function store(Request $request)
     {
+        if (empty($request->lecturer_id)) {
+            return redirect()->back()->with('error', 'Dosen pembimbing wajib dipilih!');
+        }
+
+        if (empty($request->student_id)) {
+            return redirect()->back()->with('error', 'Mahasiswa wajib dipilih!');
+        }
+
+        if (empty($request->subject_id) || !is_array($request->subject_id) || count($request->subject_id) < 1) {
+            return redirect()->back()->with('error', 'Mata Kuliah wajib dipilih!');
+        }
+
+        if (empty($request->assesment_aspect_id) || !is_array($request->assesment_aspect_id) || count($request->assesment_aspect_id) < 1) {
+            return redirect()->back()->with('error', 'Aspek Penilaian wajib dipilih!');
+        }
+
+        if (empty($request->score) || !is_array($request->score) || count($request->score) < 1) {
+            return redirect()->back()->with('error', 'Skor penilaian wajib diisi!');
+        }
+
+        // Validasi bahwa jumlah array sama
+        if (
+            count($request->subject_id) != count($request->assesment_aspect_id) ||
+            count($request->subject_id) != count($request->score)
+        ) {
+            return redirect()->back()->with('error', 'Jumlah data mata kuliah, aspek penilaian, dan skor harus sama!');
+        }
+
+        // Validasi setiap skor adalah angka dan dalam rentang yang valid
+        foreach ($request->score as $score) {
+            if (empty($score) || !is_numeric($score)) {
+                return redirect()->back()->with('error', 'Setiap skor harus berupa angka!');
+            }
+            if ($score < 0 || $score > 100) {
+                return redirect()->back()->with('error', 'Skor harus berada dalam rentang 0-100!');
+            }
+        }
+
         $validatedData = $request->validate([
             'lecturer_id' => 'required',
             'student_id' => 'required',
-            'subject_id' => 'required',
-            'assesment_aspect_id' => 'required',
-            'score' => 'required'
+            'subject_id' => 'required|array',
+            'assesment_aspect_id' => 'required|array',
+            'score' => 'required|array'
         ]);
-
-        // dd($validatedData['subject_id']);
 
         foreach ($validatedData['score'] as $score => $value) {
             $item = new Assessment();
@@ -195,18 +219,80 @@ class SupervisorAssessmentController extends Controller
             $item->save();
         }
 
-        return redirect()->intended('/penilaian');
+        return redirect()->intended('/penilaian')->with('success', 'Data penilaian berhasil disimpan!');
     }
 
     public function update(Request $request)
     {
-        $data = $request->all();
-        foreach ($data['score'] as $key => $score) {
-            $assessment = Assessment::find($data['assessment_id'][$key]);
-            if ($assessment->student_id == $data['student_id'] && $assessment->subject_id == $data['subject_id'][$key] && $assessment->assesment_aspect_id == $data['assesment_aspect_id'][$key]) {
-                $assessment->update(['score' => $score]);
+        if (empty($request->student_id)) {
+            return redirect()->back()->with('error', 'Mahasiswa wajib dipilih!');
+        }
+
+        if (empty($request->assessment_id) || !is_array($request->assessment_id) || count($request->assessment_id) < 1) {
+            return redirect()->back()->with('error', 'ID Assessment wajib ada!');
+        }
+
+        if (empty($request->subject_id) || !is_array($request->subject_id) || count($request->subject_id) < 1) {
+            return redirect()->back()->with('error', 'Mata Kuliah wajib dipilih!');
+        }
+
+        if (empty($request->assesment_aspect_id) || !is_array($request->assesment_aspect_id) || count($request->assesment_aspect_id) < 1) {
+            return redirect()->back()->with('error', 'Aspek Penilaian wajib dipilih!');
+        }
+
+        if (empty($request->score) || !is_array($request->score) || count($request->score) < 1) {
+            return redirect()->back()->with('error', 'Skor penilaian wajib diisi!');
+        }
+
+        // Validasi bahwa jumlah array sama
+        if (
+            count($request->assessment_id) != count($request->subject_id) ||
+            count($request->assessment_id) != count($request->assesment_aspect_id) ||
+            count($request->assessment_id) != count($request->score)
+        ) {
+            return redirect()->back()->with('error', 'Jumlah data assessment ID, mata kuliah, aspek penilaian, dan skor harus sama!');
+        }
+
+        // Validasi setiap skor adalah angka dan dalam rentang yang valid
+        foreach ($request->score as $score) {
+            if (empty($score) || !is_numeric($score)) {
+                return redirect()->back()->with('error', 'Setiap skor harus berupa angka!');
+            }
+            if ($score < 0 || $score > 100) {
+                return redirect()->back()->with('error', 'Skor harus berada dalam rentang 0-100!');
             }
         }
-        return redirect('/penilaian');
+
+        // Validasi setiap assessment_id adalah angka
+        foreach ($request->assessment_id as $assessmentId) {
+            if (empty($assessmentId) || !is_numeric($assessmentId)) {
+                return redirect()->back()->with('error', 'ID Assessment harus berupa angka!');
+            }
+        }
+
+        $data = $request->all();
+
+        foreach ($data['score'] as $key => $score) {
+            // Cek apakah assessment dengan ID tersebut ada
+            $assessment = Assessment::find($data['assessment_id'][$key]);
+
+            if (!$assessment) {
+                return redirect()->back()->with('error', 'Data assessment dengan ID ' . $data['assessment_id'][$key] . ' tidak ditemukan!');
+            }
+
+            // Validasi apakah data sesuai dengan assessment yang akan diupdate
+            if (
+                $assessment->student_id == $data['student_id'] &&
+                $assessment->subject_id == $data['subject_id'][$key] &&
+                $assessment->assesment_aspect_id == $data['assesment_aspect_id'][$key]
+            ) {
+
+                $assessment->update(['score' => $score]);
+            } else {
+                return redirect()->back()->with('error', 'Data tidak konsisten untuk assessment ID ' . $data['assessment_id'][$key] . '!');
+            }
+        }
+
+        return redirect('/penilaian')->with('success', 'Data penilaian berhasil diperbarui!');
     }
 }

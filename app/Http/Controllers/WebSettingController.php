@@ -8,13 +8,7 @@ use App\Models\WebSetting;
 
 class WebSettingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
+    public function index() {}
 
     public function setRegistrasiPembimbingIndustri()
     {
@@ -54,51 +48,15 @@ class WebSettingController extends Controller
         return redirect()->intended('/manage-matakuliah');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    public function create() {}
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreWebSettingRequest $request)
-    {
-        //
-    }
+    public function store(StoreWebSettingRequest $request) {}
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(WebSetting $webSetting)
-    {
-        //
-    }
+    public function show(WebSetting $webSetting) {}
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(WebSetting $webSetting)
-    {
-        //
-    }
+    public function edit(WebSetting $webSetting) {}
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateWebSettingRequest $request, WebSetting $webSetting)
-    {
-        //
-    }
+    public function update(UpdateWebSettingRequest $request, WebSetting $webSetting) {}
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(WebSetting $webSetting)
-    {
-        //
-    }
+    public function destroy(WebSetting $webSetting) {}
 }

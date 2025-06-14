@@ -105,7 +105,7 @@ Route::group(['middleware' => ['auth', 'ceklevel:mahasiswa']], function () {
     Route::get('absensi', [AttendanceController::class, 'index']);
     Route::post('absensi', [AttendanceController::class, 'store']);
     Route::put('absensi', [AttendanceController::class, 'update']);
-    Route::get('profile-user', [ProfileController::class, 'indexUser']);
+    Route::get('profile-user', [ProfileController::class, 'indexUser'])->name('profile-user');
     Route::put('gantiFoto', [ProfileController::class, 'gantiFoto']);
     Route::get('print-logbook', [LogbookController::class, 'printLogbook']);
 });
@@ -119,7 +119,7 @@ Route::group(['middleware' => ['auth']], function () {
 // auth Controller
 Route::get('login', [AuthController::class, 'index'])->name('login')->middleware('guest');
 Route::post('login', [AuthController::class, 'login']);
-Route::post('logout', [AuthController::class, 'logout']);
+Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
 // Register Pembimbing Route
 Route::get('daftar-pembimbing-industri', [IndustrialAdviserRegisterController::class, 'index']);

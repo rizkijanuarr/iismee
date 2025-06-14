@@ -9,9 +9,6 @@ use Illuminate\Http\Request;
 
 class AdminSupervisorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return view('admin.pembimbing', [
@@ -20,9 +17,6 @@ class AdminSupervisorController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $dosen = Lecturer::whereNotIn('id', function ($query) {
@@ -37,9 +31,6 @@ class AdminSupervisorController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validatedData = $request->validate(['lecturer_id' => 'required']);
@@ -52,33 +43,12 @@ class AdminSupervisorController extends Controller
         return redirect()->intended('/manage-dpl/create')->with('success', 'Data Berhasil Ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Supervisor $supervisor)
-    {
-        //
-    }
+    public function show(Supervisor $supervisor) {}
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Supervisor $supervisor)
-    {
-        //
-    }
+    public function edit(Supervisor $supervisor) {}
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Supervisor $supervisor)
-    {
-        //
-    }
+    public function update(Request $request, Supervisor $supervisor) {}
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Supervisor $manage_dpl)
     {
         $email = $manage_dpl->lecturer['email'];

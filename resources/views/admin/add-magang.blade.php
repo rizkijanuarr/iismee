@@ -1,21 +1,6 @@
 @extends('layout.admin')
 
 @section('konten')
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-    @if (session()->has('success'))
-        <div class="alert alert-success fw-bold alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close text-light" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
     <form action="{{ url('manage-magang') }}" method="POST">
         @csrf
         <div class="row">

@@ -10,9 +10,6 @@ use Illuminate\Http\Request;
 
 class IndustrialAdviserRegisterController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $registrasi = WebSetting::where('name', '=', 'Registrasi Pembimbing Industri')->firstOrFail();
@@ -27,17 +24,8 @@ class IndustrialAdviserRegisterController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    public function create() {}
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -64,35 +52,11 @@ class IndustrialAdviserRegisterController extends Controller
         return redirect()->intended('/waiting');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(IndustrialAdviser $industrialAdviser)
-    {
-        //
-    }
+    public function show(IndustrialAdviser $industrialAdviser) {}
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(IndustrialAdviser $industrialAdviser)
-    {
-        //
-    }
+    public function edit(IndustrialAdviser $industrialAdviser) {}
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, IndustrialAdviser $industrialAdviser)
-    {
-        //
-    }
+    public function update(Request $request, IndustrialAdviser $industrialAdviser) {}
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(IndustrialAdviser $industrialAdviser)
-    {
-        //
-    }
+    public function destroy(IndustrialAdviser $industrialAdviser) {}
 }

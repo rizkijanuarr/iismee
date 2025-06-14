@@ -2,70 +2,69 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Lecturer;
 use App\Models\Subject;
+use App\Models\Lecturer;
 use App\Models\WebSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminSubjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $penilaian = WebSetting::where('name', '=', 'Periode Penilaian')->firstOrFail();
 
         return view('admin.matakuliah', [
             'title' => 'Mata Kuliah',
-            'data' => Subject::all(),
+            'data' => Subject::orderByDesc('created_at')->get(),
             'penilaian' => $penilaian
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $penilaian = WebSetting::where('name', '=', 'Periode Penilaian')->firstOrFail();
         if ($penilaian->is_enable == false) {
             return view('admin.add-matakuliah', [
                 'title' => 'Tambahkan Mata Kuliah',
-                'dosen' => Lecturer::all()
+                'dosen' => Lecturer::orderByDesc('created_at')->get()
             ]);
         } else {
             return view('errors.403');
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        if (empty($request->subject_name)) {
+            return redirect()->back()->with('error', 'Nama Mata Kuliah wajib diisi!');
+        }
+
+        if (empty($request->lecturer_id)) {
+            return redirect()->back()->with('error', 'Dosen Pengajar wajib dipilih!');
+        }
+
+        if (empty($request->sks)) {
+            return redirect()->back()->with('error', 'SKS wajib diisi!');
+        }
+
+        if (empty($request->max_score)) {
+            return redirect()->back()->with('error', 'Skor Maksimal wajib diisi!');
+        }
+
         $validatedData = $request->validate([
             'subject_name' => 'required',
             'lecturer_id' => 'required',
-            'sks' => 'required',
-            'max_score' => 'required'
+            'sks' => 'required|numeric',
+            'max_score' => 'required|numeric'
         ]);
 
         Subject::create($validatedData);
-        return redirect()->intended('/manage-matakuliah')->with('success', 'Data Berhasil Ditambahkan !');
+        return redirect()->intended('/manage-matakuliah')->with('success', 'Data Mata Kuliah berhasil ditambahkan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Subject $subject)
-    {
-        //
-    }
+    public function show(Subject $subject) {}
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Subject $manage_matakuliah)
     {
         return view('admin.edit-matakuliah', [
@@ -75,25 +74,54 @@ class AdminSubjectController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Subject $manage_matakuliah)
     {
-        $validatedData = $request->validate([
-            'subject_name' => 'required',
-            'lecturer_id' => 'required',
-            'sks' => 'required',
-            'max_score' => 'required'
-        ]);
+        if (empty($request->subject_name)) {
+            return redirect()->back()->with('error', 'Nama Mata Kuliah wajib diisi!');
+        }
 
-        Subject::where('id', $manage_matakuliah->id)->update($validatedData);
-        return redirect()->intended('/manage-matakuliah')->with('success', 'Data Berhasil Diubah !');
+        if (empty($request->lecturer_id) || $request->lecturer_id == 'Pilih Dosen Pengajar') {
+            return redirect()->back()->with('error', 'Dosen Pengajar wajib dipilih!');
+        }
+
+        if (empty($request->sks)) {
+            return redirect()->back()->with('error', 'SKS wajib diisi!');
+        }
+
+        if (!is_numeric($request->sks) || $request->sks <= 0) {
+            return redirect()->back()->with('error', 'SKS harus berupa angka positif!');
+        }
+
+        if (empty($request->max_score)) {
+            return redirect()->back()->with('error', 'Skor Maksimal wajib diisi!');
+        }
+
+        if (!is_numeric($request->max_score) || $request->max_score <= 0) {
+            return redirect()->back()->with('error', 'Skor Maksimal harus berupa angka positif!');
+        }
+
+        $existingSubject = DB::select(
+            "SELECT * FROM subjects WHERE subject_name = ? AND id != ? LIMIT 1",
+            [$request->subject_name, $manage_matakuliah->id]
+        );
+        if (!empty($existingSubject)) {
+            return redirect()->back()->with('error', 'Mata Kuliah dengan nama tersebut sudah ada!');
+        }
+
+        try {
+            Subject::where('id', $manage_matakuliah->id)->update([
+                'subject_name' => $request->subject_name,
+                'lecturer_id' => $request->lecturer_id,
+                'sks' => $request->sks,
+                'max_score' => $request->max_score
+            ]);
+
+            return redirect()->intended('/manage-matakuliah')->with('success', 'Data Mata Kuliah berhasil diubah!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengubah data!');
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Subject $manage_matakuliah)
     {
         Subject::destroy($manage_matakuliah->id);

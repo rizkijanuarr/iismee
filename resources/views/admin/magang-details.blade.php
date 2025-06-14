@@ -110,8 +110,9 @@
                                         <form action="./{{ $data->id }}" method="post" class="d-inline">
                                             @method('delete')
                                             @csrf
-                                            <button class="btn btn-danger font-weight-bold text-xs" data-toggle="tooltip"
-                                                data-original-title="Hapus" onclick="return confirm('Apakah anda yakin?')">
+                                            <button class="btn btn-danger bg-gradient-danger font-weight-bold text-xs"
+                                                data-toggle="tooltip" data-original-title="Hapus"
+                                                onclick="return confirm('Apakah anda yakin?')">
                                                 Hapus
                                             </button>
                                         </form>

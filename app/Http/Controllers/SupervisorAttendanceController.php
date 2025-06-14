@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class SupervisorAttendanceController extends Controller
 {
-    //
 
     public function printAbsensi($registration_number, Request $request)
     {

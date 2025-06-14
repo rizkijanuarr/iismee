@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Internship;
 use App\Models\Lecturer;
-use Illuminate\Http\Request;
 
 class SupervisorDashboardController extends Controller
 {

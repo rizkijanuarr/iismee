@@ -1,15 +1,6 @@
 @extends('layout.admin')
 
 @section('konten')
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
     <form action="{{ url('manage-pembimbing-industri/' . $pembimbingIndustri->id) }}" method="POST">
         @method('put')
         @csrf

@@ -1,293 +1,224 @@
 @extends('layout.user')
 
 @section('konten')
-    <div class="container py-5" style="margin-top: 50px">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-20">
 
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0">Informasi Logbook</h5>
-            </div>
-            <div class="card-body">
-                <div class="row g-3">
-                    @php
-                        $fields = [
-                            'NIM' => $data->registration_number ?? 'Belum ada NIM',
-                            'Nama' => $data->name ?? 'Belum ada Nama',
-                            'Kelas' => $data->class ?? 'Belum ada Kelas',
-                            'Perusahaan' => $data->company->company_name ?? 'Belum ada Perusahaan',
-                            'Divisi' => $data->division ?? 'Belum ada Divisi',
-                            'Tipe Magang' => $data->internship_type ?? 'Belum ada Tipe Magang',
-                            'Tgl. Mulai' => $data->date_start ?? 'Belum ada Tanggal Mulai',
-                            'Tgl. Selesai' => $data->date_end ?? 'Belum ada Tanggal Selesai',
-                            'Pembimbing' => $data->internship->lecturer->name ?? 'Belum ada Pembimbing',
-                        ];
-                    @endphp
+        {{-- SECTION INFORMASI LOGBOOK --}}
+        <div class="bg-white shadow-2xl hover:shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-shadow rounded-2xl p-6 mb-4">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">📋 Informasi Logbook</h2>
 
-                    @foreach ($fields as $label => $value)
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">{{ $label }}</label>
-                            <input type="text" class="form-control" value="{{ $value }}" readonly>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @php
+                    $fields = [
+                        'NIM' => $data->registration_number ?? 'Belum ada NIM',
+                        'Nama' => $data->name ?? 'Belum ada Nama',
+                        'Kelas' => $data->class ?? 'Belum ada Kelas',
+                        'Perusahaan' => $data->company->company_name ?? 'Belum ada Perusahaan',
+                        'Divisi' => $data->division ?? 'Belum ada Divisi',
+                        'Tipe Magang' => $data->internship_type ?? 'Belum ada Tipe Magang',
+                        'Tgl. Mulai' => $data->date_start ?? 'Belum ada Tanggal Mulai',
+                        'Tgl. Selesai' => $data->date_end ?? 'Belum ada Tanggal Selesai',
+                        'Pembimbing' => $data->internship->lecturer->name ?? 'Belum ada Pembimbing',
+                    ];
+                @endphp
 
-        <div class="card mb-4">
-            <div class="card-header">
-                <h6>Aksi Logbook</h6>
-            </div>
-            <div class="card-body px-0 pt-0 pb-2">
-                <div class="p-4">
-                    <div class="mb-3">
-                        <a name="" id="" class="btn btn-success text-decoration-none me-2"
-                            href="{{ url('logbook/create') }}" role="button"><i class="fas fa-plus"></i> Tambah Logbook</a>
-                        <a name="" id="" class="btn btn-info text-decoration-none me-2"
-                            href="{{ url('print-logbook') }}" target="_blank" role="button"><i class="fas fa-file-pdf"></i>
-                            Cetak Logbook</a>
-                        @if ($suratMagang != null)
-                            <a name="" id="" class="btn btn-primary text-decoration-none me-2"
-                                target="_blank" href="{{ '/storage/' . $suratMagang->document_path }}" role="button">Lihat
-                                Surat
-                                Persetujuan</a>
-                        @endif
-                        @if ($cekAbsensiDatang == true)
-                            <a name="" id="" class="btn btn-warning text-decoration-none"
-                                href="{{ url('absensi') }}" role="button"><i class="fas fa-clipboard-check"></i>
-                                Absensi Pulang</a>
-                        @endif
+                @foreach ($fields as $label => $value)
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">{{ $label }}</label>
+                        <input type="text" value="{{ $value }}" readonly
+                            class="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-200 text-gray-800 focus:outline-none">
                     </div>
-
-                    <form action="{{ url('upload-dokumen') }}" method="post" enctype="multipart/form-data" id="uploadSuratForm">
-                        @csrf
-                        <div class="input-group mb-3">
-                            <input class="form-control d-inline" type="hidden" value="{{ $data->id }}"
-                                name="student_id">
-                            <input class="form-control d-inline" type="hidden" value="Surat Persetujuan Magang"
-                                name="type">
-                            <label class="input-group-text" for="formFile">Surat Persetujuan Magang</label>
-                            <input class="form-control d-inline" type="file" id="formFile" name="document_path" accept=".pdf,.png,.jpg,.jpeg,.svg">
-                            <button type="submit" class="btn btn-primary d-inline-block ms-3">Submit</button>
-                        </div>
-                        <small class="text-muted">Silakan upload surat persetujuan magang dari perusahaan</small>
-                    </form>
-                </div>
+                @endforeach
             </div>
         </div>
 
-        <div class="card mb-4">
-            <div class="card-header">
-                <h6>Kegiatan</h6>
+        {{-- SECTION SPTJM --}}
+        <div class="bg-white shadow-2xl hover:shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-shadow rounded-2xl p-6 mb-4">
+
+
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 border-b pb-2">
+                <h2 class="text-xl font-semibold text-gray-800">Surat Persetujuan Magang (SPTJM)</h2>
+                @php
+                    $sertifikat = \App\Models\Document::where('student_id', $data->id)
+                        ->where('type', 'Sertifikat Magang')
+                        ->first();
+                @endphp
+
+                @if ($suratMagang != null)
+                    <a href="{{ '/storage/' . $suratMagang->document_path }}" target="_blank"
+                        class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-md transition hover:no-underline hover:text-white">
+                        <i class="fas fa-eye"></i> Lihat Surat SPTJM
+                    </a>
+                @endif
             </div>
-            <div class="card-body px-0 pt-0 pb-2">
-                <div class="table-responsive table-bordered border-dark p-3">
-                    <table class="table align-items-center mb-0" id="datatable">
-                        <thead>
-                            <tr>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No.</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama
-                                    Kegiatan</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal
-                                    Kegiatan
-                                </th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Bukti
-                                    Kegiatan
-                                </th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Masukan
-                                    Pembimbing
-                                </th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if ($logbook->count() > 0)
-                                @foreach ($logbook as $key => $data)
-                                    <tr>
-                                        <td>
-                                            <div class="my-auto">
-                                                <h6 class="mb-0 text-sm">
-                                                    {{ $key + 1 }}
-                                                </h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="my-auto">
-                                                <h6 class="mb-0 text-sm">
-                                                    {{ $data->activity_name }}
-                                                </h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="my-auto">
-                                                <h6 class="mb-0 text-sm">
-                                                    {{ $data->activity_date }}
-                                                </h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="my-auto">
-                                                <h6 class="mb-0 text-sm">
-                                                    <img src="{{ URL::asset('storage/' . $data->img) }}" alt=""
-                                                        style="height: 100px">
-                                                </h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="my-auto">
-                                                <h6 class="mb-0 text-sm">
-                                                    -
-                                                </h6>
-                                            </div>
-                                        </td>
-                                        <td class="align-middle">
-                                            <a href="logbook/{{ $data->id }}/edit"
-                                                class="btn btn-warning font-weight-bold text-xs"
-                                                data-original-title="Edit user" id="edit">
-                                                Edit
-                                            </a>
-                                            <button class="btn btn-danger font-weight-bold text-xs delete-logbook"
-                                                data-id="{{ $data->id }}"
-                                                data-original-title="Hapus">
-                                                Hapus
-                                            </button>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
+
+            <p class="text-sm text-gray-700 bg-red-100 border border-red-200 rounded-lg p-3 mb-4">
+                <strong>Perhatian:</strong> Selama periode Magang, mahasiswa <span class="font-semibold">diwajibkan
+                    melampirkan Surat Pernyataan Tanggung Jawab Mutlak (SPTJM)</span> sebagai salah satu syarat
+                administratif.
+            </p>
+
+            <form action="{{ url('upload-dokumen') }}" method="POST" enctype="multipart/form-data" id="uploadSuratForm"
+                class="flex flex-col md:flex-row items-stretch gap-3">
+                @csrf
+                <input type="hidden" name="student_id" value="{{ $data->id }}">
+                <input type="hidden" name="type" value="Surat Persetujuan Magang">
+
+                <input type="file" name="document_path" accept=".pdf,.png,.jpg,.jpeg,.svg"
+                    class="flex-1 text-sm text-gray-600 border border-gray-200 rounded-lg bg-gray-100 file:mr-4 file:py-2 file:px-4
+                        file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-white file:text-gray-700
+                        hover:file:bg-gray-50 cursor-pointer transition"
+                    required>
+
+                <button type="submit"
+                    class="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow transition">
+                    Submit
+                </button>
+            </form>
+
+            <p class="text-xs text-gray-400 mt-2">PDF — max 2MB</p>
+        </div>
+
+        {{-- SECTION KEGIATAN --}}
+        <div class="bg-white shadow-2xl hover:shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-shadow rounded-2xl p-6 mb-4">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 border-b pb-2">
+                <h2 class="text-xl font-semibold text-gray-800 ">📌 Kegiatan</h2>
+
+                <div class="flex flex-wrap gap-2">
+                    <a href="{{ $hasLogbookToday ? 'javascript:void(0)' : url('logbook/create') }}"
+                        class="inline-flex items-center gap-2 
+                        {{ $hasLogbookToday ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700' }} 
+                         text-white font-medium px-4 py-2 rounded-md transition hover:no-underline hover:text-white"
+                        {{ $hasLogbookToday ? 'onclick="showAlreadyExistsAlert()"' : '' }}>
+                        <i class="fas fa-plus"></i>
+                        {{ $hasLogbookToday ? 'Sudah Ada Logbook Hari Ini' : 'Tambah Logbook' }}
+                    </a>
+
+                    <a href="{{ url('print-logbook') }}" target="_blank"
+                        class="inline-flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white font-medium px-4 py-2 rounded-md transition hover:no-underline hover:text-white">
+                        <i class="fas fa-file-pdf"></i> Cetak Logbook
+                    </a>
+
+                    @if ($cekAbsensiDatang == true)
+                        <a href="{{ url('absensi') }}"
+                            class="inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white font-medium px-4 py-2 rounded-md transition hover:no-underline hover:text-white">
+                            <i class="fas fa-clipboard-check "></i> Absensi Pulang
+                        </a>
+                    @endif
+                </div>
+            </div>
+            <p class="text-sm text-black-700 bg-red-100 border border-red-200 rounded-lg p-3 mb-4">
+                <strong>💡 Perhatian:</strong> Satu hari untuk satu logbook. Edit/hapus jika salah. Dan jangan lupa klik <!>
+                    <strong>Absensi Pulang!</strong> Good luck for today!<u />
+            </p>
+
+
+
+
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm text-left text-gray-700 border border-gray-200 rounded-lg">
+                    <thead class="bg-gray-100 text-xs uppercase text-gray-500">
+                        <tr>
+                            <th class="px-4 py-3">No.</th>
+                            <th class="px-4 py-3">Nama Kegiatan</th>
+                            <th class="px-4 py-3">Tanggal Kegiatan</th>
+                            <th class="px-4 py-3">Bukti Kegiatan</th>
+                            <th class="px-4 py-3">Masukan Pembimbing</th>
+                            <th class="px-4 py-3">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        @if ($logbook->count() > 0)
+                            @foreach ($logbook as $key => $data)
                                 <tr>
-                                    <td colspan="6" class="text-center">
-                                        <div class="alert alert-danger m-0">
-                                            Belum ada data.
-                                        </div>
+                                    <td class="px-4 py-3">{{ $key + 1 }}</td>
+                                    <td class="px-4 py-3">{{ $data->activity_name }}</td>
+                                    <td class="px-4 py-3">{{ $data->activity_date }}</td>
+                                    <td class="px-4 py-3">
+                                        <img src="{{ asset('storage/' . $data->img) }}" alt="Bukti Kegiatan"
+                                            class="h-24 object-cover rounded-md border">
+                                    </td>
+                                    <td class="px-4 py-3 text-gray-500">-</td>
+                                    <td class="px-4 py-3 space-x-2">
+                                        <a href="{{ url('logbook/' . $data->id . '/edit') }}"
+                                            class="inline-block hover:text-white hover:no-underline px-4 py-2 text-xs font-semibold text-white bg-yellow-500 rounded hover:bg-yellow-600">
+                                            Edit
+                                        </a>
+                                        <button
+                                            class="inline-block hover:text-white hover:no-underline px-4 py-2 text-xs font-semibold text-white bg-red-500 rounded hover:bg-red-600 delete-logbook"
+                                            data-id="{{ $data->id }}">
+                                            Hapus
+                                        </button>
                                     </td>
                                 </tr>
-                            @endif
-                        </tbody>
-                    </table>
-                </div>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="6" class="px-4 py-6 text-center text-sm font-bold text-red-600">
+                                    Belum ada data logbook yang tersedia.
+                                </td>
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
             </div>
         </div>
+    </div>
 
-    </div> <!-- end of container -->
-
-    <!-- SweetAlert2 CDN -->
+    {{-- Load jQuery dan SweetAlert --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        // Handle delete button clicks
-        document.querySelectorAll('.delete-logbook').forEach(button => {
-            button.addEventListener('click', function() {
-                const logbookId = this.getAttribute('data-id');
+        $(document).ready(function() {
+            $('.delete-logbook').click(function(e) {
+                e.preventDefault();
+                const id = $(this).data('id');
+
                 Swal.fire({
-                    title: 'Apakah anda yakin?',
-                    text: "Data yang dihapus tidak dapat dikembalikan!",
+                    title: 'Hapus Logbook?',
+                    text: "Data akan dihapus permanen!",
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, hapus!',
-                    cancelButtonText: 'Batal'
+                    confirmButtonColor: '#ef4444',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: 'Ya, Hapus!',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        fetch(`/logbook/${logbookId}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        Swal.fire({
+                            title: 'Menghapus data',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
                             }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Berhasil!',
-                                    text: data.message,
-                                    confirmButtonColor: '#3085d6',
-                                    confirmButtonText: 'OK'
-                                }).then(() => {
-                                    window.location.reload();
-                                });
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Oops...',
-                                    text: data.message,
-                                    confirmButtonColor: '#3085d6',
-                                    confirmButtonText: 'OK'
-                                });
-                            }
-                        })
-                        .catch(error => {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'Terjadi kesalahan saat menghapus logbook!',
-                                confirmButtonColor: '#3085d6',
-                                confirmButtonText: 'OK'
-                            });
                         });
+                        setTimeout(() => {
+                            const form = $(`<form action="/logbook/${id}" method="POST">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <input type="hidden" name="_method" value="DELETE">
+                            </form>`);
+
+                            $('body').append(form);
+                            form.submit();
+                        }, 2000);
                     }
                 });
             });
         });
 
-        // Handle upload surat persetujuan magang
-        document.getElementById('uploadSuratForm')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => { throw err; });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil!',
-                        text: data.message,
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        window.location.reload();
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: data.message,
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            })
-            .catch(error => {
-                let errorMsg = '';
-                if (error.errors) {
-                    for (let key in error.errors) {
-                        errorMsg += error.errors[key][0] + '\n';
-                    }
-                } else {
-                    errorMsg = error.message || 'Terjadi kesalahan saat upload dokumen!';
-                }
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: errorMsg,
-                    confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'OK'
-                });
+        function showAlreadyExistsAlert() {
+            Swal.fire({
+                title: 'Tidak Dapat Menambah',
+                text: 'Anda sudah membuat logbook hari ini!',
+                icon: 'info',
+                confirmButtonText: 'OK',
+                timer: 3000,
+                timerProgressBar: true
             });
-        });
+        }
     </script>
 @endsection

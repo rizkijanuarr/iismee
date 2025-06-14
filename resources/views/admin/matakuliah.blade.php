@@ -1,6 +1,16 @@
 @extends('layout.admin')
 
 @section('konten')
+    <div class="alert alert-danger bg-gradient-danger mt-3 text-white">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        Informasi!
+        <ul>
+            <li>1. Untuk menambahkan Mata Kuliah klik <strong>Nonaktifkan Periode Penilaian</strong></li>
+            <li>2. Kemudian klik fitur <strong>Aspek Penilaian</strong></li>
+            <li>3. Kemudian klik fitur <strong>Magang</strong></li>
+            <li>4. Kemudian kembali lagi ke halaman ini dan klik <strong>Aktifkan Periode Penilaian</strong></li>
+        </ul>
+    </div>
     <div class="row justify-content-between">
         <div class="col">
             <h4 class="mb-4">Manage {{ $title }}</h4>
@@ -13,19 +23,14 @@
             @endif
             <form action="{{ url('setPenilaian') }}" method="post">
                 @csrf
-                <button class="btn {{ $penilaian->is_enable == true ? 'btn-danger' : 'btn-warning' }} float-end me-2"
+                <button
+                    class="btn {{ $penilaian->is_enable == true ? 'btn-danger bg-gradient-danger' : 'btn-warning bg-gradient-warning' }} float-end me-2"
                     data-toggle="tooltip" onclick="return confirm('Apakah anda yakin?')">
                     {{ $penilaian->is_enable == true ? 'Nonaktifkan' : 'Aktifkan' }} Periode Penilaian
                 </button>
             </form>
         </div>
     </div>
-    @if (session()->has('success'))
-        <div class="alert alert-success fw-bold alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close text-light" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
     <div class="col-12">
         <div class="card mb-4">
             <div class="card-header pb-0">
@@ -98,7 +103,8 @@
                                                     class="d-inline">
                                                     @method('delete')
                                                     @csrf
-                                                    <button class="btn btn-danger font-weight-bold text-xs"
+                                                    <button
+                                                        class="btn btn-danger bg-gradient-danger font-weight-bold text-xs"
                                                         data-toggle="tooltip" data-original-title="Hapus"
                                                         onclick="return confirm('Apakah anda yakin?')">
                                                         Hapus

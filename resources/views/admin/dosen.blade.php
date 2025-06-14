@@ -1,6 +1,10 @@
 @extends('layout.admin')
 
 @section('konten')
+    <div class="alert alert-danger bg-gradient-danger mt-3 text-white">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        Informasi! Setelah menambahkan Data Dosen <strong>Wajib tambahkan di fitur Dosen Pembimbing Lapangan</strong>
+    </div>
     <div class="row justify-content-between">
         <div class="col">
             <h4 class="mb-4">Manage {{ $title }}</h4>
@@ -11,12 +15,6 @@
             </a>
         </div>
     </div>
-    @if (session()->has('success'))
-        <div class="alert alert-success fw-bold alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close text-light" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
     <div class="col-12">
         <div class="card mb-4">
             <div class="card-header pb-0">
@@ -82,11 +80,10 @@
                                                 id="edit">
                                                 Edit
                                             </a>
-                                            <form action="manage-dosen/{{ $data->name }}" method="post"
-                                                class="d-inline">
+                                            <form action="manage-dosen/{{ $data->name }}" method="post" class="d-inline">
                                                 @method('delete')
                                                 @csrf
-                                                <button class="btn btn-danger font-weight-bold text-xs"
+                                                <button class="btn btn-danger bg-gradient-danger font-weight-bold text-xs"
                                                     data-toggle="tooltip" data-original-title="Hapus"
                                                     onclick="return confirm('Apakah anda yakin?')">
                                                     Hapus
