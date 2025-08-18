@@ -5,8 +5,13 @@
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
             <div class="card">
                 <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-8">
+                    <div class="row align-items-center">
+                        <div class="col-4 col-md-3">
+                            <div class="icon icon-shape icon-sm metric-icon bg-brand-gradient shadow text-center border-radius-md d-flex align-items-center justify-content-center">
+                                <i class="bi bi-people-fill text-white" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="col-8 col-md-9">
                             <div class="numbers">
                                 <p class="text-sm mb-0 text-capitalize font-weight-bold">Jumlah Mahasiswa</p>
                                 <h5 class="font-weight-bolder mb-0">
@@ -14,11 +19,6 @@
                                 </h5>
                             </div>
                         </div>
-                        <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                                <i class="bi bi-people-fill text-lg opacity-10" aria-hidden="true"></i>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -26,8 +26,13 @@
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
             <div class="card">
                 <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-8">
+                    <div class="row align-items-center">
+                        <div class="col-4 col-md-3">
+                            <div class="icon icon-shape icon-sm metric-icon bg-brand-gradient shadow text-center border-radius-md d-flex align-items-center justify-content-center">
+                                <i class="bi bi-people-fill text-white" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="col-8 col-md-9">
                             <div class="numbers">
                                 <p class="text-sm mb-0 text-capitalize font-weight-bold">Jumlah Dosen</p>
                                 <h5 class="font-weight-bolder mb-0">
@@ -35,11 +40,6 @@
                                 </h5>
                             </div>
                         </div>
-                        <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                                <i class="bi bi-people-fill text-lg opacity-10" aria-hidden="true"></i>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -47,20 +47,20 @@
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
             <div class="card">
                 <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-8">
+                    <div class="row align-items-center">
+                        <div class="col-4 col-md-3">
+                            <div class="icon icon-shape icon-sm metric-icon bg-brand-gradient shadow text-center border-radius-md d-flex align-items-center justify-content-center">
+                                <i class="bi bi-people-fill text-white" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="col-8 col-md-9">
                             <div class="numbers">
-                                <p class="text-sm mb-0 text-capitalize font-weight-bold">Jumlah Pembimbing Industri</p>
+                                <p class="text-sm mb-0 text-capitalize font-weight-bold">Jumlah DPL</p>
                                 <h5 class="font-weight-bolder mb-0">
                                     {{ $pembimbingIndustri }}
                                 </h5>
                             </div>
                         </div>
-                        <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                                <i class="bi bi-people-fill text-lg opacity-10" aria-hidden="true"></i>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -68,18 +68,18 @@
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
             <div class="card">
                 <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-8">
+                    <div class="row align-items-center">
+                        <div class="col-4 col-md-3">
+                            <div class="icon icon-shape icon-sm metric-icon bg-brand-gradient shadow text-center border-radius-md d-flex align-items-center justify-content-center">
+                                <i class="bi bi-building-fill text-white" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="col-8 col-md-9">
                             <div class="numbers">
                                 <p class="text-sm mb-0 text-capitalize font-weight-bold">Jumlah Perusahaan</p>
                                 <h5 class="font-weight-bolder mb-0">
                                     {{ $perusahaan }}
                                 </h5>
-                            </div>
-                        </div>
-                        <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                                <i class="bi bi-building-fill text-lg opacity-10" aria-hidden="true"></i>
                             </div>
                         </div>
                     </div>
@@ -91,8 +91,13 @@
                 <a href="{{ url('konfirmasi-pembimbing-industri') }}">
                     <div class="card">
                         <div class="card-body p-3">
-                            <div class="row">
-                                <div class="col-8">
+                            <div class="row align-items-center">
+                                <div class="col-4 col-md-3">
+                                    <div class="icon icon-shape icon-sm metric-icon bg-brand-gradient shadow text-center border-radius-md d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-people-fill text-white" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                                <div class="col-8 col-md-9">
                                     <div class="numbers">
                                         <p class="text-sm mb-0 text-capitalize font-weight-bold">Jumlah Pembimbing Industri
                                             Belum
@@ -100,11 +105,6 @@
                                         <h5 class="font-weight-bolder mb-0">
                                             {{ $jml }}
                                         </h5>
-                                    </div>
-                                </div>
-                                <div class="col-4 text-end">
-                                    <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                                        <i class="bi bi-people-fill text-lg opacity-10" aria-hidden="true"></i>
                                     </div>
                                 </div>
                             </div>

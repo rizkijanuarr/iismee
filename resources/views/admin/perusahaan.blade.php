@@ -6,12 +6,32 @@
             <h4 class="mb-4">Manage {{ $title }}</h4>
         </div>
         <div class="col">
+            <a href="{{ route('manage-perusahaan.template') }}" class="btn btn-warning btn-sm bg-gradient-warning float-end ms-2">
+                Download Template
+            </a>
+            <form action="{{ route('manage-perusahaan.import') }}" method="POST" enctype="multipart/form-data" class="d-inline float-end ms-2">
+                @csrf
+                <div class="d-flex align-items-center">
+                    <input type="file" name="file" accept=".xlsx,.xls,.csv" class="form-control form-control-sm shadow-sm me-2" required>
+                    <button type="submit" class="btn btn-success btn-sm bg-gradient-success">Import Excel</button>
+                </div>
+            </form>
             <a href="{{ url('manage-perusahaan/create') }}" class="btn btn-primary float-end">
                 Tambahkan {{ $title }}
             </a>
         </div>
     </div>
     <div class="col-12">
+        @if (session('success'))
+            <div class="alert alert-success bg-gradient-success text-white" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger bg-gradient-danger text-white" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
         <div class="card mb-4">
             <div class="card-header pb-0">
                 <h6>Data {{ $title }}</h6>

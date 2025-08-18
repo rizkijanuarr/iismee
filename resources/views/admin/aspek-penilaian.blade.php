@@ -1,6 +1,11 @@
 @extends('layout.admin')
 
 @section('konten')
+<div class="alert alert-danger bg-gradient-danger mt-3 text-white">
+    <i class="bi bi-info-circle-fill me-2"></i>
+    Informasi! <br/>
+    Aspek Peniliaian minimal memiliki 3 Aspek Penilaian dari satu Mata Kuliah
+</div>
     <div class="row justify-content-between">
         <div class="col">
             <h4 class="mb-4">Manage {{ $title }}</h4>

@@ -7,16 +7,16 @@
             <div class="col-6">
                 <div class="mb-3">
                     <label for="name" class="form-label">Nama Lengkap</label>
-                    <input type="text" class="form-control" name="name" id="name" placeholder="Gumilar Agung">
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Rizal">
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control" name="email" id="email"
-                        placeholder="gumilaragung@gmailcom">
+                        placeholder="rizal@gmail.com">
                 </div>
                 <div class="mb-3">
                     <label for="position" class="form-label">Jabatan</label>
-                    <input type="text" class="form-control" name="position" id="position" placeholder="Lead Engineer">
+                    <input type="text" class="form-control" name="position" id="position" placeholder="Dosen">
                 </div>
                 <div class="mb-3">
                     <label for="phone_number" class="form-label">No. Telepon</label>

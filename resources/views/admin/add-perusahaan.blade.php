@@ -7,7 +7,7 @@
             <div class="col-12">
                 <div class="mb-3">
                     <label for="company_name" class="form-label">Nama Perusahaan <span class="text-red-500">*</span></label>
-                    <input type="text" class="form-control" name="company_name" id="company_name" placeholder="PT. Gojek"
+                    <input type="text" class="form-control" name="company_name" id="company_name" placeholder="PT. Akedemik Digital"
                         required>
                 </div>
                 <div class="mb-3">
@@ -20,7 +20,7 @@
                     <label for="company_address" class="form-label">Alamat Perusahaan <span
                             class="text-red-500">*</span></label>
                     <textarea class="form-control" name="company_address" id="company_address" rows="3"
-                        placeholder="Jl. Jend. Sudirman No. 20, Jakarta Pusat" required></textarea>
+                        placeholder="Jl. Ketintang No.10" required></textarea>
                 </div>
             </div>
         </div>

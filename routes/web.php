@@ -49,13 +49,22 @@ Route::group(['middleware' => ['auth', 'ceklevel:admin']], function () {
     Route::get('dashboard-admin', [DashboardAdminController::class, 'index']);
     // Route::get('manage-mahasiswa', [AdminStudentController::class, 'index']);
     Route::get('add-mahasiswa', [AdminStudentController::class, 'indexTambahMahasiswa']);
-    Route::resource('manage-mahasiswa', AdminStudentController::class);
+    // Dosen import/template routes BEFORE resource to avoid conflicts
+    Route::post('manage-dosen/import', [AdminLecturerController::class, 'import'])->name('manage-dosen.import');
+    Route::get('manage-dosen/template', [AdminLecturerController::class, 'downloadTemplate'])->name('manage-dosen.template');
     Route::resource('manage-dosen', AdminLecturerController::class);
     Route::resource('manage-matakuliah', AdminSubjectController::class);
     Route::resource('manage-dpl', AdminSupervisorController::class);
     Route::resource('aspek-penilaian', AssesmentAspectController::class);
     Route::resource('manage-magang', InternshipController::class);
+    // Custom routes must be defined BEFORE the resource to avoid conflicts with {manage_perusahaan}
+    Route::post('manage-perusahaan/import', [CompanyController::class, 'import'])->name('manage-perusahaan.import');
+    Route::get('manage-perusahaan/template', [CompanyController::class, 'downloadTemplate'])->name('manage-perusahaan.template');
     Route::resource('manage-perusahaan', CompanyController::class);
+    // Mahasiswa import/template routes BEFORE resource to avoid conflicts
+    Route::post('manage-mahasiswa/import', [AdminStudentController::class, 'import'])->name('manage-mahasiswa.import');
+    Route::get('manage-mahasiswa/template', [AdminStudentController::class, 'downloadTemplate'])->name('manage-mahasiswa.template');
+    Route::resource('manage-mahasiswa', AdminStudentController::class);
     Route::get('getDataPerusahaan', [AdminStudentController::class, 'getDataPerusahaan']);
     Route::resource('manage-pembimbing-industri', IndustrialAdviserController::class);
     Route::post('setRegistrasi', [WebSettingController::class, 'setRegistrasiPembimbingIndustri']);

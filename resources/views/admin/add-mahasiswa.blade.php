@@ -12,21 +12,21 @@
                 <div class="mb-3">
                     <label for="registration_number" class="form-label">NIM</label>
                     <input type="number" class="form-control" name="registration_number" id="registration_number"
-                        placeholder="2099123">
+                        placeholder="200513971818">
                 </div>
                 <div class="mb-3">
                     <label for="name" class="form-label">Nama Lengkap</label>
-                    <input type="text" class="form-control" name="name" id="name" placeholder="Budi Utomo">
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Rizal">
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control" name="email" id="email"
-                        placeholder="budiutomo@gmailcom">
+                        placeholder="rizal@gmail.com">
                 </div>
                 <div class="mb-3">
                     <label for="class" class="form-label">Kelas</label>
                     <input type="text" class="form-control" name="class" id="class"
-                        placeholder="2020A Teknik Mesin">
+                        placeholder="2020A Pendidikan Teknik Mesin">
                 </div>
                 <div class="mb-3">
                     <label for="date_start" class="form-label">Tanggal Mulai</label>

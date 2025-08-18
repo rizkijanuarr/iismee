@@ -108,6 +108,21 @@
   color: #fff !important;
 }
 
+/* Consistent metric icon box */
+.metric-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 0.75rem; /* match border-radius-md */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.metric-icon > i,
+.metric-icon > svg {
+  font-size: 1.125rem; /* approx text-lg */
+  line-height: 1;
+}
+
 *,
 *::before,
 *::after {
@@ -450,6 +465,7 @@ button,
 [type="button"],
 [type="reset"],
 [type="submit"] {
+  appearance: button;
   -webkit-appearance: button;
 }
 
@@ -511,6 +527,7 @@ legend+* {
 
 [type="search"] {
   outline-offset: -2px;
+  appearance: textfield;
   -webkit-appearance: textfield;
 }
 
@@ -532,6 +549,7 @@ legend+* {
 
 ::file-selector-button {
   font: inherit;
+  appearance: button;
   -webkit-appearance: button;
 }
 
@@ -2521,7 +2539,7 @@ progress {
 }
 
 .table-group-divider {
-  border-top: calc(2 * $table-border-width) solid currentColor;
+  border-top: calc(2 * var(--bs-border-width)) solid currentColor;
 }
 
 .caption-top {
@@ -5624,7 +5642,7 @@ fieldset:disabled .btn {
 }
 
 .page-item:not(:first-child) .page-link {
-  margin-left: calc($pagination-border-width * -1);
+  margin-left: calc(var(--bs-border-width) * -1);
 }
 
 .page-item:first-child .page-link {
@@ -22486,7 +22504,7 @@ hr.horizontal.gray-light {
   }
 }
 
-@use "sass:math";
+/* removed: was @use "sass:math"; */
 
 .navbar-vertical .navbar-brand>img,
 .navbar-vertical .navbar-brand-img {
@@ -23218,7 +23236,7 @@ hr.horizontal.gray-light {
 }
 
 .sidenav-header {
-  height: 1.8rem;
+  height: 2.8rem;
 }
 
 .sidenav-footer .card.card-background:after {
@@ -25077,7 +25095,7 @@ p {
   -ms-touch-action: manipulation;
   touch-action: manipulation;
   background: #fff;
-  -webkit-box-shadow: 0 8px 26px -4px rgba(20, 20, 20, 0.15), 0 8px 9px -5px rgba(20, 20, 20, 0.06);
+  box-shadow: 0 8px 26px -4px rgba(20, 20, 20, 0.15), 0 8px 9px -5px rgba(20, 20, 20, 0.06);
 }
 
 .flatpickr-calendar.open,
@@ -26196,10 +26214,6 @@ span.flatpickr-weekday {
   background: #fff;
   cursor: default;
   box-shadow: inset 0 0 1px #fff, inset 0 1px 7px #EBEBEB, 0 3px 6px -3px #BBB;
-  webkit-transition: .3s ease 0s;
-  -moz-transition: .3s ease 0s;
-  -ms-transition: .3s ease 0s;
-  -o-transform: .3s ease 0s;
   transition: .3s ease 0s;
 }
 

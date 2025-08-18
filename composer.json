@@ -1,4 +1,5 @@
 {
+    "$schema": "https://raw.githubusercontent.com/composer/composer/main/res/composer-schema.json",
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
@@ -12,7 +13,8 @@
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
-        "laravel/tinker": "^2.8"
+        "laravel/tinker": "^2.8",
+        "maatwebsite/excel": "^3.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -51,6 +53,20 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "clear-laravel": [
+            "composer update",
+            "composer dump-autoload -o",
+            "@php artisan clear-compiled",
+            "@php artisan optimize:clear",
+            "@php artisan config:clear",
+            "@php artisan cache:clear",
+            "@php artisan route:clear",
+            "@php artisan view:clear",
+            "@php artisan event:clear"
+        ],
+        "mig": [
+            "@php artisan migrate:fresh --seed"
         ]
     },
     "extra": {

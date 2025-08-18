@@ -6,6 +6,10 @@ use App\Models\User;
 use App\Models\Lecturer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use App\Imports\LecturersImport;
 
 class AdminLecturerController extends Controller
 {
@@ -132,5 +136,69 @@ class AdminLecturerController extends Controller
         User::where('email', $email)->delete();
         Lecturer::destroy($manage_dosen->id);
         return redirect('/manage-dosen')->with('success', 'Data Dosen Berhasil Dihapus !');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
+
+        try {
+            Excel::import(new LecturersImport, $request->file('file'));
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', 'Import dosen gagal: ' . $e->getMessage());
+        }
+
+        return redirect()->back()->with('success', 'Import data dosen berhasil.');
+    }
+
+    public function downloadTemplate()
+    {
+        $filename = 'template-dosen.csv';
+        Log::info('Lecturer downloadTemplate: start');
+        try {
+            $fp = fopen('php://temp', 'r+');
+            if (!$fp) {
+                Log::error('Lecturer downloadTemplate: failed to open php://temp');
+                return redirect()->back()->with('error', 'Gagal membuka stream memori.');
+            }
+            fputcsv($fp, ['lecturer_id_number', 'name', 'email', 'phone_number']);
+            fputcsv($fp, ['1987654321', 'Dr. Andi', 'andi@gmail.com', '081211112222']);
+            fputcsv($fp, ['1998765432', 'Dr. Rina', 'rina@gmail.com', '081322223333']);
+            rewind($fp);
+            $csv = stream_get_contents($fp);
+            fclose($fp);
+            Log::info('Lecturer downloadTemplate: csv built', ['length' => strlen((string)$csv)]);
+
+            if (request()->boolean('debug')) {
+                Log::info('Lecturer downloadTemplate: debug mode outputting raw CSV');
+                return response($csv, 200, [
+                    'Content-Type' => 'text/plain; charset=UTF-8',
+                ]);
+            }
+
+            $path = 'tmp/' . $filename;
+            Storage::disk('local')->put($path, $csv);
+            $fullPath = storage_path('app/' . $path);
+            Log::info('Lecturer downloadTemplate: file saved', ['path' => $fullPath, 'exists' => file_exists($fullPath)]);
+
+            $response = response()->download($fullPath, $filename, [
+                'Content-Type' => 'text/csv; charset=UTF-8',
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
+            ])->deleteFileAfterSend(true);
+            Log::info('Lecturer downloadTemplate: response prepared');
+            return $response;
+        } catch (\Throwable $e) {
+            Log::error('Lecturer downloadTemplate: exception', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Gagal mengunduh template dosen: ' . $e->getMessage());
+        }
     }
 }

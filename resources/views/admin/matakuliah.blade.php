@@ -1,34 +1,28 @@
 @extends('layout.admin')
 
 @section('konten')
+    @php($forceEnable = true)
     <div class="alert alert-danger bg-gradient-danger mt-3 text-white">
         <i class="bi bi-info-circle-fill me-2"></i>
-        Informasi!
-        <ul>
-            <li>1. Untuk menambahkan Mata Kuliah klik <strong>Nonaktifkan Periode Penilaian</strong></li>
-            <li>2. Kemudian klik fitur <strong>Aspek Penilaian</strong></li>
-            <li>3. Kemudian klik fitur <strong>Magang</strong></li>
-            <li>4. Kemudian kembali lagi ke halaman ini dan klik <strong>Aktifkan Periode Penilaian</strong></li>
-        </ul>
+        Informasi! <br/>
+        Setelah menambahkan Mata Kuliah diharapkan untuk mengisi <strong>Aspek Penilaian</strong>
     </div>
     <div class="row justify-content-between">
         <div class="col">
             <h4 class="mb-4">Manage {{ $title }}</h4>
         </div>
         <div class="col">
-            @if ($penilaian->is_enable == false)
-                <a href="{{ url('manage-matakuliah/create') }}" class="btn btn-primary float-end">
-                    Tambahkan {{ $title }}
-                </a>
-            @endif
-            <form action="{{ url('setPenilaian') }}" method="post">
+            <a href="{{ url('manage-matakuliah/create') }}" class="btn btn-primary float-end">
+                Tambahkan {{ $title }}
+            </a>
+            {{-- <form action="{{ url('setPenilaian') }}" method="post">
                 @csrf
                 <button
-                    class="btn {{ $penilaian->is_enable == true ? 'btn-danger bg-gradient-danger' : 'btn-warning bg-gradient-warning' }} float-end me-2"
+                    class="btn {{ $forceEnable ? 'btn-danger bg-gradient-danger' : 'btn-warning bg-gradient-warning' }} float-end me-2"
                     data-toggle="tooltip" onclick="return confirm('Apakah anda yakin?')">
-                    {{ $penilaian->is_enable == true ? 'Nonaktifkan' : 'Aktifkan' }} Periode Penilaian
+                    {{ $forceEnable ? 'Nonaktifkan' : 'Aktifkan' }} Periode Penilaian
                 </button>
-            </form>
+            </form> --}}
         </div>
     </div>
     <div class="col-12">
@@ -98,7 +92,7 @@
                                                 id="edit">
                                                 Edit
                                             </a>
-                                            @if ($penilaian->is_enable == false)
+                                            @if (!$forceEnable)
                                                 <form action="manage-matakuliah/{{ $data->subject_name }}" method="post"
                                                     class="d-inline">
                                                     @method('delete')

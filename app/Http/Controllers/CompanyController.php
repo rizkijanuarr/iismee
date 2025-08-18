@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\CompaniesImport;
+use App\Exports\CompaniesTemplateExport;
+use Maatwebsite\Excel\Excel as ExcelWriter;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class CompanyController extends Controller
 {
@@ -94,5 +100,73 @@ class CompanyController extends Controller
     {
         Company::destroy($manage_perusahaan->id);
         return redirect()->intended('/manage-perusahaan')->with('success', 'Data Perusahaan Berhasil Dihapus !');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
+
+        try {
+            Excel::import(new CompaniesImport, $request->file('file'));
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', 'Import gagal: ' . $e->getMessage());
+        }
+
+        return redirect()->back()->with('success', 'Import data perusahaan berhasil.');
+    }
+
+    public function downloadTemplate()
+    {
+        $filename = 'template-perusahaan.csv';
+        Log::info('Company downloadTemplate: start');
+        try {
+            // Build CSV content
+            $fp = fopen('php://temp', 'r+');
+            if (!$fp) {
+                Log::error('Company downloadTemplate: failed to open php://temp');
+                return redirect()->back()->with('error', 'Gagal membuka stream memori.');
+            }
+            fputcsv($fp, ['company_name', 'company_number', 'company_address']);
+            fputcsv($fp, ['PT Contoh Satu', '0211234567', 'Jl. Mawar No. 1, Jakarta']);
+            fputcsv($fp, ['CV Contoh Dua', '081234567890', 'Jl. Melati No. 2, Bandung']);
+            rewind($fp);
+            $csv = stream_get_contents($fp);
+            fclose($fp);
+            Log::info('Company downloadTemplate: csv built', ['length' => strlen((string)$csv)]);
+
+            // Debug quick check
+            if (request()->boolean('debug')) {
+                Log::info('Company downloadTemplate: debug mode outputting raw CSV');
+                return response("company_name,company_number,company_address\nPT Contoh Satu,021-1234567,Jl. Mawar No. 1, Jakarta\nCV Contoh Dua,0812-3456-7890,Jl. Melati No. 2, Bandung\n", 200, [
+                    'Content-Type' => 'text/plain; charset=UTF-8',
+                ]);
+            }
+
+            // Save to storage temporary path
+            $path = 'tmp/' . $filename;
+            Storage::disk('local')->put($path, $csv);
+            $fullPath = storage_path('app/' . $path);
+            Log::info('Company downloadTemplate: file saved', ['path' => $fullPath, 'exists' => file_exists($fullPath)]);
+
+            // Send as download and delete after send
+            $response = response()->download($fullPath, $filename, [
+                'Content-Type' => 'text/csv; charset=UTF-8',
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
+            ])->deleteFileAfterSend(true);
+            Log::info('Company downloadTemplate: response prepared');
+            return $response;
+        } catch (\Throwable $e) {
+            Log::error('Company downloadTemplate: exception', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Gagal mengunduh template perusahaan: ' . $e->getMessage());
+        }
     }
 }
