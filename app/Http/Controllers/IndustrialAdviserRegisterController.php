@@ -28,13 +28,39 @@ class IndustrialAdviserRegisterController extends Controller
 
     public function store(Request $request)
     {
+        // Basic validation first (without company_id conditional part)
         $validatedData = $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:industrial_advisers',
             'phone_number' => 'required',
             'position' => 'required',
-            'company_id' => 'required'
         ]);
+
+        // If manual company name is provided, create/find it and set company_id
+        if ($request->filled('company_name_other')) {
+            $validatedCompany = $request->validate([
+                'company_name_other' => 'required|string|max:255',
+                'company_address' => 'required|string|max:255',
+                'company_number' => 'nullable|string|max:50',
+            ]);
+
+            // Create or get company by name, setting address/number on create
+            $company = Company::firstOrCreate(
+                ['company_name' => $validatedCompany['company_name_other']],
+                [
+                    'company_address' => $validatedCompany['company_address'],
+                    'company_number' => $validatedCompany['company_number'] ?? null,
+                ]
+            );
+
+            $validatedData['company_id'] = $company->id;
+        } else {
+            // Otherwise, company_id must be present and valid
+            $request->validate([
+                'company_id' => 'required|exists:companies,id',
+            ]);
+            $validatedData['company_id'] = $request->input('company_id');
+        }
 
         $validateCreateUser = $request->validate([
             'name' => 'required',

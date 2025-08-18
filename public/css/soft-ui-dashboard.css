@@ -74,6 +74,39 @@
   --bs-code-color: #d63384;
   --bs-highlight-bg: #fcf8e3;
 }
+/* Brand gradient utilities (pink-500 -> purple-500 -> indigo-500) */
+:root {
+  --brand-gradient: linear-gradient(to right, #ec4899, #a855f7, #6366f1);
+}
+
+/* Background gradient helper */
+.bg-brand-gradient {
+  background-image: var(--brand-gradient) !important;
+  background-size: 200% 100%;
+  background-position: left center;
+  color: #fff;
+  transition: background-position .3s ease;
+}
+.bg-brand-gradient:hover {
+  background-position: right center;
+}
+
+/* Text gradient helper */
+.text-brand-gradient {
+  background: var(--brand-gradient) !important;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+}
+
+/* Apply gradient to common primary backgrounds (without breaking solid color usage) */
+.btn-primary,
+.bg-gradient-primary {
+  background-image: var(--brand-gradient) !important;
+  background-color: initial !important;
+  border-color: transparent !important;
+  color: #fff !important;
+}
 
 *,
 *::before,
@@ -23185,7 +23218,7 @@ hr.horizontal.gray-light {
 }
 
 .sidenav-header {
-  height: 4.875rem;
+  height: 1.8rem;
 }
 
 .sidenav-footer .card.card-background:after {

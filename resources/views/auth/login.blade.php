@@ -14,7 +14,10 @@
         <!-- Left Form Section -->
         <div class="p-8 flex flex-col justify-center bg-white relative">
             <a href="{{ url('/') }}"
-                class="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent text-2xl font-bold absolute top-4 left-8 hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600 transition-all cursor-pointer">IISMEE</a>
+               class="group inline-block absolute top-4 left-8 cursor-pointer">
+                <span class="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent text-2xl font-bold transition-all group-hover:from-pink-600 group-hover:via-purple-600 group-hover:to-indigo-600">IISMEE</span>
+                <span class="block h-0.5 mt-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-full"></span>
+            </a>
 
             <div class="text-center mb-8">
                 <h2 class="text-3xl font-bold text-gray-800 mb-2">Masuk</h2>
@@ -27,24 +30,25 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-800 mb-2">Email</label>
                     <input type="text" name="email" value="{{ old('email') }}"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
-                        placeholder="ex: rizal@gmail.com">
+                        class="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:shadow-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
+                        placeholder="rizal@gmail.com">
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-800 mb-2">Password</label>
                     <input type="password" name="password"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
-                        placeholder="ex: 123">
+                        class="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:shadow-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
+                        placeholder="********">
                 </div>
                 <div class="space-y-3">
                     <button type="submit"
-                        class="w-full py-3 rounded-md bg-indigo-600 text-white font-semibold shadow-md hover:bg-indigo-700 transition-colors">
+                        class="w-full py-3 rounded-md text-white font-semibold shadow-md bg-gradient-to-r hover:bg-gradient-to-l from-pink-500 via-purple-500 to-indigo-500 hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600 transition-all">
                         Masuk
                     </button>
                     <div class="text-center">
                         <a href="{{ url('daftar-pembimbing-industri') }}"
-                            class="text-sm font-medium text-black hover:text-indigo-600 hover:underline">
-                            Daftar sebagai Pembimbing Industri !
+                           class="group inline-block text-sm font-medium text-black transition-all duration-300 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500">
+                            <span>Daftar sebagai Pembimbing Industri !</span>
+                            <span class="block h-0.5 mt-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-full"></span>
                         </a>
                     </div>
                 </div>

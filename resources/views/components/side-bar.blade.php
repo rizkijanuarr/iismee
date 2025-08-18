@@ -1,4 +1,4 @@
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-white shadow-sm"
     id="sidenav-main">
     <div class="sidenav-header">
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
@@ -14,7 +14,7 @@
                 <li class="nav-item">
                     <a class="nav-link {{ $title == 'Dashboard' ? 'active' : '' }}" href="{{ url('dashboard-admin') }}">
                         <div
-                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            class="icon icon-shape icon-sm shadow border-radius-md text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Dashboard' ? 'bg-brand-gradient text-white' : 'bg-white' }}">
                             <svg width="12px" height="12px" viewBox="0 0 45 40" version="1.1"
                                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <title>shop </title>
@@ -42,7 +42,7 @@
                     <a class="nav-link {{ $title === 'Perusahaan' ? 'active' : '' }} "
                         href="{{ url('manage-perusahaan') }}">
                         <div
-                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Perusahaan' ? 'text-white' : '' }}">
+                            class="icon icon-shape icon-sm shadow border-radius-md text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Perusahaan' ? 'bg-brand-gradient text-white' : 'bg-white' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-building-fill-gear" viewBox="0 0 16 16">
                                 <path
@@ -58,7 +58,7 @@
                     <a class="nav-link {{ $title === 'Mahasiswa' ? 'active' : '' }} "
                         href="{{ url('manage-mahasiswa') }}">
                         <div
-                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Mahasiswa' ? 'text-white' : '' }}">
+                            class="icon icon-shape icon-sm shadow border-radius-md text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Mahasiswa' ? 'bg-brand-gradient text-white' : 'bg-white' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-people-fill" viewBox="0 0 16 16">
                                 <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
@@ -73,7 +73,7 @@
                 <li class="nav-item">
                     <a class="nav-link {{ $title === 'Dosen' ? 'active' : '' }} " href="{{ url('manage-dosen') }}">
                         <div
-                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Dosen' ? 'text-white' : '' }}">
+                            class="icon icon-shape icon-sm shadow border-radius-md text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Dosen' ? 'bg-brand-gradient text-white' : 'bg-white' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-people-fill" viewBox="0 0 16 16">
                                 <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
@@ -89,7 +89,7 @@
                     <a class="nav-link {{ $title === 'Dosen Pembimbing Lapangan' ? 'active' : '' }} "
                         href="{{ url('manage-dpl') }}">
                         <div
-                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Dosen Pembimbing Lapangan' ? 'text-white' : '' }}">
+                            class="icon icon-shape icon-sm shadow border-radius-md text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Dosen Pembimbing Lapangan' ? 'bg-brand-gradient text-white' : 'bg-white' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-people-fill" viewBox="0 0 16 16">
                                 <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
@@ -105,7 +105,7 @@
                     <a class="nav-link {{ $title === 'Pembimbing Industri' ? 'active' : '' }} "
                         href="{{ url('manage-pembimbing') }}-industri">
                         <div
-                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Pembimbing Industri' ? 'text-white' : '' }}">
+                            class="icon icon-shape icon-sm shadow border-radius-md text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Pembimbing Industri' ? 'bg-brand-gradient text-white' : 'bg-white' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-person-fill-gear" viewBox="0 0 16 16">
                                 <path
@@ -119,7 +119,7 @@
                     <a class="nav-link {{ $title === 'Mata Kuliah' ? 'active' : '' }} "
                         href="{{ url('manage-matakuliah') }}">
                         <div
-                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Mata Kuliah' ? 'text-white' : '' }}">
+                            class="icon icon-shape icon-sm shadow border-radius-md text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Mata Kuliah' ? 'bg-brand-gradient text-white' : 'bg-white' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-book-half" viewBox="0 0 16 16">
                                 <path
@@ -133,7 +133,7 @@
                     <a class="nav-link {{ $title === 'Aspek Penilaian' ? 'active' : '' }} "
                         href="{{ url('aspek-penilaian') }}">
                         <div
-                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Aspek Penilaian' ? 'text-white' : '' }}">
+                            class="icon icon-shape icon-sm shadow border-radius-md text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Aspek Penilaian' ? 'bg-brand-gradient text-white' : 'bg-white' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                 fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                 <path
@@ -149,7 +149,7 @@
                     <a class="nav-link {{ $title === 'Magang' ? 'active' : '' }} "
                         href="{{ url('manage-magang') }}">
                         <div
-                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Magang' ? 'text-white' : '' }}">
+                            class="icon icon-shape icon-sm shadow border-radius-md text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Magang' ? 'bg-brand-gradient text-white' : 'bg-white' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                 fill="currentColor" class="bi bi-person-workspace" viewBox="0 0 16 16">
                                 <path
@@ -167,7 +167,7 @@
                     <a class="nav-link {{ $title == 'Dashboard' ? 'active' : '' }}"
                         href="{{ url('dashboard-pembimbing') }}">
                         <div
-                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Magang' ? 'text-white' : '' }}">
+                            class="icon icon-shape icon-sm shadow border-radius-md text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Dashboard' ? 'bg-brand-gradient text-white' : 'bg-white' }}">
                             <svg width="12px" height="12px" viewBox="0 0 45 40" version="1.1"
                                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <title>shop </title>
@@ -196,8 +196,8 @@
                         href="{{ url('penilaian') }} ">
                         <div
                             class="icon
-                        icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center
-                        justify-content-center {{ $title === 'Penilaian' ? 'text-white' : '' }}">
+                        icon-shape icon-sm shadow border-radius-md text-center me-2 d-flex align-items-center
+                        justify-content-center {{ $title === 'Penilaian' ? 'bg-brand-gradient text-white' : 'bg-white' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                 fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                 <path
@@ -214,7 +214,7 @@
                         <a class="nav-link {{ $title == 'Dashboard' ? 'active' : '' }}"
                             href="{{ url('dashboard-pembimbing') }}">
                             <div
-                                class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Dashboard' ? 'text-white' : '' }}">
+                                class="icon icon-shape icon-sm shadow border-radius-md text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Dashboard' ? 'bg-brand-gradient text-white' : 'bg-white' }}">
                                 <svg width="12px" height="12px" viewBox="0 0 45 40" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                     <title>shop </title>
@@ -242,7 +242,7 @@
                         <a class="nav-link {{ $title === 'Penilaian' ? 'active' : '' }} "
                             href="{{ url('penilaian-industri') }}">
                             <div
-                                class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Penilaian' ? 'text-white' : '' }}">
+                                class="icon icon-shape icon-sm shadow border-radius-md text-center me-2 d-flex align-items-center justify-content-center {{ $title === 'Penilaian' ? 'bg-brand-gradient text-white' : 'bg-white' }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                     fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                     <path
