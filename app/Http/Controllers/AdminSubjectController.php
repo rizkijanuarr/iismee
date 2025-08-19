@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Subject;
 use App\Models\Lecturer;
+use App\Models\Subject;
 use App\Models\WebSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +24,7 @@ class AdminSubjectController extends Controller
     public function create()
     {
         $penilaian = WebSetting::where('name', '=', 'Periode Penilaian')->firstOrFail();
-        if ($penilaian->is_enable == false) {
+        if ($penilaian->is_enable == true) {
             return view('admin.add-matakuliah', [
                 'title' => 'Tambahkan Mata Kuliah',
                 'dosen' => Lecturer::orderByDesc('created_at')->get()
@@ -101,7 +101,7 @@ class AdminSubjectController extends Controller
         }
 
         $existingSubject = DB::select(
-            "SELECT * FROM subjects WHERE subject_name = ? AND id != ? LIMIT 1",
+            'SELECT * FROM subjects WHERE subject_name = ? AND id != ? LIMIT 1',
             [$request->subject_name, $manage_matakuliah->id]
         );
         if (!empty($existingSubject)) {
