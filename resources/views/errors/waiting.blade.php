@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Waiting</title>
+    <title>{{ __('messages.waiting_title') }}</title>
 
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <style>
@@ -43,9 +43,9 @@
     <div class="container">
         <div class="content">
             <img src="{{ URL::asset('/img/waiting.svg') }}" height="300" alt="">
-            <div class="title">Waiting</div>
-            <p>Pendaftaran akun anda sedang diproses <br>Harap menunggu atau hubungi Admin</p>
-            <a href="{{ url('login') }}"> Kembali ke halaman login</a>
+            <div class="title">{{ __('messages.waiting_title') }}...⏳</div>
+            <p>{{ __('messages.waiting_process') }} <br>{{ __('messages.waiting_instruction') }}</p>
+            <a href="{{ url('login') }}">{{ __('messages.back_to_login') }}</a>
         </div>
     </div>
 </body>

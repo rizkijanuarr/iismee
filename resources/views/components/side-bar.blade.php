@@ -52,7 +52,7 @@
                                     d="M11.886 9.46c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382l.045-.148ZM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
                             </svg>
                         </div>
-                        <span class="nav-link-text ms-1">Perusahaan</span>
+                        <span class="nav-link-text ms-1">{{ __('messages.sidebar_companies') }}</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -68,7 +68,7 @@
                                 <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
                             </svg>
                         </div>
-                        <span class="nav-link-text ms-1">Mahasiswa</span>
+                        <span class="nav-link-text ms-1">{{ __('messages.sidebar_students') }}</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -83,7 +83,7 @@
                                 <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
                             </svg>
                         </div>
-                        <span class="nav-link-text ms-1">Dosen</span>
+                        <span class="nav-link-text ms-1">{{ __('messages.sidebar_lecturers') }}</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -99,7 +99,7 @@
                                 <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
                             </svg>
                         </div>
-                        <span class="nav-link-text ms-1">Dosen Pembimbing <br> Lapangan</br></span>
+                        <span class="nav-link-text ms-1">{{ __('messages.sidebar_dpl') }}</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -113,7 +113,7 @@
                                     d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Zm9.886-3.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382l.045-.148ZM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
                             </svg>
                         </div>
-                        <span class="nav-link-text ms-1">Pembimbing <br> Industri</br></span>
+                        <span class="nav-link-text ms-1">{{ __('messages.sidebar_industry_supervisors') }}</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -127,7 +127,7 @@
                                     d="M8.5 2.687c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z" />
                             </svg>
                         </div>
-                        <span class="nav-link-text ms-1">Mata Kuliah</span>
+                        <span class="nav-link-text ms-1">{{ __('messages.sidebar_subjects') }}</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -143,7 +143,7 @@
                                     d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
                             </svg>
                         </div>
-                        <span class="nav-link-text ms-1">Aspek Penilaian</span>
+                        <span class="nav-link-text ms-1">{{ __('messages.sidebar_assessment_aspects') }}</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -159,7 +159,7 @@
                                     d="M2 1a2 2 0 0 0-2 2v9.5A1.5 1.5 0 0 0 1.5 14h.653a5.373 5.373 0 0 1 1.066-2H1V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v9h-2.219c.554.654.89 1.373 1.066 2h.653a1.5 1.5 0 0 0 1.5-1.5V3a2 2 0 0 0-2-2H2Z" />
                             </svg>
                         </div>
-                        <span class="nav-link-text ms-1">Magang</span>
+                        <span class="nav-link-text ms-1">{{ __('messages.sidebar_internship') }}</span>
                     </a>
                 </li>
             @endif
@@ -207,7 +207,7 @@
                                     d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
                             </svg>
                         </div>
-                        <span class="nav-link-text ms-1">Penilaian</span>
+                        <span class="nav-link-text ms-1">{{ __('messages.sidebar_assessment') }}</span>
                     </a>
                 </li>
                 @endif @if (auth()->user()->level === 'pembimbing industri')

@@ -13,7 +13,7 @@
                         </div>
                         <div class="col-8 col-md-9">
                             <div class="numbers">
-                                <p class="text-sm mb-0 text-capitalize font-weight-bold">Jumlah Mahasiswa</p>
+                                <p class="text-sm mb-0 text-capitalize font-weight-bold">{{ __('messages.dashboard_students') }}</p>
                                 <h5 class="font-weight-bolder mb-0">
                                     {{ $mahasiswa }}
                                 </h5>
@@ -34,7 +34,7 @@
                         </div>
                         <div class="col-8 col-md-9">
                             <div class="numbers">
-                                <p class="text-sm mb-0 text-capitalize font-weight-bold">Jumlah Dosen</p>
+                                <p class="text-sm mb-0 text-capitalize font-weight-bold">{{ __('messages.dashboard_lecturers') }}</p>
                                 <h5 class="font-weight-bolder mb-0">
                                     {{ $dosen }}
                                 </h5>
@@ -55,7 +55,7 @@
                         </div>
                         <div class="col-8 col-md-9">
                             <div class="numbers">
-                                <p class="text-sm mb-0 text-capitalize font-weight-bold">Jumlah DPL</p>
+                                <p class="text-sm mb-0 text-capitalize font-weight-bold">{{ __('messages.dashboard_dpl') }}</p>
                                 <h5 class="font-weight-bolder mb-0">
                                     {{ $pembimbingIndustri }}
                                 </h5>
@@ -76,7 +76,7 @@
                         </div>
                         <div class="col-8 col-md-9">
                             <div class="numbers">
-                                <p class="text-sm mb-0 text-capitalize font-weight-bold">Jumlah Perusahaan</p>
+                                <p class="text-sm mb-0 text-capitalize font-weight-bold">{{ __('messages.dashboard_companies') }}</p>
                                 <h5 class="font-weight-bolder mb-0">
                                     {{ $perusahaan }}
                                 </h5>
@@ -99,9 +99,7 @@
                                 </div>
                                 <div class="col-8 col-md-9">
                                     <div class="numbers">
-                                        <p class="text-sm mb-0 text-capitalize font-weight-bold">Jumlah Pembimbing Industri
-                                            Belum
-                                            Terkonfirmasi</p>
+                                        <p class="text-sm mb-0 text-capitalize font-weight-bold">{{ __('messages.dashboard_unconfirmed_industry_supervisors') }}</p>
                                         <h5 class="font-weight-bolder mb-0">
                                             {{ $jml }}
                                         </h5>
@@ -121,12 +119,9 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="d-flex flex-column h-100">
-                                <p class="mb-1 pt-2 text-bold">IISMEE</p>
-                                <h5 class="font-weight-bolder">Internship Information System of Mechanical Enginering
-                                    Education</h5>
-                                <p class="mb-5">Merupakan sebuah sistem informasi berbasis web yang digunakan untuk
-                                    program magang mahasiswa Pendidikan Teknik Mesin Unesa
-                                </p>
+                                <p class="mb-1 pt-2 text-bold">{{ __('messages.dashboard_system_name') }}</p>
+                                <h5 class="font-weight-bolder">{{ __('messages.dashboard_system_fullname') }}</h5>
+                                <p class="mb-5">{{ __('messages.dashboard_system_desc') }}</p>
                             </div>
                         </div>
                         <div class="col-lg-5 ms-auto text-center mt-5 mt-lg-0">

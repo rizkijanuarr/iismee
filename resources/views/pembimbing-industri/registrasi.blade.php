@@ -15,6 +15,11 @@
 </head>
 
 <body class="bg-gray-100 min-h-screen">
+     <!-- Language Switcher -->
+    <div class="absolute top-4 right-8 z-50">
+        <a href="{{ url('lang/id') }}" class="px-2 text-white">🇮🇩 Indonesia</a> |
+        <a href="{{ url('lang/en') }}" class="px-2 text-white">🇬🇧 English</a>
+    </div>
     <div class="min-h-screen grid grid-cols-1 lg:grid-cols-2">
         <!-- Left Form Section -->
         <div class="p-8 lg:px-16 flex flex-col justify-center bg-white relative">
@@ -25,44 +30,44 @@
 
             <div class="max-w-2xl w-full mx-auto">
             <div class="text-center mb-8 mt-16">
-                <h2 class="text-3xl font-bold text-gray-800 mb-2">Registrasi Pembimbing Industri</h2>
-                <p class="text-gray-600 text-sm">Isi data Anda di bawah ini</p>
-                <p class="text-gray-600 text-sm">untuk membuat akun pembimbing industri</p>
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">{{ __('messages.register_title') }}</h2>
+                <p class="text-gray-600 text-sm">{{ __('messages.register_subtitle1') }}</p>
+                <p class="text-gray-600 text-sm">{{ __('messages.register_subtitle2') }}</p>
             </div>
 
             <form action="{{ url('daftar') }}" method="POST" class="space-y-6">
                 @csrf
 
                 <div>
-                    <label class="block text-sm font-semibold text-gray-800 mb-2">Nama Lengkap</label>
+                    <label class="block text-sm font-semibold text-gray-800 mb-2">{{ __('messages.full_name') }}</label>
                     <input type="text" name="name" value="{{ old('name') }}"
                         class="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:shadow-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
                         placeholder="Rizal Akbar">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-gray-800 mb-2">Email</label>
+                    <label class="block text-sm font-semibold text-gray-800 mb-2">{{ __('messages.email') }}</label>
                     <input type="email" name="email" value="{{ old('email') }}"
                         class="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:shadow-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
                         placeholder="rizal@gmail.com" autocomplete="email">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-gray-800 mb-2">Password</label>
+                    <label class="block text-sm font-semibold text-gray-800 mb-2">{{ __('messages.password') }}</label>
                     <input type="password" name="password"
                         class="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:shadow-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
                         placeholder="********" autocomplete="new-password">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-gray-800 mb-2">No. Telepon</label>
+                    <label class="block text-sm font-semibold text-gray-800 mb-2">{{ __('messages.phone_number') }}</label>
                     <input type="tel" name="phone_number" value="{{ old('phone_number') }}"
                         class="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:shadow-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
                         placeholder="081234567890" autocomplete="tel">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-gray-800 mb-2">Jabatan</label>
+                    <label class="block text-sm font-semibold text-gray-800 mb-2">{{ __('messages.position') }}</label>
                     <input type="text" name="position" value="{{ old('position') }}"
                         class="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:shadow-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
                         placeholder="HRD / Supervisor">
@@ -70,15 +75,15 @@
 
                 <div>
                     <div class="flex items-center justify-between">
-                        <label for="company_id" class="block text-sm font-semibold text-gray-800 mb-2">Nama Perusahaan</label>
+                        <label for="company_id" class="block text-sm font-semibold text-gray-800 mb-2">{{ __('messages.company_name') }}</label>
                         <label class="flex items-center gap-2 text-sm text-gray-700">
                             <input type="checkbox" id="toggle-other-company" class="rounded border-gray-300 shadow-sm focus:shadow-md" {{ old('company_name_other') ? 'checked' : '' }}>
-                            <span>Perusahaan belum ada?</span>
+                            <span>{{ __('messages.company_not_found') }}</span>
                         </label>
                     </div>
                     <select name="company_id" id="company_id"
                         class="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:shadow-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white {{ old('company_name_other') ? 'hidden' : '' }}">
-                        <option value="">-- Pilih Perusahaan --</option>
+                        <option value="">{{ __('messages.select_company') }}</option>
                         @foreach ($perusahaan as $item)
                             <option value="{{ $item->id }}" {{ old('company_id') == $item->id ? 'selected' : '' }}>
                                 {{ $item->company_name }}
@@ -86,38 +91,45 @@
                         @endforeach
                     </select>
                     <div id="other-company-wrapper" class="mt-3 {{ old('company_name_other') ? '' : 'hidden' }}">
-                        <label class="block text-sm font-semibold text-gray-800 mb-2">Nama Perusahaan</label>
+                        <label class="block text-sm font-semibold text-gray-800 mb-2">{{ __('messages.company_name') }}</label>
                         <input type="text" name="company_name_other" value="{{ old('company_name_other') }}"
                             class="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:shadow-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
                             placeholder="PT. Akedemik Digital">
 
                         <div class="mt-4">
-                            <label class="block text-sm font-semibold text-gray-800 mb-2">Alamat Perusahaan</label>
+                            <label class="block text-sm font-semibold text-gray-800 mb-2">{{ __('messages.company_address') }}</label>
                             <input type="text" name="company_address" value="{{ old('company_address') }}"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:shadow-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
                                 placeholder="Jl. Ketintang No. 10, Surabaya">
                         </div>
 
                         <div class="mt-4">
-                            <label class="block text-sm font-semibold text-gray-800 mb-2">Nomor Telepon Perusahaan</label>
+                            <label class="block text-sm font-semibold text-gray-800 mb-2">{{ __('messages.company_phone') }}</label>
                             <input type="text" name="company_number" value="{{ old('company_number') }}"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:shadow-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
                                 placeholder="08571234567">
                         </div>
 
-                        <p class="text-xs text-gray-500 mt-3">Centang "Perusahaan belum ada?" untuk mengisi data perusahaan baru.</p>
+                        <p class="text-xs text-gray-500 mt-3">{{ __('messages.company_hint') }}</p>
                     </div>
                 </div>
 
                 <div class="space-y-3 pt-2">
-                    <button type="submit"
-                        class="w-full py-3 rounded-md text-white font-semibold shadow-md bg-gradient-to-r hover:bg-gradient-to-l from-pink-500 via-purple-500 to-indigo-500 hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600 transition-all">
-                        Daftar
+                    <button id="registerBtn" type="submit"
+                        class="w-full py-3 rounded-md text-white font-semibold shadow-md bg-gradient-to-r hover:bg-gradient-to-l from-pink-500 via-purple-500 to-indigo-500 hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled>
+                        <span id="registerBtnText">{{ __('messages.register_button') }}</span>
+                        <span id="registerLoading" class="hidden ml-2 animate-spin inline-block align-middle">
+                            <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                            </svg>
+                        </span>
                     </button>
                     <div class="text-center">
                         <a href="{{ route('login') }}"
                            class="group inline-block text-sm font-medium text-black transition-all duration-300 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500">
-                            <span>Sudah punya akun? Masuk di sini</span>
+                            <span>{{ __('messages.login_link') }}</span>
                             <span class="block h-0.5 mt-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-full"></span>
                         </a>
                     </div>
@@ -136,9 +148,9 @@
             <div
                 class="relative z-10 flex flex-col justify-center items-end text-right min-h-screen px-8 -translate-y-16">
                 <div class="mb-8">
-                    <h2 class="text-3xl font-bold text-white drop-shadow-lg">Selamat</h2>
-                    <h2 class="text-3xl font-bold text-white mb-4 drop-shadow-lg">Datang di SIAKAD</h2>
-                    <p class="text-gray-100 text-lg italic drop-shadow-md">"Karena Setiap Data Akademik Itu Berharga"</p>
+                    <h2 class="text-3xl font-bold text-white drop-shadow-lg">{{ __('messages.greeting_welcome') }}</h2>
+                    <h2 class="text-3xl font-bold text-white mb-4 drop-shadow-lg">{{ __('messages.greeting_to_siakad') }}</h2>
+                    <p class="text-gray-100 text-lg italic drop-shadow-md">"{{ __('messages.greeting_quote') }}"</p>
                 </div>
             </div>
         </div>
@@ -167,14 +179,64 @@
             }
             if (toggleCb) toggleCb.addEventListener('change', syncOtherVisibility);
             syncOtherVisibility();
+
+            // Enable/disable register button
+            const nameInput = document.querySelector('input[name="name"]');
+            const emailInput = document.querySelector('input[name="email"]');
+            const passwordInput = document.querySelector('input[name="password"]');
+            const phoneInput = document.querySelector('input[name="phone_number"]');
+            const positionInput = document.querySelector('input[name="position"]');
+            const registerBtn = document.getElementById('registerBtn');
+            const companySelect = document.getElementById('company_id');
+            function checkForm() {
+                let valid = nameInput.value.trim() !== '' &&
+                    emailInput.value.trim() !== '' &&
+                    passwordInput.value.trim() !== '' &&
+                    phoneInput.value.trim() !== '' &&
+                    positionInput.value.trim() !== '';
+                // Perusahaan: jika toggle manual aktif, cek input manual, jika tidak cek select
+                if (toggleCb && toggleCb.checked) {
+                    valid = valid && otherInput.value.trim() !== '' && otherAddress.value.trim() !== '' && otherNumber.value.trim() !== '';
+                } else {
+                    valid = valid && companySelect.value.trim() !== '';
+                }
+                registerBtn.disabled = !valid;
+            }
+            nameInput.addEventListener('input', checkForm);
+            emailInput.addEventListener('input', checkForm);
+            passwordInput.addEventListener('input', checkForm);
+            phoneInput.addEventListener('input', checkForm);
+            positionInput.addEventListener('input', checkForm);
+            if (toggleCb) toggleCb.addEventListener('change', checkForm);
+            if (companySelect) companySelect.addEventListener('change', checkForm);
+            if (otherInput) otherInput.addEventListener('input', checkForm);
+            if (otherAddress) otherAddress.addEventListener('input', checkForm);
+            if (otherNumber) otherNumber.addEventListener('input', checkForm);
+            checkForm();
+
+            // Loading effect on register
+            const registerForm = document.querySelector('form[action="{{ url('daftar') }}"]');
+            const registerBtnText = document.getElementById('registerBtnText');
+            const registerLoading = document.getElementById('registerLoading');
+            registerForm.addEventListener('submit', function(e) {
+                if (!registerBtn.disabled) {
+                    e.preventDefault();
+                    registerBtn.disabled = true;
+                    registerBtnText.textContent = 'Loading...';
+                    registerLoading.classList.remove('hidden');
+                    setTimeout(function() {
+                        registerForm.submit();
+                    }, 2000);
+                }
+            });
         });
 
         @if (session('success'))
             Swal.fire({
                 icon: 'success',
-                title: 'Sukses',
+                title: '{{ __('messages.success') }}',
                 text: @json(session('success')),
-                confirmButtonText: 'OK',
+                confirmButtonText: '{{ __('messages.ok') }}',
                 timer: 3000,
                 timerProgressBar: true
             });
@@ -182,14 +244,14 @@
         @if (session('error'))
             Swal.fire({
                 icon: 'error',
-                title: 'Gagal',
+                title: '{{ __('messages.failed') }}',
                 text: @json(session('error'))
             });
         @endif
         @if ($errors->any())
             Swal.fire({
                 icon: 'error',
-                title: 'Validasi Gagal',
+                title: '{{ __('messages.validation_failed') }}',
                 html: @json(implode('<br>', $errors->all()))
             });
         @endif

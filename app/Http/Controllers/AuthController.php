@@ -39,7 +39,7 @@ class AuthController extends Controller
         // Cek apakah email terdaftar
         $user = DB::table('users')->where('email', $inputan['email'])->first();
         if (!$user) {
-            return back()->with('errorLogin', 'Email belum terdaftar!');
+            return back()->with('errorLogin', __('messages.login_email_not_registered'));
         }
 
         $level = $user->level;
@@ -50,12 +50,12 @@ class AuthController extends Controller
             if ($aktif == true) {
                 if (Auth::attempt($inputan)) {
                     $request->session()->regenerate();
-                    return redirect()->intended('/dashboard-admin')->with('success', 'Berhasil login sebagai admin!');
+                    return redirect()->intended('/dashboard-admin')->with('success', __('messages.login_success_admin'));
                 } else {
-                    return back()->with('errorLogin', 'Password salah!');
+                    return back()->with('errorLogin', __('messages.login_wrong_password'));
                 }
             } else {
-                return back()->with('errorLogin', 'Akun admin belum aktif!');
+                return back()->with('errorLogin', __('messages.login_admin_inactive'));
             }
         }
 
@@ -64,12 +64,12 @@ class AuthController extends Controller
             if ($aktif == true) {
                 if (Auth::attempt($inputan)) {
                     $request->session()->regenerate();
-                    return redirect()->intended('/dashboard-pembimbing')->with('success', 'Berhasil login sebagai pembimbing!');
+                    return redirect()->intended('/dashboard-pembimbing')->with('success', __('messages.login_success_lecturer'));
                 } else {
-                    return back()->with('errorLogin', 'Password salah!');
+                    return back()->with('errorLogin', __('messages.login_wrong_password'));
                 }
             } else {
-                return back()->with('errorLogin', 'Akun pembimbing belum aktif!');
+                return back()->with('errorLogin', __('messages.login_lecturer_inactive'));
             }
         }
 
@@ -78,12 +78,12 @@ class AuthController extends Controller
             if ($aktif == true) {
                 if (Auth::attempt($inputan)) {
                     $request->session()->regenerate();
-                    return redirect()->intended('/dashboard-pembimbing-industri')->with('success', 'Berhasil login sebagai pembimbing industri!');
+                    return redirect()->intended('/dashboard-pembimbing-industri')->with('success', __('messages.login_success_industry_supervisor'));
                 } else {
-                    return back()->with('errorLogin', 'Password salah!');
+                    return back()->with('errorLogin', __('messages.login_wrong_password'));
                 }
             } else {
-                return back()->with('errorLogin', 'Akun pembimbing industri belum aktif!');
+                return back()->with('errorLogin', __('messages.login_industry_supervisor_inactive'));
             }
         }
 
@@ -92,17 +92,17 @@ class AuthController extends Controller
             if ($aktif == true) {
                 if (Auth::attempt($inputan)) {
                     $request->session()->regenerate();
-                    return redirect()->intended('/mahasiswa')->with('success', 'Berhasil login sebagai mahasiswa!');
+                    return redirect()->intended('/mahasiswa')->with('success', __('messages.login_success_student'));
                 } else {
-                    return back()->with('errorLogin', 'Password salah!');
+                    return back()->with('errorLogin', __('messages.login_wrong_password'));
                 }
             } else {
-                return back()->with('errorLogin', 'Akun mahasiswa belum aktif!');
+                return back()->with('errorLogin', __('messages.login_student_inactive'));
             }
         }
 
-        // Jika level tidak dikenali
-        return back()->with('errorLogin', 'Login gagal, role tidak dikenali!');
+    // Jika level tidak dikenali
+    return back()->with('errorLogin', __('messages.login_unknown_role'));
     }
 
 

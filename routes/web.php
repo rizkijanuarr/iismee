@@ -31,6 +31,14 @@ use App\Models\Supervisor;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
+// Route untuk switch bahasa
+Route::get('lang/{locale}', function ($locale) {
+    if (in_array($locale, ['en', 'id'])) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back();
+});
+
 /*
  * |--------------------------------------------------------------------------
  * | Web Routes

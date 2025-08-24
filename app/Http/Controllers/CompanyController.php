@@ -18,8 +18,12 @@ class CompanyController extends Controller
 {
     public function index()
     {
+        $companyTitle = trans('messages.company_manage_title', ['title' => trans('messages.sidebar_companies')]);
+        $dataTitle = trans('messages.company_data_title', ['title' => trans('messages.sidebar_companies')]);
         return view('admin.perusahaan', [
-            'title' => 'Perusahaan',
+            'title' => trans('messages.sidebar_companies'),
+            'company_manage_title' => $companyTitle,
+            'company_data_title' => $dataTitle,
             'data' => Company::orderByDesc('created_at')->get()
         ]);
     }
@@ -27,22 +31,22 @@ class CompanyController extends Controller
     public function create()
     {
         return view('admin.add-perusahaan', [
-            'title' => 'Tambahkan Perusahaan'
+            'title' => trans('messages.company_add', ['title' => trans('messages.sidebar_companies')])
         ]);
     }
 
     public function store(Request $request)
     {
         if (empty($request->company_name)) {
-            return redirect()->back()->with('error', 'Nama Perusahaan wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.company_name') . ' ' . trans('messages.validation_failed'));
         }
 
         if (empty($request->company_address)) {
-            return redirect()->back()->with('error', 'Alamat Perusahaan wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.company_address') . ' ' . trans('messages.validation_failed'));
         }
 
         if (empty($request->company_number)) {
-            return redirect()->back()->with('error', 'Nomor Telepon Perusahaan wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.company_phone') . ' ' . trans('messages.validation_failed'));
         }
         $validatedData = $request->validate([
             'company_name' => 'required',
@@ -51,7 +55,7 @@ class CompanyController extends Controller
         ]);
 
         Company::create($validatedData);
-        return redirect()->intended('/manage-perusahaan')->with('success', 'Data Perusahaan berhasil ditambahkan!');
+        return redirect()->intended('/manage-perusahaan')->with('success', trans('messages.company_add', ['title' => trans('messages.sidebar_companies')]) . ' ' . trans('messages.success'));
     }
 
     public function show(Company $company) {}
@@ -59,7 +63,7 @@ class CompanyController extends Controller
     public function edit(Company $manage_perusahaan)
     {
         return view('admin.edit-perusahaan', [
-            'title' => 'Edit Perusahaan',
+            'title' => trans('messages.company_edit') . ' ' . trans('messages.sidebar_companies'),
             'perusahaan' => $manage_perusahaan
         ]);
     }
@@ -67,15 +71,15 @@ class CompanyController extends Controller
     public function update(Request $request, Company $manage_perusahaan)
     {
         if (empty($request->company_name)) {
-            return redirect()->back()->with('error', 'Nama Perusahaan wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.company_name') . ' ' . trans('messages.validation_failed'));
         }
 
         if (empty($request->company_address)) {
-            return redirect()->back()->with('error', 'Alamat Perusahaan wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.company_address') . ' ' . trans('messages.validation_failed'));
         }
 
         if (empty($request->company_number)) {
-            return redirect()->back()->with('error', 'Nomor Telepon Perusahaan wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.company_phone') . ' ' . trans('messages.validation_failed'));
         }
 
         $existingCompany = DB::select(
@@ -83,7 +87,7 @@ class CompanyController extends Controller
             [$request->company_name, $manage_perusahaan->id]
         );
         if (!empty($existingCompany)) {
-            return redirect()->back()->with('error', 'Nama perusahaan dengan nama tersebut sudah ada!');
+            return redirect()->back()->with('error', trans('messages.company_name') . ' ' . trans('messages.failed'));
         }
 
         $validatedData = $request->validate([
@@ -93,13 +97,13 @@ class CompanyController extends Controller
         ]);
 
         Company::where('id', $manage_perusahaan->id)->update($validatedData);
-        return redirect()->intended('/manage-perusahaan')->with('success', 'Data Perusahaan Berhasil Diubah');
+        return redirect()->intended('/manage-perusahaan')->with('success', trans('messages.company_edit') . ' ' . trans('messages.success'));
     }
 
     public function destroy(Company $manage_perusahaan)
     {
         Company::destroy($manage_perusahaan->id);
-        return redirect()->intended('/manage-perusahaan')->with('success', 'Data Perusahaan Berhasil Dihapus !');
+        return redirect()->intended('/manage-perusahaan')->with('success', trans('messages.company_delete') . ' ' . trans('messages.success'));
     }
 
     public function import(Request $request)
@@ -111,10 +115,10 @@ class CompanyController extends Controller
         try {
             Excel::import(new CompaniesImport, $request->file('file'));
         } catch (\Throwable $e) {
-            return redirect()->back()->with('error', 'Import gagal: ' . $e->getMessage());
+            return redirect()->back()->with('error', trans('messages.failed') . ': ' . $e->getMessage());
         }
 
-        return redirect()->back()->with('success', 'Import data perusahaan berhasil.');
+        return redirect()->back()->with('success', trans('messages.company_import_excel') . ' ' . trans('messages.success'));
     }
 
     public function downloadTemplate()
