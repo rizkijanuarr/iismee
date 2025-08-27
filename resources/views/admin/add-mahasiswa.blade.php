@@ -3,85 +3,85 @@
 @section('konten')
     <div class="alert alert-danger bg-gradient-danger mt-3 text-white">
         <i class="bi bi-info-circle-fill me-2"></i>
-        <strong>Password Mahasiswa</strong> secara sistem generate <strong>1234</strong>
+        {{ __('messages.student_password_notice', ['password' => '1234']) }}
     </div>
     <form action="{{ url('manage-mahasiswa') }}" method="POST">
         @csrf
         <div class="row">
             <div class="col-6">
                 <div class="mb-3">
-                    <label for="registration_number" class="form-label">NIM</label>
-                    <input type="number" class="form-control" name="registration_number" id="registration_number"
-                        placeholder="200513971818">
+                    <label for="registration_number" class="form-label text-dark">{{ __('messages.student_table_nim') }}</label>
+                    <input type="number" class="form-control shadow-sm focus:shadow-md" name="registration_number" id="registration_number"
+                        placeholder="{{ __('messages.placeholder_registration_number') }}">
                 </div>
                 <div class="mb-3">
-                    <label for="name" class="form-label">Nama Lengkap</label>
-                    <input type="text" class="form-control" name="name" id="name" placeholder="Rizal">
+                    <label for="name" class="form-label text-dark">{{ __('messages.student_table_full_name') }}</label>
+                    <input type="text" class="form-control shadow-sm focus:shadow-md" name="name" id="name" placeholder="{{ __('messages.placeholder_full_name') }}">
                 </div>
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" name="email" id="email"
-                        placeholder="rizal@gmail.com">
+                    <label for="email" class="form-label text-dark">{{ __('messages.email') }}</label>
+                    <input type="email" class="form-control shadow-sm focus:shadow-md" name="email" id="email"
+                        placeholder="{{ __('messages.placeholder_email') }}">
                 </div>
                 <div class="mb-3">
-                    <label for="class" class="form-label">Kelas</label>
-                    <input type="text" class="form-control" name="class" id="class"
-                        placeholder="2020A Pendidikan Teknik Mesin">
+                    <label for="class" class="form-label text-dark">{{ __('messages.student_table_class') }}</label>
+                    <input type="text" class="form-control shadow-sm focus:shadow-md" name="class" id="class"
+                        placeholder="{{ __('messages.placeholder_class') }}">
                 </div>
                 <div class="mb-3">
-                    <label for="date_start" class="form-label">Tanggal Mulai</label>
+                    <label for="date_start" class="form-label text-dark">{{ __('messages.student_table_date_start') }}</label>
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1"><i class="bi bi-calendar2-date-fill"></i></span>
-                        <input type="date" class="form-control ps-3" name="date_start" id="date_start"
-                            aria-label="date_start" aria-describedby="basic-addon1" placeholder="2022-01-01">
+                        <input type="date" class="form-control ps-3 shadow-sm focus:shadow-md" name="date_start" id="date_start"
+                            aria-label="date_start" aria-describedby="basic-addon1" placeholder="{{ __('messages.placeholder_date_start') }}">
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="date_end" class="form-label">Tanggal Selesai</label>
+                    <label for="date_end" class="form-label text-dark">{{ __('messages.student_table_date_end') }}</label>
                     <div class="input-group date" id="datepicker">
                         <span class="input-group-text" id="basic-addon1"><i class="bi bi-calendar2-date-fill"></i></span>
-                        <input type="date" class="form-control ps-3" name="date_end" id="date_end" aria-label="date_end"
-                            aria-describedby="basic-addon1" placeholder="2022-01-01">
+                        <input type="date" class="form-control ps-3 shadow-sm focus:shadow-md" name="date_end" id="date_end" aria-label="date_end"
+                            aria-describedby="basic-addon1" placeholder="{{ __('messages.placeholder_date_end') }}">
                     </div>
                 </div>
             </div>
             <div class="col-6">
                 <div class="mb-3">
-                    <label for="company_id" class="form-label">Nama Perusahaan</label>
-                    <select class="form-select" name="company_id" id="company_id" aria-label="Default select example">
-                        <option selected>Pilih Perusahaan</option>
+                    <label for="company_id" class="form-label text-dark">{{ __('messages.company_name') }}</label>
+                    <select class="form-select shadow-sm focus:shadow-md" name="company_id" id="company_id" aria-label="Default select example">
+                        <option selected>{{ __('messages.select_company') }}</option>
                         @foreach ($perusahaan as $item)
                             <option value="{{ $item->id }}">{{ $item->company_name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="company_number" class="form-label">No. Telepon Perusahaan</label>
-                    <input type="number" class="form-control" name="company_number" id="company_number" disabled
-                        placeholder="Secara sistem otomatis terisi, setelah memilih perusahaan">
+                    <label for="company_number" class="form-label text-dark">{{ __('messages.company_phone') }}</label>
+                    <input type="number" class="form-control shadow-sm focus:shadow-md" name="company_number" id="company_number" disabled
+                        placeholder="{{ __('messages.placeholder_company_phone_auto') }}">
                 </div>
                 <div class="mb-3">
-                    <label for="company_address" class="form-label">Alamat Perusahaan</label>
-                    <textarea class="form-control" name="company_address" id="company_address" rows="3" disabled
-                        placeholder="Secara sistem otomatis terisi, setelah memilih perusahaan"></textarea>
+                    <label for="company_address" class="form-label text-dark">{{ __('messages.company_address') }}</label>
+                    <textarea class="form-control shadow-sm focus:shadow-md" name="company_address" id="company_address" rows="3" disabled
+                        placeholder="{{ __('messages.placeholder_company_address_auto') }}"></textarea>
                 </div>
                 <div class="mb-3">
-                    <label for="division" class="form-label">Divisi</label>
-                    <input type="text" class="form-control" name="division" id="division"
-                        placeholder="Teknologi Informasi">
+                    <label for="division" class="form-label text-dark">{{ __('messages.student_table_division') }}</label>
+                    <input type="text" class="form-control shadow-sm focus:shadow-md" name="division" id="division"
+                        placeholder="{{ __('messages.placeholder_division') }}">
                 </div>
                 <div class="mb-3">
-                    <label for="internship_type" class="form-label">Kategori Magang</label>
-                    <select class="form-select" name="internship_type" id="internship_type"
+                    <label for="internship_type" class="form-label text-dark">{{ __('messages.internship_type') }}</label>
+                    <select class="form-select shadow-sm focus:shadow-md" name="internship_type" id="internship_type"
                         aria-label="Default select example">
-                        <option selected>Pilih Kategori Magang</option>
+                        <option selected>{{ __('messages.select_internship_type') }}</option>
                         <option value="MSIB">MSIB</option>
                         <option value="Reguler">Reguler</option>
                     </select>
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">{{ __('messages.submit_button') }}</button>
     </form>
 @endsection
 

@@ -1,151 +1,146 @@
 @extends('layout.admin')
 
 @section('konten')
-    <form action="{{ url('manage-magang') }}" method="POST">
+    <div class="row justify-content-between">
+        <div class="col">
+            <h4 class="mb-4">{{ $title }}</h4>
+        </div>
+    </div>
+
+    <form action="{{ route('internship.store') }}" method="POST" class="mt-4">
         @csrf
-        <div class="row">
-            <div class="mb-3">
-                <label for="lecturer_id" class="form-label">Dosen Pembimbing Lapangan</label>
-                <select class="form-select" name="lecturer_id" id="lecturer_id" aria-label="Default select example">
-                    <option selected>Pilih Dosen Pembimbing Lapangan</option>
-                    @foreach ($dosen as $item)
-                        <option value="{{ $item->lecturer['id'] }}">{{ $item->lecturer['name'] }}</option>
-                    @endforeach
-                </select>
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0 text-black">{{ __('messages.internship_supervisor') }}</h6>
             </div>
-            <div class="col-6">
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="lecturer_id" class="form-label text-black">{{ __('messages.internship_select_supervisor') }}</label>
+                    <select class="form-select shadow-sm @error('lecturer_id') is-invalid @enderror"
+                            name="lecturer_id"
+                            id="lecturer_id"
+                            required>
+                        <option value="" selected disabled>{{ __('messages.select_option') }}</option>
+                        @foreach ($dosen as $item)
+                            <option value="{{ $item->lecturer['id'] }}" {{ old('lecturer_id') == $item->lecturer['id'] ? 'selected' : '' }}>
+                                {{ $item->lecturer['name'] }} ({{ $item->lecturer['lecturer_id_number'] ?? 'N/A' }})
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('lecturer_id')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
             </div>
         </div>
         <div class="col-12">
             <div class="card mb-4">
                 <div class="card-header pb-0">
-                    <h6>Data Mahasiswa</h6>
+                    <h6 class="text-black">{{ __('messages.internship_student_data') }}</h6>
+                    <p class="text-sm text-secondary mb-0">{{ __('messages.select_students_for_internship') }}</p>
                 </div>
                 <div class="card-body px-0 pt-0 pb-2">
-                    <div class="table-responsive p-0">
-                        <table class="table align-items-center mb-0" id="datatable">
-                            <thead>
-                                <tr>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">NIM</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama
-                                        Lengkap
-                                    </th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kelas
-                                    </th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama
-                                        Perusahaan</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Divisi
-                                    </th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Alamat
-                                    </th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal
-                                        Mulai</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal
-                                        Selesai</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tipe
-                                        Magang
-                                    </th>
-                                    <th class="opacity-7"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (count($mhs) == 0)
+                    @if (count($mhs) == 0)
+                        <div class="text-center p-4">
+                            <div class="alert alert-info" role="alert">
+                                <i class="fas fa-info-circle me-2"></i>
+                                {{ __('messages.no_students_available') }}
+                            </div>
+                        </div>
+                    @else
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center mb-0" id="datatable">
+                                <thead>
                                     <tr>
-                                        <td colspan="10" class="text-center">
-                                            <div class="alert alert-danger bg-gradient-danger" role="alert">
-                                                <h6 class="mb-0 text-white">Belum Ada Data</h6>
-                                            </div>
-                                        </td>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            <input type="checkbox" id="selectAll" class="form-check-input">
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ __('messages.student_id') }}</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            {{ __('messages.full_name') }}
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            {{ __('messages.class') }}
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            {{ __('messages.company') }}
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            {{ __('messages.division') }}
+                                        </th>
+                                        {{-- <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            {{ __('messages.internship_start_date') }}
+                                        </th> --}}
                                     </tr>
-                                @else
+                                </thead>
+                                <tbody>
                                     @foreach ($mhs as $data)
                                         <tr>
+                                            <td class="align-middle">
+                                                <div class="form-check">
+                                                    <input class="form-check-input student-checkbox"
+                                                           type="checkbox"
+                                                           name="student_id[]"
+                                                           value="{{ $data->id }}"
+                                                           id="student_{{ $data->id }}">
+                                                </div>
+                                            </td>
                                             <td>
                                                 <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">
+                                                    <h6 class="mb-0 text-sm text-black">
                                                         {{ $data->registration_number }}
                                                     </h6>
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">
-                                                        {{ $data->name }}
-                                                    </h6>
-                                                </div>
+                                                <h6 class="mb-0 text-sm text-black">
+                                                    {{ $data->name }}
+                                                </h6>
                                             </td>
                                             <td>
-                                                <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">
-                                                        {{ $data->class }}
-                                                    </h6>
-                                                </div>
+                                                <p class="text-xs text-secondary mb-0">{{ $data->class ?? 'N/A' }}</p>
                                             </td>
                                             <td>
-                                                <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">
-                                                        {{ $data->company->company_name }}
-                                                    </h6>
-                                                </div>
+                                                <p class="text-xs text-secondary mb-0">
+                                                    {{ $data->company->company_name }}
+                                                </p>
                                             </td>
                                             <td>
-                                                <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">
-                                                        {{ $data->division }}
-                                                    </h6>
-                                                </div>
+                                                <p class="text-xs text-secondary mb-0">{{ $data->division ?? 'N/A' }}</p>
                                             </td>
-                                            <td>
-                                                <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">
-                                                        {{ $data->company->company_address }}
-                                                    </h6>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">
-                                                        {{ $data->date_start }}
-                                                    </h6>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">
-                                                        {{ $data->date_end }}
-                                                    </h6>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">
-                                                        {{ $data->internship_type }}
-                                                    </h6>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="mb-3">
-                                                    <label class="visually-hidden" for="inputName">Hidden input
-                                                        label</label>
-                                                    <input type="hidden" class="form-control" name="student_id[]"
-                                                        id="student_id" placeholder="" value="{{ $data->id }}"
-                                                        style="display: none !important">
-                                                </div>
-                                                <button class="btn btn-primary font-weight-bold text-xs"
-                                                    data-toggle="tooltip" data-original-title="Tambah"
-                                                    onclick="return confirm('Apakah anda yakin?')"
-                                                    value="{{ $data->id }}" name="tambahkan">
-                                                    Tambahkan
-                                                </button>
-                                            </td>
+                                            {{-- <td>
+                                                <p class="text-xs text-secondary mb-0">
+                                                    {{ $data->date_start }}
+                                                </p>
+                                            </td> --}}
                                         </tr>
                                     @endforeach
-                                @endif
-                            </tbody>
-                        </table>
-                    </div>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Tombol Submit -->
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>{{ __('messages.submit_button') }}
+                            </button>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
     </form>
+
+    @push('scripts')
+    <script>
+        // Fungsi untuk select/deselect semua checkbox
+        document.getElementById('selectAll').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.student-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+    </script>
+    @endpush
 @endsection

@@ -4,20 +4,17 @@
     <div class="col-12">
         <div class="card mb-4">
             <div class="card-header pb-0">
-                <h6>Data {{ $title }}</h6>
+                <h6>{{ __('messages.industrial_advisor_data_title', ['title' => $title]) }}</h6>
             </div>
             <div class="card-body px-0 pt-0 pb-2">
                 <div class="table-responsive p-0">
                     <table class="table align-items-center mb-0" id="datatable">
                         <thead>
                             <tr>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Lengkap
-                                </th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No. Telepon
-                                </th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Perusahaan
-                                </th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ __('messages.industrial_advisor_table_full_name') }}</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ __('messages.industrial_advisor_table_email') }}</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ __('messages.industrial_advisor_table_phone') }}</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ __('messages.industrial_advisor_table_company') }}</th>
                                 <th class="text-secondary opacity-7"></th>
                             </tr>
                         </thead>
@@ -57,9 +54,10 @@
                                             @method('put')
                                             @csrf
                                             <button class="btn btn-info font-weight-bold text-xs" data-toggle="tooltip"
-                                                name="email" value="{{ $data->email }}" data-original-title="Hapus"
-                                                onclick="return confirm('Apakah anda yakin?')">
-                                                Konfirmasi
+                                                    name="email" value="{{ $data->email }}" 
+                                                    data-original-title="{{ __('messages.industrial_advisor_confirm') }}"
+                                                onclick="return confirm('{{ __('messages.industrial_advisor_confirm_confirm') }}')">
+                                                {{ __('messages.industrial_advisor_confirm') }}
                                             </button>
                                         </form>
                                     </td>

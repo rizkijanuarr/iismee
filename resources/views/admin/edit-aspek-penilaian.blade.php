@@ -7,9 +7,9 @@
         <div class="row">
             <div class="col-12">
                 <div class="mb-3">
-                    <label for="subject_id" class="form-label">Mata Kuliah</label>
-                    <select class="form-select" name="subject_id" id="subject_id" aria-label="Default select example">
-                        <option selected>Pilih Mata Kuliah</option>
+                    <label for="subject_id" class="form-label">{{ __('messages.subject') }}</label>
+                    <select class="form-select shadow-sm focus:shadow-md" name="subject_id" id="subject_id" required>
+                        <option value="" disabled>{{ __('messages.select_subject') }}</option>
                         @foreach ($matakuliah as $item)
                             <option value="{{ $item->id }}"
                                 {{ old('subject_id', $item->id) == $aspek->subject_id ? 'selected' : '' }}>
@@ -18,19 +18,18 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="name" class="form-label">Aspek Penilaian</label>
-                    <input type="text" class="form-control" name="name" id="name"
-                        value="{{ old('name', $aspek->name) }}" placeholder="Logika Dasar">
+                    <label for="name" class="form-label">{{ __('messages.assessment_aspect_name') }}</label>
+                    <input type="text" class="form-control shadow-sm focus:shadow-md" name="name" id="name"
+                        placeholder="{{ __('messages.assessment_aspect_name') }}" value="{{ $aspek->name }}" required>
                 </div>
                 <div class="mb-3">
-                    <label for="name" class="form-label">Aspek Penilaian</label>
-                    <input id="description" type="hidden" name="description"
-                        value="{{ old('description', $aspek->description) }}">
-                    <trix-editor input="description"
-                        placeholder="Mahasiswa diharapkan mampu menguasai Logika Dasar dengan detail."></trix-editor>
+                    <label for="description" class="form-label">{{ __('messages.assessment_aspect_description') }}</label>
+                    <input id="description" type="hidden" name="description" value="{!! $aspek->description !!}" required>
+                    <trix-editor input="description" class="shadow-sm focus:shadow-md"
+                        placeholder="{{ __('messages.assessment_aspect_description_placeholder') }}"></trix-editor>
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">{{ __('messages.submit_button') }}</button>
     </form>
 @endsection

@@ -64,7 +64,7 @@ Route::group(['middleware' => ['auth', 'ceklevel:admin']], function () {
     Route::resource('manage-matakuliah', AdminSubjectController::class);
     Route::resource('manage-dpl', AdminSupervisorController::class);
     Route::resource('aspek-penilaian', AssesmentAspectController::class);
-    Route::resource('manage-magang', InternshipController::class);
+    Route::resource('manage-magang', InternshipController::class)->names('internship');
     // Custom routes must be defined BEFORE the resource to avoid conflicts with {manage_perusahaan}
     Route::post('manage-perusahaan/import', [CompanyController::class, 'import'])->name('manage-perusahaan.import');
     Route::get('manage-perusahaan/template', [CompanyController::class, 'downloadTemplate'])->name('manage-perusahaan.template');

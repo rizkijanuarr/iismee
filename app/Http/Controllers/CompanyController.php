@@ -130,7 +130,7 @@ class CompanyController extends Controller
             $fp = fopen('php://temp', 'r+');
             if (!$fp) {
                 Log::error('Company downloadTemplate: failed to open php://temp');
-                return redirect()->back()->with('error', 'Gagal membuka stream memori.');
+                return redirect()->back()->with('error', trans('messages.error_open_stream'));
             }
             fputcsv($fp, ['company_name', 'company_number', 'company_address']);
             fputcsv($fp, ['PT Contoh Satu', '0211234567', 'Jl. Mawar No. 1, Jakarta']);
@@ -170,7 +170,7 @@ class CompanyController extends Controller
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Gagal mengunduh template perusahaan: ' . $e->getMessage());
+            return redirect()->back()->with('error', trans('messages.download_template_failed') . ' ' . $e->getMessage());
         }
     }
 }

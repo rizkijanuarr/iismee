@@ -14,7 +14,7 @@ class InternshipController extends Controller
     public function index()
     {
         return view('admin.magang', [
-            'title' => 'Magang',
+            'title' => __('messages.internship'),
             'data' => Internship::groupBy('lecturer_id')->get()
         ]);
     }
@@ -22,7 +22,7 @@ class InternshipController extends Controller
     public function create()
     {
         return view('admin.add-magang', [
-            'title' => 'Tambahkan Data Magang',
+            'title' => __('messages.internship_add'),
             'dosen' => Supervisor::all(),
             'mhs' => Student::whereNotIn('id', function ($query) {
                 $query->select('student_id')->from('internships');
@@ -33,11 +33,11 @@ class InternshipController extends Controller
     public function store(Request $request)
     {
         if (empty($request->lecturer_id)) {
-            return redirect()->back()->with('error', 'Dosen pembimbing harus dipilih!');
+            return redirect()->back()->with('error', __('messages.internship_lecturer_required'));
         }
 
         if (empty($request->student_id) || !is_array($request->student_id) || count($request->student_id) < 1) {
-            return redirect()->back()->with('error', 'Minimal satu mahasiswa harus dipilih!');
+            return redirect()->back()->with('error', __('messages.internship_student_required'));
         }
 
         $existingLecturer = DB::select(
@@ -63,7 +63,7 @@ class InternshipController extends Controller
             ]);
         }
 
-        return redirect()->intended('/manage-magang/')->with('success', 'Data Berhasil Ditambahkan !');
+        return redirect()->intended('/manage-magang/')->with('success', __('messages.internship_add_success'));
     }
 
     public function show(Internship $manage_magang)
@@ -75,7 +75,7 @@ class InternshipController extends Controller
             ->get();
 
         return view('admin.magang-details', [
-            'title' => 'Detail Magang',
+            'title' => __('messages.internship_detail'),
             'data' => $data,
             'magang' => $manage_magang
         ]);
@@ -88,6 +88,6 @@ class InternshipController extends Controller
     public function destroy(Internship $manage_magang)
     {
         Internship::destroy($manage_magang->id);
-        return redirect()->intended('/manage-magang')->with('success', 'Data Berhasil Dihapus !');
+        return redirect()->intended('/manage-magang')->with('success', __('messages.internship_delete_success'));
     }
 }

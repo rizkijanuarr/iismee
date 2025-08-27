@@ -20,7 +20,7 @@ class IndustrialAdviserController extends Controller
 
         $registrasi = WebSetting::where('name', '=', 'Registrasi Pembimbing Industri')->firstOrFail();
         return view('admin.pembimbing-industri', [
-            'title' => 'Pembimbing Industri',
+            'title' => __('messages.industrial_advisor'),
             'data' => $pembimbing_industri,
             'registrasi' => $registrasi,
             'jml' => count($pembimbing)
@@ -30,7 +30,7 @@ class IndustrialAdviserController extends Controller
     public function konfirmasiIndex()
     {
         return view('admin.konfirmasi-pembimbing-industri', [
-            'title' => 'Pembimbing Industri',
+            'title' => __('messages.industrial_advisor'),
             'data' => IndustrialAdviser::with('company')->join('users', 'users.email', '=', 'industrial_advisers.email')->where('users.is_active', '=', false)->get(),
         ]);
     }
@@ -38,61 +38,53 @@ class IndustrialAdviserController extends Controller
     public function create()
     {
         return view('admin.add-pembimbing-industri', [
-            'title' => 'Tambah Pembimbing Industri',
+            'title' => __('messages.industrial_advisor_add', ['title' => __('messages.industrial_advisor')]),
             'perusahaan' => Company::orderByDesc('created_at')->get()
         ]);
     }
 
     public function store(Request $request)
     {
-        if (empty($request->name)) {
-            return redirect()->back()->with('error', 'Nama Lengkap wajib diisi!');
-        }
-
-        if (empty($request->email)) {
-            return redirect()->back()->with('error', 'Email wajib diisi!');
-        }
-
-        if (empty($request->phone_number)) {
-            return redirect()->back()->with('error', 'Nomor Telepon wajib diisi!');
-        }
-
-        if (empty($request->position)) {
-            return redirect()->back()->with('error', 'Jabatan wajib diisi!');
-        }
-
-        if (empty($request->company_id)) {
-            return redirect()->back()->with('error', 'Perusahaan wajib dipilih!');
-        }
-
-        $existingEmailIndustrialAdviser = DB::select(
-            "SELECT * FROM industrial_advisers WHERE email = ? LIMIT 1",
-            [$request->email]
-        );
-        if (!empty($existingEmailIndustrialAdviser)) {
-            return redirect()->back()->with('error', 'Email tersebut sudah terdaftar!');
-        }
-
-        $existingEmailUser = DB::select(
-            "SELECT * FROM users WHERE email = ? LIMIT 1",
-            [$request->email]
-        );
-        if (!empty($existingEmailUser)) {
-            return redirect()->back()->with('error', 'Email tersebut sudah terdaftar!');
-        }
-
-        $validatedData = $request->validate([
+        // Validate required fields with i18n messages
+        $validationRules = [
             'name' => 'required',
             'email' => 'required|email',
             'phone_number' => 'required',
             'position' => 'required',
             'company_id' => 'required'
-        ]);
+        ];
 
-        $validateCreateUser = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email'
-        ]);
+        $validationMessages = [
+            'name.required' => __('messages.industrial_advisor_required_name'),
+            'email.required' => __('messages.industrial_advisor_required_email'),
+            'email.email' => __('validation.email', ['attribute' => 'email']),
+            'phone_number.required' => __('messages.industrial_advisor_required_phone'),
+            'position.required' => __('messages.industrial_advisor_required_position'),
+            'company_id.required' => __('messages.industrial_advisor_required_company'),
+        ];
+
+        $validatedData = $request->validate($validationRules, $validationMessages);
+
+        // Check for existing email in industrial_advisers and users tables
+        $existingEmailIndustrialAdviser = DB::select(
+            "SELECT * FROM industrial_advisers WHERE email = ? LIMIT 1",
+            [$request->email]
+        );
+
+        $existingEmailUser = DB::select(
+            "SELECT * FROM users WHERE email = ? LIMIT 1",
+            [$request->email]
+        );
+
+        if (!empty($existingEmailIndustrialAdviser) || !empty($existingEmailUser)) {
+            return redirect()->back()->with('error', __('messages.industrial_advisor_email_exists'));
+        }
+
+        // Use the already validated data
+        $validateCreateUser = [
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email']
+        ];
 
         $validateCreateUser['is_active'] = true;
         $validateCreateUser['password'] = bcrypt('1234');
@@ -101,7 +93,8 @@ class IndustrialAdviserController extends Controller
         IndustrialAdviser::create($validatedData);
         User::create($validateCreateUser);
 
-        return redirect()->intended('/manage-pembimbing-industri')->with('success', 'Data Pembimbing Industri Berhasil Ditambahkan');
+        return redirect()->intended('/manage-pembimbing-industri')
+            ->with('success', __('messages.industrial_advisor_create_success'));
     }
 
     public function show(IndustrialAdviser $industrialAdviser) {}
@@ -109,7 +102,7 @@ class IndustrialAdviserController extends Controller
     public function edit(IndustrialAdviser $manage_pembimbing_industri)
     {
         return view('admin.edit-pembimbing-industri', [
-            'title' => 'Edit Pembimbing Industri',
+            'title' => __('messages.industrial_advisor_edit') . ' ' . __('messages.industrial_advisor'),
             'perusahaan' => Company::all(),
             'pembimbingIndustri' => $manage_pembimbing_industri
         ]);
@@ -117,49 +110,42 @@ class IndustrialAdviserController extends Controller
 
     public function update(Request $request, IndustrialAdviser $manage_pembimbing_industri)
     {
-        if (empty($request->name)) {
-            return redirect()->back()->with('error', 'Nama Lengkap wajib diisi!');
-        }
-
-        if (empty($request->email)) {
-            return redirect()->back()->with('error', 'Email wajib diisi!');
-        }
-
-        if (empty($request->phone_number)) {
-            return redirect()->back()->with('error', 'Nomor Telepon wajib diisi!');
-        }
-
-        if (empty($request->position)) {
-            return redirect()->back()->with('error', 'Jabatan wajib diisi!');
-        }
-
-        if (empty($request->company_id)) {
-            return redirect()->back()->with('error', 'Perusahaan wajib dipilih!');
-        }
-
-        $existingEmailIndustrialAdviser = DB::select(
-            "SELECT * FROM industrial_advisers WHERE email = ? AND id != ? LIMIT 1",
-            [$request->email, $manage_pembimbing_industri->id]
-        );
-        if (!empty($existingEmailIndustrialAdviser)) {
-            return redirect()->back()->with('error', 'Email tersebut sudah terdaftar!');
-        }
-
-        $existingEmailUser = DB::select(
-            "SELECT * FROM users WHERE email = ? AND email != ? LIMIT 1",
-            [$request->email, $manage_pembimbing_industri->email]
-        );
-        if (!empty($existingEmailUser)) {
-            return redirect()->back()->with('error', 'Email tersebut sudah terdaftar!');
-        }
-
-        $validatedData = $request->validate([
+        // Validate required fields with i18n messages
+        $validationRules = [
             'name' => 'required',
             'email' => 'required|email',
             'phone_number' => 'required',
             'position' => 'required',
             'company_id' => 'required'
-        ]);
+        ];
+
+        $validationMessages = [
+            'name.required' => __('messages.industrial_advisor_required_name'),
+            'email.required' => __('messages.industrial_advisor_required_email'),
+            'email.email' => __('validation.email', ['attribute' => 'email']),
+            'phone_number.required' => __('messages.industrial_advisor_required_phone'),
+            'position.required' => __('messages.industrial_advisor_required_position'),
+            'company_id.required' => __('messages.industrial_advisor_required_company'),
+        ];
+
+        $validatedData = $request->validate($validationRules, $validationMessages);
+
+        // Check for existing email in industrial_advisers and users tables
+        $existingEmailIndustrialAdviser = DB::select(
+            "SELECT * FROM industrial_advisers WHERE email = ? AND id != ? LIMIT 1",
+            [$request->email, $manage_pembimbing_industri->id]
+        );
+
+        $existingEmailUser = DB::select(
+            "SELECT * FROM users WHERE email = ? AND email != ? LIMIT 1",
+            [$request->email, $manage_pembimbing_industri->email]
+        );
+
+        if (!empty($existingEmailIndustrialAdviser) || !empty($existingEmailUser)) {
+            return redirect()->back()->with('error', __('messages.industrial_advisor_email_exists'));
+        }
+
+        // Use the already validated data from above
 
         $validateCreateUser = [
             'name' => $request->name,
@@ -169,7 +155,8 @@ class IndustrialAdviserController extends Controller
         User::where('email', $manage_pembimbing_industri->email)->update($validateCreateUser);
         IndustrialAdviser::where('id', $manage_pembimbing_industri->id)->update($validatedData);
 
-        return redirect()->intended('/manage-pembimbing-industri')->with('success', 'Data Pembimbing Industri Berhasil Diubah');
+        return redirect()->intended('/manage-pembimbing-industri')
+            ->with('success', __('messages.industrial_advisor_update_success'));
     }
 
     public function konfirmasi(Request $request)
@@ -180,7 +167,8 @@ class IndustrialAdviserController extends Controller
                 'is_active' => true
             ]);
 
-        return redirect()->intended('/manage-pembimbing-industri')->with('success', 'Data Berhasil Dikonfirmasi');
+        return redirect()->intended('/manage-pembimbing-industri')
+            ->with('success', __('messages.industrial_advisor_confirm_success'));
     }
 
     public function destroy(IndustrialAdviser $manage_pembimbing_industri)
@@ -188,6 +176,7 @@ class IndustrialAdviserController extends Controller
         $email = $manage_pembimbing_industri->email;
         User::where('email', $email)->delete();
         IndustrialAdviser::destroy($manage_pembimbing_industri->id);
-        return redirect('/manage-pembimbing-industri')->with('success', 'Data  Pembimbing Industri Berhasil Dihapus !');
+        return redirect('/manage-pembimbing-industri')
+            ->with('success', __('messages.industrial_advisor_delete_success'));
     }
 }

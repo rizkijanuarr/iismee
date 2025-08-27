@@ -4,18 +4,18 @@
     <div class="col-12">
         <div class="card mb-4">
             <div class="card-header pb-0">
-                <h6>Data Dosen</h6>
+                <h6>{{ __('messages.lecturer_data_title', ['title' => __('messages.sidebar_lecturers')]) }}</h6>
             </div>
             <div class="card-body px-0 pt-0 pb-2">
                 <div class="table-responsive p-0">
                     <table class="table align-items-center mb-0" id="datatable">
                         <thead>
                             <tr>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">NIP</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Lengkap
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ __('messages.lecturer_table_nip') }}</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ __('messages.lecturer_table_full_name') }}
                                 </th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No. Telepon
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ __('messages.lecturer_table_email') }}</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ __('messages.lecturer_table_phone') }}
                                 </th>
                                 <th class="text-secondary opacity-7"></th>
                             </tr>
@@ -67,8 +67,8 @@
                                                     style="display: none !important">
                                             </div>
                                             <button class="btn btn-primary font-weight-bold text-xs" data-toggle="tooltip"
-                                                data-original-title="Tambah" onclick="return confirm('Apakah anda yakin?')">
-                                                Tambahkan
+                                                data-original-title="{{ __('messages.supervisor_add', ['title' => __('messages.sidebar_dpl')]) }}" onclick="return confirm('{{ __('messages.supervisor_add_confirm') }}')">
+                                                {{ __('messages.supervisor_add', ['title' => __('messages.sidebar_dpl')]) }}
                                             </button>
                                         </form>
                                     </td>

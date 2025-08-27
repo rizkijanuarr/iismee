@@ -17,7 +17,7 @@ class WebSettingController extends Controller
         if ($registrasi->is_enable == true) {
             WebSetting::where('name', '=', 'Registrasi Pembimbing Industri')
                 ->update([
-                    'is_enable' => false
+                    'is_enable' => true
                 ]);
         } else {
             WebSetting::where('name', '=', 'Registrasi Pembimbing Industri')
@@ -36,7 +36,7 @@ class WebSettingController extends Controller
         if ($penilaian->is_enable == true) {
             WebSetting::where('name', '=', 'Periode Penilaian')
                 ->update([
-                    'is_enable' => false
+                    'is_enable' => true
                 ]);
         } else {
             WebSetting::where('name', '=', 'Periode Penilaian')

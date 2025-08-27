@@ -19,8 +19,8 @@ class AssesmentAspectController extends Controller
         $penilaian = WebSetting::where('name', '=', 'Periode Penilaian')->firstOrFail();
 
         return view('admin.aspek-penilaian', [
-            'title' => 'Aspek Penilaian',
-            'matakuliah' => Subject::orderByDesc('created_at')->get(),
+            'title' => __('messages.assessment_aspect'),
+            'matakuliah' => Subject::with('lecturer')->orderByDesc('created_at')->get(),
             'penilaian' => $penilaian
         ]);
     }
@@ -29,79 +29,91 @@ class AssesmentAspectController extends Controller
     {
         $penilaian = WebSetting::where('name', '=', 'Periode Penilaian')->firstOrFail();
 
-        if ($penilaian->is_enable == false) {
+        if ($penilaian->is_enable == true) {
             return view('admin.add-aspek-penilaian', [
-                'title' => 'Tambahkan Aspek Penilaian',
-                'matakuliah' => Subject::orderByDesc('created_at')->get()
+                'title' => __('messages.assessment_aspect_add'),
+                'matakuliah' => Subject::with('lecturer')->orderByDesc('created_at')->get()
             ]);
         } else {
-            return view('errors.403');
+            abort(403, __('messages.evaluation_period_disabled'));
         }
     }
 
 
     public function store(Request $request)
     {
-        if (empty($request->subject_id)) {
-            return redirect()->back()->with('error', 'Mata Kuliah wajib dipilih!');
-        }
-
-        if (empty($request->name)) {
-            return redirect()->back()->with('error', 'Nama Aspek Penilaian wajib diisi!');
-        }
-
-        if (empty($request->description)) {
-            return redirect()->back()->with('error', 'Deskripsi wajib diisi!');
-        }
-
         $validatedData = $request->validate([
             'name' => 'required',
-            'subject_id' => 'required',
+            'subject_id' => 'required|exists:subjects,id',
             'description' => 'required'
+        ], [
+            'name.required' => __('messages.assessment_aspect_name_required'),
+            'subject_id.required' => __('messages.assessment_aspect_subject_required'),
+            'subject_id.exists' => __('messages.subject_not_found'),
+            'description.required' => __('messages.assessment_aspect_description_required'),
         ]);
 
-        AssesmentAspect::create($validatedData);
-        return redirect()->intended('/aspek-penilaian')->with('success', 'Data Aspek Penilaian Berhasil Ditambahkan !');
+        try {
+            AssesmentAspect::create($validatedData);
+            return redirect()->intended('/aspek-penilaian')
+                ->with('success', __('messages.assessment_aspect_create_success'));
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.general_error'));
+        }
     }
 
     public function show(AssesmentAspect $assesmentAspect) {}
 
     public function edit(AssesmentAspect $aspek_penilaian)
     {
+        $penilaian = WebSetting::where('name', '=', 'Periode Penilaian')->firstOrFail();
+        
+        if ($penilaian->is_enable == false) {
+            abort(403, __('messages.evaluation_period_disabled'));
+        }
+
         return view('admin.edit-aspek-penilaian', [
-            'title' => 'Edit Aspek Penilaian',
-            'matakuliah' => Subject::orderByDesc('created_at')->get(),
+            'title' => __('messages.assessment_aspect_edit'),
+            'matakuliah' => Subject::with('lecturer')->orderByDesc('created_at')->get(),
             'aspek' => $aspek_penilaian
         ]);
     }
 
     public function update(Request $request, AssesmentAspect $aspek_penilaian)
     {
-        if (empty($request->name)) {
-            return redirect()->back()->with('error', 'Nama Aspek Penilaian wajib diisi!');
-        }
-
-        if (empty($request->subject_id)) {
-            return redirect()->back()->with('error', 'Mata Kuliah wajib dipilih!');
-        }
-
-        if (empty($request->description)) {
-            return redirect()->back()->with('error', 'Deskripsi wajib diisi!');
-        }
-
         $validatedData = $request->validate([
             'name' => 'required',
-            'subject_id' => 'required',
+            'subject_id' => 'required|exists:subjects,id',
             'description' => 'required'
+        ], [
+            'name.required' => __('messages.assessment_aspect_name_required'),
+            'subject_id.required' => __('messages.assessment_aspect_subject_required'),
+            'subject_id.exists' => __('messages.subject_not_found'),
+            'description.required' => __('messages.assessment_aspect_description_required'),
         ]);
 
-        AssesmentAspect::where('id', $aspek_penilaian->id)->update($validatedData);
-        return redirect()->intended('/aspek-penilaian')->with('success', 'Data Aspek Penilaian Berhasil Diubah !');
+        try {
+            $aspek_penilaian->update($validatedData);
+            return redirect()->intended('/aspek-penilaian')
+                ->with('success', __('messages.assessment_aspect_update_success'));
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.general_error'));
+        }
     }
 
     public function destroy(AssesmentAspect $aspek_penilaian)
     {
-        AssesmentAspect::destroy($aspek_penilaian->id);
-        return redirect()->intended('/aspek-penilaian')->with('success', 'Data Berhasil Dihapus !');
+        try {
+            $aspek_penilaian->delete();
+            return redirect()->intended('/aspek-penilaian')
+                ->with('success', __('messages.assessment_aspect_delete_success'));
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', __('messages.general_error'));
+        }
     }
 }

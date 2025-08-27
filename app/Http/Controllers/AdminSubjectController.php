@@ -15,7 +15,7 @@ class AdminSubjectController extends Controller
         $penilaian = WebSetting::where('name', '=', 'Periode Penilaian')->firstOrFail();
 
         return view('admin.matakuliah', [
-            'title' => 'Mata Kuliah',
+            'title' => __('messages.subject'),
             'data' => Subject::orderByDesc('created_at')->get(),
             'penilaian' => $penilaian
         ]);
@@ -24,43 +24,50 @@ class AdminSubjectController extends Controller
     public function create()
     {
         $penilaian = WebSetting::where('name', '=', 'Periode Penilaian')->firstOrFail();
-        if ($penilaian->is_enable == true) {
+        if ($penilaian->is_enable) {
             return view('admin.add-matakuliah', [
-                'title' => 'Tambahkan Mata Kuliah',
+                'title' => __('messages.subject_add'),
                 'dosen' => Lecturer::orderByDesc('created_at')->get()
             ]);
-        } else {
-            return view('errors.403');
         }
+        
+        return redirect()->back()
+            ->with('error', __('messages.evaluation_period_disabled'));
     }
 
     public function store(Request $request)
     {
-        if (empty($request->subject_name)) {
-            return redirect()->back()->with('error', 'Nama Mata Kuliah wajib diisi!');
+        $validationRules = [
+            'subject_name' => 'required|unique:subjects,subject_name',
+            'lecturer_id' => 'required|exists:lecturers,id',
+            'sks' => 'required|numeric|min:1',
+            'max_score' => 'required|numeric|min:1'
+        ];
+
+        $validationMessages = [
+            'subject_name.required' => __('messages.subject_required_name'),
+            'subject_name.unique' => __('messages.subject_name_exists'),
+            'lecturer_id.required' => __('messages.subject_required_lecturer'),
+            'lecturer_id.exists' => __('messages.lecturer_not_found'),
+            'sks.required' => __('messages.subject_required_sks'),
+            'sks.numeric' => __('messages.subject_numeric_sks'),
+            'sks.min' => __('messages.subject_positive_sks'),
+            'max_score.required' => __('messages.subject_required_max_score'),
+            'max_score.numeric' => __('messages.subject_numeric_max_score'),
+            'max_score.min' => __('messages.subject_positive_max_score')
+        ];
+
+        $validatedData = $request->validate($validationRules, $validationMessages);
+
+        try {
+            Subject::create($validatedData);
+            return redirect()->intended('/manage-matakuliah')
+                ->with('success', __('messages.subject_create_success'));
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.general_error'));
         }
-
-        if (empty($request->lecturer_id)) {
-            return redirect()->back()->with('error', 'Dosen Pengajar wajib dipilih!');
-        }
-
-        if (empty($request->sks)) {
-            return redirect()->back()->with('error', 'SKS wajib diisi!');
-        }
-
-        if (empty($request->max_score)) {
-            return redirect()->back()->with('error', 'Skor Maksimal wajib diisi!');
-        }
-
-        $validatedData = $request->validate([
-            'subject_name' => 'required',
-            'lecturer_id' => 'required',
-            'sks' => 'required|numeric',
-            'max_score' => 'required|numeric'
-        ]);
-
-        Subject::create($validatedData);
-        return redirect()->intended('/manage-matakuliah')->with('success', 'Data Mata Kuliah berhasil ditambahkan!');
     }
 
     public function show(Subject $subject) {}
@@ -68,7 +75,7 @@ class AdminSubjectController extends Controller
     public function edit(Subject $manage_matakuliah)
     {
         return view('admin.edit-matakuliah', [
-            'title' => 'Edit Mata Kuliah',
+            'title' => __('messages.subject_edit'),
             'matakuliah' => $manage_matakuliah,
             'dosen' => Lecturer::all()
         ]);
@@ -76,36 +83,33 @@ class AdminSubjectController extends Controller
 
     public function update(Request $request, Subject $manage_matakuliah)
     {
-        if (empty($request->subject_name)) {
-            return redirect()->back()->with('error', 'Nama Mata Kuliah wajib diisi!');
-        }
+        $validationRules = [
+            'subject_name' => 'required',
+            'lecturer_id' => 'required|not_in:Pilih Dosen Pengajar',
+            'sks' => 'required|numeric|min:1',
+            'max_score' => 'required|numeric|min:1'
+        ];
 
-        if (empty($request->lecturer_id) || $request->lecturer_id == 'Pilih Dosen Pengajar') {
-            return redirect()->back()->with('error', 'Dosen Pengajar wajib dipilih!');
-        }
+        $validationMessages = [
+            'subject_name.required' => __('messages.subject_required_name'),
+            'lecturer_id.required' => __('messages.subject_required_lecturer'),
+            'lecturer_id.not_in' => __('messages.subject_required_lecturer'),
+            'sks.required' => __('messages.subject_required_sks'),
+            'sks.numeric' => __('messages.subject_numeric_sks'),
+            'sks.min' => __('messages.subject_positive_sks'),
+            'max_score.required' => __('messages.subject_required_max_score'),
+            'max_score.numeric' => __('messages.subject_numeric_max_score'),
+            'max_score.min' => __('messages.subject_positive_max_score')
+        ];
 
-        if (empty($request->sks)) {
-            return redirect()->back()->with('error', 'SKS wajib diisi!');
-        }
+        $validatedData = $request->validate($validationRules, $validationMessages);
 
-        if (!is_numeric($request->sks) || $request->sks <= 0) {
-            return redirect()->back()->with('error', 'SKS harus berupa angka positif!');
-        }
-
-        if (empty($request->max_score)) {
-            return redirect()->back()->with('error', 'Skor Maksimal wajib diisi!');
-        }
-
-        if (!is_numeric($request->max_score) || $request->max_score <= 0) {
-            return redirect()->back()->with('error', 'Skor Maksimal harus berupa angka positif!');
-        }
-
-        $existingSubject = DB::select(
-            'SELECT * FROM subjects WHERE subject_name = ? AND id != ? LIMIT 1',
-            [$request->subject_name, $manage_matakuliah->id]
-        );
-        if (!empty($existingSubject)) {
-            return redirect()->back()->with('error', 'Mata Kuliah dengan nama tersebut sudah ada!');
+        $existingSubject = Subject::where('subject_name', $request->subject_name)
+            ->where('id', '!=', $manage_matakuliah->id)
+            ->first();
+            
+        if ($existingSubject) {
+            return redirect()->back()->with('error', __('messages.subject_name_exists'));
         }
 
         try {
@@ -116,15 +120,23 @@ class AdminSubjectController extends Controller
                 'max_score' => $request->max_score
             ]);
 
-            return redirect()->intended('/manage-matakuliah')->with('success', 'Data Mata Kuliah berhasil diubah!');
+            return redirect()->intended('/manage-matakuliah')
+                ->with('success', __('messages.subject_update_success'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengubah data!');
+            return redirect()->back()
+                ->with('error', __('messages.general_error'));
         }
     }
 
     public function destroy(Subject $manage_matakuliah)
     {
-        Subject::destroy($manage_matakuliah->id);
-        return redirect()->intended('/manage-matakuliah')->with('success', 'Data Berhasil Dihapus !');
+        try {
+            $manage_matakuliah->delete();
+            return redirect()->intended('/manage-matakuliah')
+                ->with('success', __('messages.subject_delete_success'));
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', __('messages.general_error'));
+        }
     }
 }

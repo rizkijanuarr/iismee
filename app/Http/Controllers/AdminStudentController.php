@@ -17,7 +17,7 @@ class AdminStudentController extends Controller
     public function index()
     {
         return view('admin.mahasiswa', [
-            'title' => 'Mahasiswa',
+            'title' => trans('messages.sidebar_students'),
             'data' => Student::with('company')->orderByDesc('created_at')->get()
         ]);
     }
@@ -25,7 +25,7 @@ class AdminStudentController extends Controller
     public function indexTambahMahasiswa()
     {
         return view('admin.add-mahasiswa', [
-            'title' => 'Tambah Mahasiswa',
+            'title' => trans('messages.student_add', ['title' => trans('messages.sidebar_students')]),
             'perusahaan' => Company::orderByDesc('created_at')->get()
         ]);
     }
@@ -42,39 +42,39 @@ class AdminStudentController extends Controller
     public function store(Request $request)
     {
         if (empty($request->registration_number)) {
-            return redirect()->back()->with('error', 'NIM wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.student_required_nim'));
         }
 
         if (empty($request->name)) {
-            return redirect()->back()->with('error', 'Nama Lengkap wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.student_required_full_name'));
         }
 
         if (empty($request->email)) {
-            return redirect()->back()->with('error', 'Email wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.student_required_email'));
         }
 
         if (empty($request->class)) {
-            return redirect()->back()->with('error', 'Kelas wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.student_required_class'));
         }
 
         if (empty($request->date_start)) {
-            return redirect()->back()->with('error', 'Tanggal Mulai wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.student_required_date_start'));
         }
 
         if (empty($request->date_end)) {
-            return redirect()->back()->with('error', 'Tanggal Selesai wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.student_required_date_end'));
         }
 
         if (empty($request->company_id)) {
-            return redirect()->back()->with('error', 'Perusahaan wajib dipilih!');
+            return redirect()->back()->with('error', trans('messages.student_required_company'));
         }
 
         if (empty($request->division)) {
-            return redirect()->back()->with('error', 'Divisi wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.student_required_division'));
         }
 
         if (empty($request->internship_type)) {
-            return redirect()->back()->with('error', 'Kategori Magang wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.student_required_internship_type'));
         }
 
         $existingEmailUser = DB::select(
@@ -82,7 +82,7 @@ class AdminStudentController extends Controller
             [$request->email]
         );
         if (!empty($existingEmailUser)) {
-            return redirect()->back()->with('error', 'Email tersebut sudah terdaftar!');
+            return redirect()->back()->with('error', trans('messages.student_email_already_registered'));
         }
 
         $validatedData = $request->validate([
@@ -109,7 +109,7 @@ class AdminStudentController extends Controller
         Student::create($validatedData);
         User::create($validateCreateUser);
 
-        return redirect()->intended('/manage-mahasiswa')->with('success', 'Data Mahasiswa berhasil ditambahkan!');
+        return redirect()->intended('/manage-mahasiswa')->with('success', trans('messages.student_create_success'));
     }
 
     public function show(Student $student) {}
@@ -118,7 +118,7 @@ class AdminStudentController extends Controller
     {
         return view('admin.edit-mahasiswa', [
             'mahasiswa' => $manage_mahasiswa,
-            'title' => 'Edit Mahasiswa',
+            'title' => trans('messages.student_edit') . ' ' . trans('messages.sidebar_students'),
             'perusahaan' => Company::orderByDesc('created_at')->get()
         ]);
     }
@@ -126,39 +126,39 @@ class AdminStudentController extends Controller
     public function update(Request $request, Student $manage_mahasiswa)
     {
         if (empty($request->registration_number)) {
-            return redirect()->back()->with('error', 'NIM wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.student_required_nim'));
         }
 
         if (empty($request->name)) {
-            return redirect()->back()->with('error', 'Nama Lengkap wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.student_required_full_name'));
         }
 
         if (empty($request->email)) {
-            return redirect()->back()->with('error', 'Email wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.student_required_email'));
         }
 
         if (empty($request->class)) {
-            return redirect()->back()->with('error', 'Kelas wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.student_required_class'));
         }
 
         if (empty($request->date_start)) {
-            return redirect()->back()->with('error', 'Tanggal Mulai wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.student_required_date_start'));
         }
 
         if (empty($request->date_end)) {
-            return redirect()->back()->with('error', 'Tanggal Selesai wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.student_required_date_end'));
         }
 
         if (empty($request->company_id)) {
-            return redirect()->back()->with('error', 'Perusahaan wajib dipilih!');
+            return redirect()->back()->with('error', trans('messages.student_required_company'));
         }
 
         if (empty($request->division)) {
-            return redirect()->back()->with('error', 'Divisi wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.student_required_division'));
         }
 
         if (empty($request->internship_type)) {
-            return redirect()->back()->with('error', 'Kategori Magang wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.student_required_internship_type'));
         }
 
         $existingEmailUser = DB::select(
@@ -166,7 +166,7 @@ class AdminStudentController extends Controller
             [$request->email, $manage_mahasiswa->email]
         );
         if (!empty($existingEmailUser)) {
-            return redirect()->back()->with('error', 'Email tersebut sudah terdaftar!');
+            return redirect()->back()->with('error', trans('messages.student_email_already_registered'));
         }
 
         $validatedData = $request->validate([
@@ -189,7 +189,7 @@ class AdminStudentController extends Controller
         User::where('email', $manage_mahasiswa->email)->update($validateCreateUser);
         Student::where('id', $manage_mahasiswa->id)->update($validatedData);
 
-        return redirect()->intended('/manage-mahasiswa')->with('success', 'Data Mahasiswa Berhasil Diubah');
+        return redirect()->intended('/manage-mahasiswa')->with('success', trans('messages.student_update_success'));
     }
 
     public function destroy(Student $manage_mahasiswa)
@@ -197,7 +197,7 @@ class AdminStudentController extends Controller
         $email = $manage_mahasiswa->email;
         User::where('email', $email)->delete();
         Student::destroy($manage_mahasiswa->id);
-        return redirect('/manage-mahasiswa')->with('success', 'Data Mahasiswa Berhasil Dihapus !');
+        return redirect('/manage-mahasiswa')->with('success', trans('messages.student_delete_success'));
     }
 
     public function import(Request $request)
@@ -209,10 +209,10 @@ class AdminStudentController extends Controller
         try {
             Excel::import(new StudentsImport, $request->file('file'));
         } catch (\Throwable $e) {
-            return redirect()->back()->with('error', 'Import mahasiswa gagal: ' . $e->getMessage());
+            return redirect()->back()->with('error', trans('messages.student_import_failed') . ' ' . $e->getMessage());
         }
 
-        return redirect()->back()->with('success', 'Import data mahasiswa berhasil.');
+        return redirect()->back()->with('success', trans('messages.student_import_success'));
     }
 
     public function downloadTemplate()
@@ -224,7 +224,7 @@ class AdminStudentController extends Controller
             $fp = fopen('php://temp', 'r+');
             if (!$fp) {
                 Log::error('downloadTemplate mahasiswa: failed to open php://temp');
-                return redirect()->back()->with('error', 'Gagal membuka stream memori.');
+                return redirect()->back()->with('error', trans('messages.error_open_stream'));
             }
             fputcsv($fp, [
                 'registration_number',
@@ -274,7 +274,7 @@ class AdminStudentController extends Controller
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Gagal mengunduh template mahasiswa: ' . $e->getMessage());
+            return redirect()->back()->with('error', trans('messages.download_template_failed_student') . ' ' . $e->getMessage());
         }
     }
 }

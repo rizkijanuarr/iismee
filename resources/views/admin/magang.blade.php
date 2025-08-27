@@ -3,40 +3,38 @@
 @section('konten')
     <div class="row justify-content-between">
         <div class="col">
-            <h4 class="mb-4">Manage {{ $title }}</h4>
+            <h4 class="mb-4">{{ __('messages.manage') }} {{ $title }}</h4>
         </div>
         <div class="col">
-            <a href="{{ url('manage-magang/create') }}" class="btn btn-primary float-end">
-                Tambahkan {{ $title }}
+            <a href="{{ route('internship.create') }}" class="btn btn-primary float-end">
+                <i class="fas fa-plus me-2"></i>{{ __('messages.internship_add') }}
             </a>
         </div>
     </div>
     <div class="col-12">
         <div class="card mb-4">
             <div class="card-header pb-0">
-                <h6>Data {{ $title }}</h6>
+                <h6 class="text-black">{{ __('messages.data') }} {{ $title }}</h6>
             </div>
             <div class="card-body px-0 pt-0 pb-2">
                 <div class="table-responsive p-0">
                     <table class="table align-items-center mb-0" id="datatable">
                         <thead>
                             <tr>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">NIP</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Lengkap
-                                </th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No. Telepon
-                                </th>
-                                <th class="text-secondary opacity-7"></th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ __('messages.lecturer_id_number') }}</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ __('messages.full_name') }}</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ __('messages.email') }}</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ __('messages.phone_number') }}</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ __('messages.actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
                             @if (count($data) == 0)
                                 <tr>
                                     <td colspan="6" class="text-center">
-                                        <div class="alert alert-danger bg-gradient-danger" role="alert">
-                                            <h6 class="mb-0 text-white">Belum Ada Data</h6>
-                                        </div>
+                                            <div class="alert alert-danger bg-gradient-danger" role="alert">
+                                                <h6 class="mb-0 text-white">{{ __('messages.no_data') }}</h6>
+                                            </div>
                                     </td>
                                 </tr>
                             @else
@@ -71,11 +69,22 @@
                                             </div>
                                         </td>
                                         <td class="align-middle">
-                                            <a href="manage-magang/{{ $data->id }}"
-                                                class="edit btn font-weight-bold text-xs" data-original-title="Edit user"
-                                                id="edit">
-                                                Lihat Detail
-                                            </a>
+                                            <div class="d-flex gap-1">
+                                                <a href="{{ route('internship.show', $data->id) }}"
+                                                    class="btn btn-link text-info text-gradient px-3 mb-0">
+                                                    <i class="fas fa-eye me-2" aria-hidden="true"></i>{{ __('messages.view_details') }}
+                                                </a>
+                                                <form action="{{ route('internship.destroy', $data->id) }}" 
+                                                      method="POST" 
+                                                      class="d-inline"
+                                                      onsubmit="return confirm('{{ __('messages.internship_delete_confirm') }}')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-link text-danger text-gradient px-3 mb-0">
+                                                        <i class="far fa-trash-alt me-2" aria-hidden="true"></i>{{ __('messages.delete') }}
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach

@@ -12,7 +12,7 @@ class AdminSupervisorController extends Controller
     public function index()
     {
         return view('admin.pembimbing', [
-            'title' => 'Dosen Pembimbing Lapangan',
+            'title' => trans('messages.sidebar_dpl'),
             'data' => Supervisor::all()
         ]);
     }
@@ -26,13 +26,16 @@ class AdminSupervisorController extends Controller
 
 
         return view('admin.add-pembimbing', [
-            'title' => 'Tambahkan Dosen Pembimbing Lapangan',
+            'title' => trans('messages.supervisor_add', ['title' => trans('messages.sidebar_dpl')]),
             'data' => $dosen
         ]);
     }
 
     public function store(Request $request)
     {
+        if (empty($request->lecturer_id)) {
+            return redirect()->back()->with('error', trans('messages.supervisor_required_lecturer'));
+        }
         $validatedData = $request->validate(['lecturer_id' => 'required']);
         $email = $request->email;
         Supervisor::create($validatedData);
@@ -40,7 +43,7 @@ class AdminSupervisorController extends Controller
             'level' => 'pembimbing',
             'password' => bcrypt('1234')
         ]);
-        return redirect()->intended('/manage-dpl/create')->with('success', 'Data Berhasil Ditambahkan');
+        return redirect()->intended('/manage-dpl/create')->with('success', trans('messages.supervisor_create_success'));
     }
 
     public function show(Supervisor $supervisor) {}
@@ -54,6 +57,6 @@ class AdminSupervisorController extends Controller
         $email = $manage_dpl->lecturer['email'];
         User::where('email', $email)->update(['level' => 'dosen']);
         Supervisor::destroy($manage_dpl->id);
-        return redirect()->intended('/manage-dpl')->with('success', 'Data Berhasil Dihapus !');
+        return redirect()->intended('/manage-dpl')->with('success', trans('messages.supervisor_delete_success'));
     }
 }

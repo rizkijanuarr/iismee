@@ -16,7 +16,7 @@ class AdminLecturerController extends Controller
     public function index()
     {
         return view('admin.dosen', [
-            'title' => 'Dosen',
+            'title' => trans('messages.sidebar_lecturers'),
             'data' => Lecturer::orderByDesc('created_at')->get()
         ]);
     }
@@ -24,26 +24,26 @@ class AdminLecturerController extends Controller
     public function create()
     {
         return view('admin.add-dosen', [
-            'title' => 'Tambahkan Dosen'
+            'title' => trans('messages.lecturer_add', ['title' => trans('messages.sidebar_lecturers')])
         ]);
     }
 
     public function store(Request $request)
     {
         if (empty($request->lecturer_id_number)) {
-            return redirect()->back()->with('error', 'NIP Dosen wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.lecturer_required_nip'));
         }
 
         if (empty($request->name)) {
-            return redirect()->back()->with('error', 'Nama Lengkap wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.lecturer_required_full_name'));
         }
 
         if (empty($request->email)) {
-            return redirect()->back()->with('error', 'Email wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.lecturer_required_email'));
         }
 
         if (empty($request->phone_number)) {
-            return redirect()->back()->with('error', 'Nomor Telepon wajib diisi!');
+            return redirect()->back()->with('error', trans('messages.lecturer_required_phone'));
         }
 
         $existingEmailUser = DB::select(
@@ -51,7 +51,7 @@ class AdminLecturerController extends Controller
             [$request->email]
         );
         if (!empty($existingEmailUser)) {
-            return redirect()->back()->with('error', 'Email tersebut sudah terdaftar!');
+            return redirect()->back()->with('error', trans('messages.lecturer_email_already_registered'));
         }
 
         $validatedData = $request->validate([
@@ -73,7 +73,7 @@ class AdminLecturerController extends Controller
         Lecturer::create($validatedData);
         User::create($validateCreateUser);
 
-        return redirect()->intended('/manage-dosen')->with('success', 'Data Dosen Berhasil Ditambahkan');
+        return redirect()->intended('/manage-dosen')->with('success', trans('messages.lecturer_create_success'));
     }
 
     public function show(Lecturer $lecturer) {}
@@ -81,7 +81,7 @@ class AdminLecturerController extends Controller
     public function edit(Lecturer $manage_dosen)
     {
         return view('admin.edit-dosen', [
-            'title' => 'Edit Dosen',
+            'title' => trans('messages.lecturer_edit') . ' ' . trans('messages.sidebar_lecturers'),
             'dosen' => $manage_dosen
         ]);
     }
@@ -127,7 +127,7 @@ class AdminLecturerController extends Controller
         User::where('email', $manage_dosen->email)->update($validateCreateUser);
         Lecturer::where('id', $manage_dosen->id)->update($validatedData);
 
-        return redirect()->intended('/manage-dosen')->with('success', 'Data Dosen Berhasil Diubah');
+        return redirect()->intended('/manage-dosen')->with('success', trans('messages.lecturer_update_success'));
     }
 
     public function destroy(Lecturer $manage_dosen)
@@ -135,7 +135,7 @@ class AdminLecturerController extends Controller
         $email = $manage_dosen->email;
         User::where('email', $email)->delete();
         Lecturer::destroy($manage_dosen->id);
-        return redirect('/manage-dosen')->with('success', 'Data Dosen Berhasil Dihapus !');
+        return redirect('/manage-dosen')->with('success', trans('messages.lecturer_delete_success'));
     }
 
     public function import(Request $request)
@@ -147,10 +147,10 @@ class AdminLecturerController extends Controller
         try {
             Excel::import(new LecturersImport, $request->file('file'));
         } catch (\Throwable $e) {
-            return redirect()->back()->with('error', 'Import dosen gagal: ' . $e->getMessage());
+            return redirect()->back()->with('error', trans('messages.lecturer_import_failed') . ' ' . $e->getMessage());
         }
 
-        return redirect()->back()->with('success', 'Import data dosen berhasil.');
+        return redirect()->back()->with('success', trans('messages.lecturer_import_success'));
     }
 
     public function downloadTemplate()
@@ -161,7 +161,7 @@ class AdminLecturerController extends Controller
             $fp = fopen('php://temp', 'r+');
             if (!$fp) {
                 Log::error('Lecturer downloadTemplate: failed to open php://temp');
-                return redirect()->back()->with('error', 'Gagal membuka stream memori.');
+                return redirect()->back()->with('error', trans('messages.error_open_stream'));
             }
             fputcsv($fp, ['lecturer_id_number', 'name', 'email', 'phone_number']);
             fputcsv($fp, ['1987654321', 'Dr. Andi', 'andi@gmail.com', '081211112222']);
@@ -198,7 +198,7 @@ class AdminLecturerController extends Controller
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Gagal mengunduh template dosen: ' . $e->getMessage());
+            return redirect()->back()->with('error', trans('messages.download_template_failed_lecturer') . ' ' . $e->getMessage());
         }
     }
 }
