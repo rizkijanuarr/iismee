@@ -14,7 +14,7 @@ class ProfileController extends Controller
         $mhs = Student::where('email', '=', auth()->user()->email)->firstOrFail();
 
         return view('mahasiswa.profil', [
-            'title' => 'Profil',
+            'title' => __('messages.profile'),
             'data' => $mhs
         ]);
     }
@@ -35,7 +35,8 @@ class ProfileController extends Controller
         }
 
         Student::where('id', '=', $mhs->id)->update($validatedData);
-        return redirect()->intended('/profile-user')->with('success', 'Data Berhasil Diubah !');
+        return redirect()->intended('/profile-user')
+        ->with('success', __('messages.success_data_updated'));
     }
 
     public function indexGantiPassword()
@@ -44,11 +45,11 @@ class ProfileController extends Controller
 
         if ($level == 'mahasiswa') {
             return view('mahasiswa.ganti-password', [
-                'title' => 'Ganti Password'
+                'title' => __('messages.change_password')
             ]);
         } else {
             return view('akun.ganti-password', [
-                'title' => 'Ganti Password'
+                'title' => __('messages.change_password')
             ]);
         }
     }
@@ -63,6 +64,7 @@ class ProfileController extends Controller
 
         User::where('id', '=', auth()->user()->id)->update($validatedData);
 
-        return redirect()->intended('/gantiPassword')->with('success', 'Data Berhasil Diubah !');
+        return redirect()->intended('/gantiPassword')
+        ->with('success', __('messages.success_data_updated'));
     }
 }

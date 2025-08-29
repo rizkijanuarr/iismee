@@ -5,12 +5,12 @@
         <div class="col">
             <div class="card mb-3">
                 <div class="card-body">
-                    <p>Data Mahasiswa :</p>
+                    <p>@lang('messages.student_data') :</p>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon3">NIM</span>
+                                    <span class="input-group-text" id="basic-addon3">@lang('messages.student_id_number')</span>
                                     <input type="text" class="form-control ps-3" id="basic-url"
                                         aria-describedby="basic-addon3 basic-addon4"
                                         value="{{ $data->registration_number }}" readonly>
@@ -20,7 +20,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon3">Nama</span>
+                                    <span class="input-group-text" id="basic-addon3">@lang('messages.name')</span>
                                     <input type="text" class="form-control ps-3" id="basic-url"
                                         aria-describedby="basic-addon3 basic-addon4" value="{{ $data->name }}" readonly>
                                 </div>
@@ -29,7 +29,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon3">Kelas</span>
+                                    <span class="input-group-text" id="basic-addon3">@lang('messages.class')</span>
                                     <input type="text" class="form-control ps-3" id="basic-url"
                                         aria-describedby="basic-addon3 basic-addon4" value="{{ $data->class }}" readonly>
                                 </div>
@@ -38,7 +38,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon3">Nama Perusahaan</span>
+                                    <span class="input-group-text" id="basic-addon3">@lang('messages.company_name')</span>
                                     <input type="text" class="form-control ps-3" id="basic-url"
                                         aria-describedby="basic-addon3 basic-addon4"
                                         value="{{ $data->company->company_name }}" readonly>
@@ -48,7 +48,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon3">Alamat</span>
+                                    <span class="input-group-text" id="basic-addon3">@lang('messages.address')</span>
                                     <input type="text" class="form-control ps-3" id="basic-url"
                                         aria-describedby="basic-addon3 basic-addon4"
                                         value="{{ $data->company->company_address }}" readonly>
@@ -58,7 +58,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon3">Divisi</span>
+                                    <span class="input-group-text" id="basic-addon3">@lang('messages.division')</span>
                                     <input type="text" class="form-control ps-3" id="basic-url"
                                         aria-describedby="basic-addon3 basic-addon4" value="{{ $data->division }}" readonly>
                                 </div>
@@ -67,7 +67,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon3">Tipe Magang</span>
+                                    <span class="input-group-text" id="basic-addon3">@lang('messages.internship_type')</span>
                                     <input type="text" class="form-control ps-3" id="basic-url"
                                         aria-describedby="basic-addon3 basic-addon4" value="{{ $data->internship_type }}"
                                         readonly>
@@ -77,7 +77,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon3">Tgl. Mulai</span>
+                                    <span class="input-group-text" id="basic-addon3">@lang('messages.start_date') @lang('messages.to') @lang('messages.end_date')</span>
                                     <input type="text" class="form-control ps-3" id="basic-url"
                                         aria-describedby="basic-addon3 basic-addon4"
                                         value="{{ $data->date_start }} s/d {{ $data->date_end }}" readonly>
@@ -91,7 +91,7 @@
     </div>
     <div class="card mb-3">
         <div class="card-body">
-            <h5 class="mb-3">Edit Penilaian : </h5>
+            <h5 class="mb-3">@lang('messages.edit') @lang('messages.assessment') : </h5>
 
             <div class="accordion" id="accordionExample">
                 <form action="{{ url('penilaian') }}" method="post">
@@ -152,7 +152,7 @@
                         </div>
                     @endforeach
                     <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary me-0">Simpan</button>
+                        <button type="submit" class="btn btn-primary me-0">@lang('messages.save')</button>
                     </div>
                 </form>
             </div>

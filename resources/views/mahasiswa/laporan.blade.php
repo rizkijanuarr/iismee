@@ -6,20 +6,20 @@
 
         {{-- SECTION INFORMASI LAPORAN --}}
         <div class="bg-white shadow-2xl hover:shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-shadow rounded-2xl p-6 mb-4">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">🗂️ Informasi Laporan</h2>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">🗂️ {{ __('messages.report_information') }}</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 @php
                     $fields = [
-                        'NIM' => $data->registration_number ?? 'Belum ada NIM',
-                        'Nama' => $data->name ?? 'Belum ada Nama',
-                        'Kelas' => $data->class ?? 'Belum ada Kelas',
-                        'Perusahaan' => $data->company->company_name ?? 'Belum ada Perusahaan',
-                        'Divisi' => $data->division ?? 'Belum ada Divisi',
-                        'Tipe Magang' => $data->internship_type ?? 'Belum ada Tipe Magang',
-                        'Tgl. Mulai' => $data->date_start ?? 'Belum ada Tanggal Mulai',
-                        'Tgl. Selesai' => $data->date_end ?? 'Belum ada Tanggal Selesai',
-                        'Pembimbing' => $data->internship->lecturer->name ?? 'Belum ada Pembimbing',
+                        __('messages.student_id_number') => $data->registration_number ?? __('messages.no_student_id'),
+                        __('messages.name') => $data->name ?? __('messages.no_name'),
+                        __('messages.class') => $data->class ?? __('messages.no_class'),
+                        __('messages.company') => $data->company->company_name ?? __('messages.no_company'),
+                        __('messages.division') => $data->division ?? __('messages.no_division'),
+                        __('messages.internship_type') => $data->internship_type ?? __('messages.no_internship_type'),
+                        __('messages.start_date') => $data->date_start ?? __('messages.no_start_date'),
+                        __('messages.end_date') => $data->date_end ?? __('messages.no_end_date'),
+                        __('messages.supervisor') => $data->internship->lecturer->name ?? __('messages.no_supervisor'),
                     ];
                 @endphp
 
@@ -40,7 +40,7 @@
         <div class="bg-white shadow-2xl hover:shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-shadow rounded-2xl p-6 mb-4">
 
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 border-b pb-2">
-                <h2 class="text-xl font-semibold text-gray-800">📝 Pelaporan Magang</h2>
+                <h2 class="text-xl font-semibold text-gray-800">📝 {{ __('messages.internship_reporting') }}</h2>
             </div>
 
             <form action="{{ route('laporan.store') }}" method="post" enctype="multipart/form-data" id="laporanForm"
@@ -60,12 +60,12 @@
                     {{-- Submit Button --}}
                     <button type="submit"
                         class="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow transition">
-                        Submit
+                        {{ __('messages.submit') }}
                     </button>
                 </div>
             </form>
 
-            <p class="text-xs text-gray-400 mt-2">PDF — max 2MB</p>
+            <p class="text-xs text-gray-400 mt-2">{{ __('messages.pdf_format_info') }}</p>
         </div>
         {{-- SECTION UPLOAD LAPORAN MAGANG --}}
 
@@ -75,19 +75,19 @@
         <div class="bg-white shadow-2xl hover:shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-shadow rounded-2xl p-6 mb-4">
 
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 border-b pb-2">
-                <h2 class="text-xl font-semibold text-gray-800">📊 Hasil Laporan Magang</h2>
+                <h2 class="text-xl font-semibold text-gray-800">📊 {{ __('messages.internship_report_results') }}</h2>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="min-w-full text-sm text-left text-gray-700 border border-gray-200 rounded-lg">
                     <thead class="bg-gray-100 text-xs uppercase text-gray-500">
                         <tr>
-                            <th class="px-4 py-3">No.</th>
-                            <th class="px-4 py-3">Nama File</th>
-                            <th class="px-4 py-3">Jenis File</th>
-                            <th class="px-4 py-3">Status</th>
-                            <th class="px-4 py-3">Keterangan</th>
-                            <th class="px-4 py-3">Aksi</th>
+                            <th class="px-4 py-3">{{ __('messages.number') }}</th>
+                            <th class="px-4 py-3">{{ __('messages.file_name') }}</th>
+                            <th class="px-4 py-3">{{ __('messages.file_type') }}</th>
+                            <th class="px-4 py-3">{{ __('messages.status') }}</th>
+                            <th class="px-4 py-3">{{ __('messages.description') }}</th>
+                            <th class="px-4 py-3">{{ __('messages.action') }}</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
@@ -126,7 +126,7 @@
                                         <button
                                             class="delete-btn inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-md shadow transition delete-laporan"
                                             data-id="{{ $item->id }}">
-                                            <i class="fas fa-trash-alt"></i> Hapus
+                                            <i class="fas fa-trash-alt"></i> {{ __('messages.delete') }}
                                         </button>
                                     </td>
                                 </tr>
@@ -134,7 +134,7 @@
                         @else
                             <tr>
                                 <td colspan="6" class="px-4 py-6 text-center text-sm font-bold text-red-600">
-                                    Belum ada data yang tersedia.
+                                    {{ __('messages.no_data_available') }}
                                 </td>
                             </tr>
                         @endif
@@ -158,19 +158,19 @@
                 const id = $(this).data('id');
 
                 Swal.fire({
-                    title: 'Hapus Laporan?',
-                    text: "Data akan dihapus permanen!",
+                    title: '{{ __('messages.delete_report_title') }}',
+                    text: "{{ __('messages.delete_report_text') }}",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#ef4444',
                     cancelButtonColor: '#6b7280',
-                    confirmButtonText: 'Ya, Hapus!',
-                    cancelButtonText: 'Batal',
+                    confirmButtonText: '{{ __('messages.yes_delete') }}',
+                    cancelButtonText: '{{ __('messages.cancel') }}',
                     reverseButtons: true
                 }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.fire({
-                            title: 'Menghapus data',
+                            title: '{{ __('messages.deleting_data') }}',
                             allowOutsideClick: false,
                             showConfirmButton: false,
                             didOpen: () => {

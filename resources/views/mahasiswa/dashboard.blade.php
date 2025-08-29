@@ -9,47 +9,46 @@
                 <div class="w-full lg:w-1/2 space-y-6">
                     <div>
                         <span class="inline-block bg-pink-100 text-pink-600 text-sm font-bold px-4 py-1 rounded-full">
-                            Welcome {{ auth()->user()->name }}
+                            {{ __('messages.welcome') }} {{ auth()->user()->name }}
                         </span>
                     </div>
 
                     <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">
-                        Internship Information System of Mechanical Engineering Education
+                        {{ __('messages.system_title') }}
                     </h1>
 
                     <p class="text-gray-600 text-lg">
-                        Merupakan sebuah sistem informasi berbasis web yang digunakan untuk program magang mahasiswa
-                        Pendidikan Teknik Mesin Unesa.
+                        {{ __('messages.system_description') }}
                     </p>
 
                     <div class="flex flex-wrap items-center gap-3 pt-4">
                         <a href="{{ url('magang') }}"
                             class="bg-pink-500 hover:no-underline hover:bg-pink-600 hover:text-white text-white font-semibold py-2 px-6 rounded-full shadow transition">
-                            <i class="fas fa-book mr-2"></i> Magang
+                            <i class="fas fa-book mr-2"></i> {{ __('messages.internship') }}
                         </a>
 
                         @if (!$cekAbsensiDatang)
                             <a href="{{ url('absensi') }}"
                                 class="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-6 rounded-full shadow transition hover:no-underline hover:text-white">
-                                <i class="fas fa-clipboard-check mr-2"></i> Absensi
+                                <i class="fas fa-clipboard-check mr-2"></i> {{ __('messages.attendance') }}
                             </a>
                         @else
                             <a href="{{ url('logbook') }}"
                                 class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-full shadow transition">
-                                <i class="fas fa-book mr-2"></i> Isi Logbook
+                                <i class="fas fa-book mr-2"></i> {{ __('messages.fill_logbook') }}
                             </a>
                         @endif
 
                         <button onclick="showPanduan()"
                             class="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 px-6 rounded-full shadow transition">
-                            <i class="fas fa-info-circle mr-2"></i> Lihat Panduan
+                            <i class="fas fa-info-circle mr-2"></i> {{ __('messages.view_guide') }}
                         </button>
                     </div>
                 </div>
 
                 <!-- KANAN: Gambar -->
                 <div class="w-full lg:w-1/2">
-                    <img src="{{ URL::asset('img/header-illustration.svg') }}" alt="Ilustrasi Header" class="w-full h-auto">
+                    <img src="{{ URL::asset('img/header-illustration.svg') }}" alt="{{ __('messages.header_illustration') }}" class="w-full h-auto">
                 </div>
 
             </div>
@@ -60,30 +59,30 @@
         function showPanduan() {
             Swal.fire({
                 icon: 'info',
-                title: 'Panduan Penggunaan',
+                title: '{{ __('messages.usage_guide') }}',
                 html: `
                     <div style='text-align:left;'>
-                        <b>Selama Magang</b>
+                        <b>{{ __('messages.during_internship') }}</b>
                         <ul class="list-disc pl-5">
-                            <li>Klik <b>Absensi/Logbook</b> untuk absen</li>
-                            <li>Absen <b>Datang</b> setiap hari</li>
-                            <li>Isi <b>Logbook</b> harian</li>
-                            <li>Klik <b>Absensi Pulang</b> (<span class='bg-yellow-400 text-black px-1 rounded'>kuning</span>)</li>
-                            <li>Ulangi tiap hari magang</li>
-                            <li>Wajib isi <b>Surat Persetujuan</b></li>
+                            <li>{{ __('messages.guide_click_attendance') }}</li>
+                            <li>{{ __('messages.guide_daily_checkin') }}</li>
+                            <li>{{ __('messages.guide_fill_logbook') }}</li>
+                            <li>{{ __('messages.guide_checkout') }}</li>
+                            <li>{{ __('messages.guide_repeat_daily') }}</li>
+                            <li>{{ __('messages.guide_approval_letter') }}</li>
                         </ul>
                         <br/>
-                        <b>Setelah Magang</b>
+                        <b>{{ __('messages.after_internship') }}</b>
                         <ul class="list-disc pl-5">
-                            <li>Klik <b>Laporan</b></li>
-                            <li>Upload file laporan</li>
-                            <li>Tunggu validasi dospem</li>
-                            <li>Upload <b>Sertifikat Magang</b></li>
-                            <li>Nilai konversi menunggu dosen industri</li>
+                            <li>{{ __('messages.guide_click_report') }}</li>
+                            <li>{{ __('messages.guide_upload_report') }}</li>
+                            <li>{{ __('messages.guide_wait_validation') }}</li>
+                            <li>{{ __('messages.guide_upload_certificate') }}</li>
+                            <li>{{ __('messages.guide_grade_conversion') }}</li>
                         </ul>
                     </div>
                 `,
-                confirmButtonText: 'OK'
+                confirmButtonText: '{{ __('messages.ok') }}'
             });
         }
     </script>

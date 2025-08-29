@@ -29,7 +29,7 @@ class AttendanceController extends Controller
             return view('errors.403');
         } else {
             return view('mahasiswa.absensi', [
-                'title' => 'Absensi',
+                'title' => __('messages.attendance'),
                 'data' => Student::with('internship.lecturer')->where('email', '=', auth()->user()->email)->firstOrFail(),
                 'now' => $now,
                 'is_absen_datang' => $cekAbsensiDatang->is_absen ?? false,
@@ -49,7 +49,7 @@ class AttendanceController extends Controller
 
             // 1. Cek apakah file diupload
             if (!$request->hasFile('entry_proof')) {
-                return redirect()->back()->with('error', 'Bukti kehadiran datang harus diupload!')->withInput();
+                return redirect()->back()->with('error', __('messages.entry_proof_required'))->withInput();
             }
 
             $file = $request->file('entry_proof');
@@ -97,7 +97,7 @@ class AttendanceController extends Controller
 
             // 7. Cek apakah student_id ada
             if (!$request->student_id) {
-                return redirect()->back()->with('error', 'Student ID tidak valid!')->withInput();
+                return redirect()->back()->with('error', __('messages.invalid_student_id'))->withInput();
             }
 
             // Semua validasi lolos, proses upload
@@ -108,9 +108,9 @@ class AttendanceController extends Controller
 
             Attendance::create($validatedData);
 
-            return redirect()->intended('/logbook')->with('success', 'Absensi datang berhasil disimpan!');
+            return redirect()->intended('/logbook')->with('success', __('messages.checkin_success'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menyimpan absensi. Silakan coba lagi!')->withInput();
+            return redirect()->back()->with('error', __('messages.attendance_save_failed'))->withInput();
         }
     }
 
@@ -133,19 +133,19 @@ class AttendanceController extends Controller
 
             // Perbaikan 2: Validasi apakah sudah absen datang
             if (!$attendanceToday) {
-                return redirect()->back()->with('error', 'Anda belum melakukan absensi datang hari ini!')->withInput();
+                return redirect()->back()->with('error', __('messages.no_checkin_today'))->withInput();
             }
 
             // Perbaikan 3: Cek apakah sudah absen pulang
             if ($attendanceToday->absent_out) {
-                return redirect()->back()->with('error', 'Anda sudah melakukan absensi pulang hari ini!')->withInput();
+                return redirect()->back()->with('error', __('messages.already_checkout_today'))->withInput();
             }
 
             // Validasi manual satu per satu
 
             // 1. Cek apakah file diupload
             if (!$request->hasFile('out_proof')) {
-                return redirect()->back()->with('error', 'Bukti kehadiran pulang harus diupload!')->withInput();
+                return redirect()->back()->with('error', __('messages.out_proof_required'))->withInput();
             }
 
             $file = $request->file('out_proof');
@@ -202,10 +202,10 @@ class AttendanceController extends Controller
                 'out_proof' => $validatedData['out_proof']
             ]);
 
-            return redirect()->intended('/logbook')->with('success', 'Absensi pulang berhasil disimpan!');
+            return redirect()->intended('/logbook')->with('success', __('messages.checkout_success'));
         } catch (\Exception $e) {
             // Perbaikan 5: Log error untuk debugging
-            return redirect()->back()->with('error', 'Gagal menyimpan absensi. Silakan coba lagi! Error: ' . $e->getMessage())->withInput();
+            return redirect()->back()->with('error', __('messages.attendance_save_failed_with_error', ['error' => $e->getMessage()]))->withInput();
         }
     }
 

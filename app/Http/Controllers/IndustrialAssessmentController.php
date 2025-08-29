@@ -30,7 +30,7 @@ class IndustrialAssessmentController extends Controller
 
 
         return view('pembimbing-industri.penilaian', [
-            'title' => 'Penilaian',
+            'title' => __('messages.assessment'),
             'mahasiswa' => $is_assessment,
             'penilaian' => $penilaian
         ]);
@@ -49,12 +49,12 @@ class IndustrialAssessmentController extends Controller
             empty($data['assesment_aspect_id']) || !is_array($data['assesment_aspect_id']) ||
             empty($data['score']) || !is_array($data['score'])
         ) {
-            return redirect()->back()->with('error', 'Semua field wajib diisi dengan benar!');
+            return redirect()->back()->with('error', __('messages.error_all_fields_required'));
         }
 
         foreach ($data['score'] as $key => $value) {
             if ($value === null || $value === '') {
-                return redirect()->back()->with('error', 'Nilai score tidak boleh kosong!');
+                return redirect()->back()->with('error', __('messages.error_score_required'));
             }
 
             $item = new IndustrialAssessment();
@@ -67,7 +67,7 @@ class IndustrialAssessmentController extends Controller
         }
 
 
-        return redirect()->intended('/penilaian-industri')->with('success', 'Data penilaian berhasil disimpan!');
+        return redirect()->intended('/penilaian-industri')->with('success', __('messages.success_assessment_saved'));
     }
 
     public function show($registration_number)
@@ -78,7 +78,7 @@ class IndustrialAssessmentController extends Controller
 
         if ($penilaian->is_enable == true) {
             return view('pembimbing-industri.penilaian-details', [
-                'title' => 'Penilaian',
+                'title' => __('messages.assessment'),
                 'pembimbing' => $pembimbing,
                 'data' => Student::where('registration_number', '=', $registration_number)->firstOrFail(),
                 'mpk' => Subject::whereIn('id', function ($query) {
@@ -109,7 +109,7 @@ class IndustrialAssessmentController extends Controller
             ->get();
 
         return view('pembimbing-industri.penilaian-show', [
-            'title' => 'Penilaian',
+            'title' => __('messages.assessment'),
             'data' => Student::with('company')->where('registration_number', '=', $registration_number)->firstOrFail(),
             'matakuliah' => $subjects
         ]);
@@ -131,7 +131,7 @@ class IndustrialAssessmentController extends Controller
 
 
         return view('pembimbing-industri.penilaian-edit', [
-            'title' => 'Penilaian',
+            'title' => __('messages.assessment'),
             'data' => Student::with('company')->where('registration_number', '=', $registration_number)->firstOrFail(),
             'assessment' => $assesment,
             'mpks' => $subjects
@@ -149,7 +149,7 @@ class IndustrialAssessmentController extends Controller
             empty($data['assesment_aspect_id']) || !is_array($data['assesment_aspect_id']) ||
             empty($data['score']) || !is_array($data['score'])
         ) {
-            return redirect()->back()->with('error', 'Semua field wajib diisi dengan benar!');
+            return redirect()->back()->with('error', __('messages.error_all_fields_required'));
         }
 
         foreach ($data['score'] as $key => $score) {
@@ -166,7 +166,7 @@ class IndustrialAssessmentController extends Controller
             }
         }
 
-        return redirect('/penilaian-industri')->with('success', 'Data penilaian berhasil diperbarui!');
+        return redirect('/penilaian-industri')->with('success', __('messages.success_assessment_updated'));
     }
 
 

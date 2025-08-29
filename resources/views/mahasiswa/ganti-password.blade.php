@@ -7,22 +7,22 @@
                 @csrf
                 @method('put')
                 <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Nama</label>
+                    <label for="exampleFormControlInput1" class="form-label">{{ __('messages.name') }}</label>
                     <input type="text" class="form-control" id="exampleFormControlInput1" name="name"
                         value="{{ auth()->user()->name }}" disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Email</label>
+                    <label for="exampleFormControlInput1" class="form-label">{{ __('messages.email') }}</label>
                     <input type="text" class="form-control" id="exampleFormControlInput1" name="email"
                         value="{{ auth()->user()->email }}" disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Password Baru</label>
+                    <label for="exampleFormControlInput1" class="form-label">{{ __('messages.new_password') }}</label>
                     <input type="password" class="form-control" id="exampleFormControlInput1" name="password"
-                        placeholder="Masukkan Password Baru">
+                        placeholder="{{ __('messages.enter_new_password') }}">
                 </div>
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary ">Ganti Password</button>
+                    <button type="submit" class="btn btn-primary ">{{ __('messages.change_password') }}</button>
                 </div>
             </form>
         </div>

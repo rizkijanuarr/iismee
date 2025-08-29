@@ -23,7 +23,7 @@ class SupervisorLogbookController extends Controller
     public function responseIndex($logbook_id)
     {
         return view('pembimbing.tanggapan', [
-            'title' => 'Tambahkan Tanggapan',
+            'title' => __('messages.add_response'),
             'logbook' => Logbook::where('id', '=', $logbook_id)->firstOrFail()
         ]);
     }
@@ -48,7 +48,7 @@ class SupervisorLogbookController extends Controller
         $pdf = Pdf::loadView('mahasiswa.print-logbook', [
             'data' => $data,
             'mhs' => $mhs,
-            'title' => 'Cetak Logbook'
+            'title' => __('messages.print_logbook')
         ]);
 
         return $pdf->stream('logbook.pdf');

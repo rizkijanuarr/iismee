@@ -5,12 +5,12 @@
         <div class="col">
             <div class="card mb-3">
                 <div class="card-body">
-                    <p>Data Mahasiswa :</p>
+                    <p>{{ __('messages.student_data') }} :</p>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon3">NIM</span>
+                                    <span class="input-group-text" id="basic-addon3">{{ __('messages.student_id_number') }}</span>
                                     <input type="text" class="form-control ps-3" id="basic-url"
                                         aria-describedby="basic-addon3 basic-addon4"
                                         value="{{ $data->registration_number }}" readonly>
@@ -20,7 +20,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon3">Nama</span>
+                                    <span class="input-group-text" id="basic-addon3">{{ __('messages.name') }}</span>
                                     <input type="text" class="form-control ps-3" id="basic-url"
                                         aria-describedby="basic-addon3 basic-addon4" value="{{ $data->name }}" readonly>
                                 </div>
@@ -29,7 +29,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon3">Kelas</span>
+                                    <span class="input-group-text" id="basic-addon3">{{ __('messages.class') }}</span>
                                     <input type="text" class="form-control ps-3" id="basic-url"
                                         aria-describedby="basic-addon3 basic-addon4" value="{{ $data->class }}" readonly>
                                 </div>
@@ -38,7 +38,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon3">Nama Perusahaan</span>
+                                    <span class="input-group-text" id="basic-addon3">{{ __('messages.company_name') }}</span>
                                     <input type="text" class="form-control ps-3" id="basic-url"
                                         aria-describedby="basic-addon3 basic-addon4"
                                         value="{{ $data->company->company_name }}" readonly>
@@ -48,7 +48,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon3">Alamat</span>
+                                    <span class="input-group-text" id="basic-addon3">{{ __('messages.address') }}</span>
                                     <input type="text" class="form-control ps-3" id="basic-url"
                                         aria-describedby="basic-addon3 basic-addon4"
                                         value="{{ $data->company->company_address }}" readonly>
@@ -58,7 +58,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon3">Divisi</span>
+                                    <span class="input-group-text" id="basic-addon3">{{ __('messages.division') }}</span>
                                     <input type="text" class="form-control ps-3" id="basic-url"
                                         aria-describedby="basic-addon3 basic-addon4" value="{{ $data->division }}" readonly>
                                 </div>
@@ -67,7 +67,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon3">Tipe Magang</span>
+                                    <span class="input-group-text" id="basic-addon3">{{ __('messages.internship_type') }}</span>
                                     <input type="text" class="form-control ps-3" id="basic-url"
                                         aria-describedby="basic-addon3 basic-addon4" value="{{ $data->internship_type }}"
                                         readonly>
@@ -77,10 +77,10 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon3">Tgl. Mulai</span>
+                                    <span class="input-group-text" id="basic-addon3">{{ __('messages.start_date') }}</span>
                                     <input type="text" class="form-control ps-3" id="basic-url"
                                         aria-describedby="basic-addon3 basic-addon4"
-                                        value="{{ $data->date_start }} s/d {{ $data->date_end }}" readonly>
+                                        value="{{ $data->date_start }} {{ __('messages.to') }} {{ $data->date_end }}" readonly>
                                 </div>
                             </div>
                         </div>
@@ -92,7 +92,7 @@
     <div class="col-12">
         <div class="card mb-4">
             <div class="card-header pb-0">
-                <h6>Data {{ $title }}</h6>
+                <h6>{{ __('messages.data') }} {{ $title }}</h6>
             </div>
             <div class="card-body px-0 pt-0 pb-2">
                 <div class="table-responsive p-0">
@@ -100,16 +100,15 @@
                         <thead>
                             <tr>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-                                    style="width: 1%!important">No.
+                                    style="width: 1%!important">{{ __('messages.no') }}.
                                 </th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama File
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ __('messages.file_name') }}
                                 </th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis File
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ __('messages.file_type') }}
                                 </th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status
-                                    Validasi
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ __('messages.validation_status') }}
                                 </th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Keterangan
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ __('messages.information') }}
                                 </th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
                                 </th>
@@ -120,7 +119,7 @@
                                 <tr>
                                     <td colspan="7" class="text-center">
                                         <div class="alert alert-danger bg-gradient-danger" role="alert">
-                                            <h6 class="mb-0 text-white">Belum Ada Data</h6>
+                                            <h6 class="mb-0 text-white">{{ __('messages.no_data_available') }}</h6>
                                         </div>
                                     </td>
                                 </tr>
@@ -164,14 +163,14 @@
                                     </td>
                                     <td class="align-middle text-center">
                                         <a href="{{ url('storage/' . $item->document_path) }}" target="_blank"
-                                            class="btn btn-info font-weight-bold text-xs" data-original-title="Edit user"
-                                            id="edit">
-                                            Lihat
+                                            class="btn btn-info font-weight-bold text-xs" data-original-title="{{ __('messages.view') }}"
+                                            id="view">
+                                            {{ __('messages.view') }}
                                         </a>
                                         <a href="{{ url('add-asistensi/' . $item->id) }}"
                                             class="btn btn-warning font-weight-bold text-xs"
-                                            data-original-title="Edit user" id="edit">
-                                            Berikan Asistensi
+                                            data-original-title="{{ __('messages.provide_assistance') }}" id="assistance">
+                                            {{ __('messages.provide_assistance') }}
                                         </a>
                                     </td>
                                 </tr>

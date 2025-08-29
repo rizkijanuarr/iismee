@@ -8,7 +8,7 @@
 @section('konten')
     <div class="row justify-content-between" style="overflow: hidden">
         <div class="col">
-            <h4 class="mb-4">Daftar Mahasiswa </h4>
+            <h4 class="mb-4">{{ __('messages.student_list') }} </h4>
         </div>
     </div>
     <div class="row">
@@ -18,13 +18,13 @@
                     <div class="card-body">
                         @php
                             if (Carbon::now()->greaterThan(Carbon::parse($item->date_start)) && Carbon::now()->lessThan(Carbon::parse($item->date_end))) {
-                                $periodeMagang = 'Sedang Berlangsung';
+                                $periodeMagang = __('messages.ongoing');
                                 $warna = 'success';
                             } elseif (Carbon::now()->greaterThan(Carbon::parse($item->date_end))) {
-                                $periodeMagang = 'Sudah Berakhir';
+                                $periodeMagang = __('messages.finished');
                                 $warna = 'danger';
                             } else {
-                                $periodeMagang = 'Belum Dimulai';
+                                $periodeMagang = __('messages.not_started');
                                 $warna = 'warning';
                             }
                         @endphp
@@ -54,19 +54,19 @@
                         </div>
                         <ul>
                             <li>
-                                <b> Nama Instansi : </b> {{ $item->company->company_name }}
+                                <b> {{ __('messages.company_name') }} : </b> {{ $item->company->company_name }}
                             </li>
                             <li>
-                                <b> Divisi : </b> {{ $item->division }}
+                                <b> {{ __('messages.division') }} : </b> {{ $item->division }}
                             </li>
                             <li>
-                                <b> Jenis Magang : </b> {{ $item->internship_type }}
+                                <b> {{ __('messages.internship_type') }} : </b> {{ $item->internship_type }}
                             </li>
                             <li>
-                                <b> Jenis Konversi : </b> Konversi Matakuliah Umum
+                                <b> {{ __('messages.conversion_type') }} : </b> {{ __('messages.general_course_conversion') }}
                             </li>
                             <li>
-                                <b> Tanggal Pelaksanaan : </b> {{ $item->date_start }} S/D
+                                <b> {{ __('messages.implementation_date') }} : </b> {{ $item->date_start }} {{ __('messages.to') }}
                                 {{ $item->date_end }}
                             </li>
                         </ul>
@@ -76,15 +76,15 @@
                                     <a href="penilaian-industri/{{ $item->registration_number }}/edit"
                                         class="btn btn-warning btn-sm card-link fw-bold text-dark"
                                         style="margin-bottom: 0!important">Ubah
-                                        Nilai</a>
+                                        {{ __('messages.edit_grade') }}</a>
                                 @else
                                     <a href="penilaian-industri/{{ $item->registration_number }}"
                                         class="btn btn-primary btn-sm card-link fw-bold"
-                                        style="margin-bottom: 0!important">Nilai</a>
+                                        style="margin-bottom: 0!important">{{ __('messages.grade') }}</a>
                                 @endif
                             @endif
                             <a href="penilaian-industri/{{ $item->registration_number }}/show"
-                                class="btn btn-light btn-sm card-link fw-bold" style="margin-bottom: 0!important">Lihat</a>
+                                class="btn btn-light btn-sm card-link fw-bold" style="margin-bottom: 0!important">{{ __('messages.view') }}</a>
                             <div class="dropdown ms-auto">
                                 <a href="#" class="dropdown-toggle" type="button" id="dropdownMenuButton"
                                     data-bs-toggle="dropdown" aria-expanded="true">
@@ -92,12 +92,11 @@
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <li><a class="dropdown-item"
-                                            href="{{ url('logbook-shows/' . $item->registration_number) }}">Lihat
-                                            Logbook</a>
+                                            href="{{ url('logbook-shows/' . $item->registration_number) }}">{{ __('messages.view_logbook') }}</a>
                                     </li>
                                     @if ($item->document_path)
                                         <li><a class="dropdown-item" href="{{ '/storage/' . $item->document_path }}"
-                                                target="_blank">Lihat Surat Balasan</a></li>
+                                                target="_blank">{{ __('messages.view_reply_letter') }}</a></li>
                                     @endif
                                 </ul>
                             </div>

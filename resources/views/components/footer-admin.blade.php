@@ -7,9 +7,9 @@
                     <script>
                         document.write(new Date().getFullYear())
                     </script>,
-                    made with <i class="fa fa-heart"></i> by
+                    {{ __('messages.made_with') }} <i class="fa fa-heart"></i> {{ __('messages.by') }}
                     <a href="#" class="font-weight-bold" target="_blank">Vokasi Unesa</a>
-                    for a better web.
+                    {{ __('messages.for_better_web') }}.
                 </div>
             </div>
         </div>

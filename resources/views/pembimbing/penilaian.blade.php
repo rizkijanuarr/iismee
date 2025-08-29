@@ -7,9 +7,10 @@
 @section('konten')
     <div class="row mb-4 justify-content-between" style="overflow: hidden">
         <div class="col-6">
-            <h4>Daftar Mahasiswa </h4>
-            <a class="btn btn-primary ms-auto" class="" target="_blank" href="{{ url('cetak-penilaian/') }}">Cetak
-                Penilaian</a>
+            <h4>@lang('messages.assessment_student_list')</h4>
+            <a class="btn btn-primary ms-auto" target="_blank" href="{{ url('cetak-penilaian/') }}">
+                @lang('messages.print_assessment')
+            </a>
         </div>
     </div>
     <div class="row">
@@ -19,13 +20,13 @@
                     <div class="card-body">
                         @php
                             if (Carbon::now()->greaterThan(Carbon::parse($item->student->date_start)) && Carbon::now()->lessThan(Carbon::parse($item->student->date_end))) {
-                                $periodeMagang = 'Sedang Berlangsung';
+                                $periodeMagang = __('messages.internship_ongoing');
                                 $warna = 'success';
                             } elseif (Carbon::now()->greaterThan(Carbon::parse($item->student->date_end))) {
-                                $periodeMagang = 'Sudah Berakhir';
+                                $periodeMagang = __('messages.internship_ended');
                                 $warna = 'danger';
                             } else {
-                                $periodeMagang = 'Belum Dimulai';
+                                $periodeMagang = __('messages.internship_not_started');
                                 $warna = 'warning';
                             }
                         @endphp
@@ -56,20 +57,19 @@
                         </div>
                         <ul>
                             <li>
-                                <b> Nama Instansi : </b> {{ $item->company_name }}
+                                <b>@lang('messages.institution_name') : </b> {{ $item->company_name }}
                             </li>
                             <li>
-                                <b> Divisi : </b> {{ $item->student->division }}
+                                <b>@lang('messages.division') : </b> {{ $item->student->division }}
                             </li>
                             <li>
-                                <b> Jenis Magang : </b> {{ $item->student->internship_type }}
+                                <b>@lang('messages.internship_type') : </b> {{ $item->student->internship_type }}
                             </li>
                             <li>
-                                <b> Jenis Konversi : </b> Konversi Matakuliah Umum
+                                <b>@lang('messages.conversion_type') : </b> @lang('messages.general_subject_conversion')
                             </li>
                             <li>
-                                <b> Tanggal Pelaksanaan : </b> {{ $item->student->date_start }} S/D
-                                {{ $item->student->date_end }}
+                                <b>@lang('messages.execution_date') : </b> {{ $item->student->date_start }} @lang('messages.to') {{ $item->student->date_end }}
                             </li>
                         </ul>
                         <div class="d-flex align-items-center">
@@ -77,34 +77,42 @@
                                 @if ($item->is_assessment == true)
                                     <a href="penilaian/{{ $item->student->registration_number }}/edit"
                                         class="btn btn-warning btn-sm card-link fw-bold text-dark"
-                                        style="margin-bottom: 0!important">Ubah
-                                        Nilai</a>
+                                        style="margin-bottom: 0!important">@lang('messages.edit_score')</a>
                                 @else
                                     <a href="penilaian/{{ $item->student->registration_number }}"
                                         class="btn btn-primary btn-sm card-link fw-bold"
-                                        style="margin-bottom: 0!important">Nilai</a>
+                                        style="margin-bottom: 0!important">@lang('messages.score')</a>
                                 @endif
                             @endif
                             <a href="penilaian/{{ $item->student->registration_number }}/show"
-                                class="btn btn-light btn-sm card-link fw-bold" style="margin-bottom: 0!important">Lihat</a>
+                                class="btn btn-light btn-sm card-link fw-bold" style="margin-bottom: 0!important">@lang('messages.view')</a>
                             <div class="dropdown ms-auto">
                                 <a href="#" class="dropdown-toggle" type="button" id="dropdownMenuButton"
                                     data-bs-toggle="dropdown" aria-expanded="true">
                                     <i class="bi bi-three-dots-vertical"></i>
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a class="dropdown-item"
-                                            href="{{ url('logbook-show/' . $item->student->registration_number) }}">Lihat
-                                            Logbook</a></li>
-                                    <li><a class="dropdown-item"
-                                            href="{{ url('laporan-show/' . $item->student->registration_number) }}">Lihat
-                                            Laporan</a></li>
-                                    <li><a class="dropdown-item" target="_blank"
-                                            href="{{ url('cetak-absensi/' . $item->student->registration_number) }}">Cetak
-                                            Absensi</a></li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url('logbook-show/' . $item->student->registration_number) }}">
+                                            @lang('messages.view_logbook')
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url('laporan-show/' . $item->student->registration_number) }}">
+                                            @lang('messages.view_report')
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" target="_blank" href="{{ url('cetak-absensi/' . $item->student->registration_number) }}">
+                                            @lang('messages.print_attendance')
+                                        </a>
+                                    </li>
                                     @if ($item->document_path)
-                                        <li><a class="dropdown-item" href="{{ url('storage/' . $item->document_path) }}"
-                                                target="_blank">Lihat Surat Balasan</a></li>
+                                        <li>
+                                            <a class="dropdown-item" href="{{ url('storage/' . $item->document_path) }}" target="_blank">
+                                                @lang('messages.view_response_letter')
+                                            </a>
+                                        </li>
                                     @endif
                                 </ul>
                             </div>

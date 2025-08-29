@@ -4,13 +4,13 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-20">
         {{-- SECTION INFORMASI Profil --}}
         <div class="bg-white shadow-2xl hover:shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-shadow rounded-2xl p-6 mb-4">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">🪪 Informasi Profil</h2>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">🪪 {{ __('messages.profile_information') }}</h2>
 
             <div class="max-w-xl mx-auto">
                 <div class="text-center">
                     <div class="mb-4">
                         @if ($data->img_path != null)
-                            <img src="{{ asset('storage/' . $data->img_path) }}" alt="Foto Profil" id="btn"
+                            <img src="{{ asset('storage/' . $data->img_path) }}" alt="{{ __('messages.profile_photo') }}" id="btn"
                                 class="h-40 w-40 object-cover rounded-full mx-auto shadow-lg cursor-pointer transition hover:scale-105">
                         @else
                             <div id="btn"
@@ -24,7 +24,7 @@
                             </div>
                         @endif
                     </div>
-                    <p id="text-help" class="text-sm text-gray-500">Klik gambar untuk mengganti foto profil.</p>
+                    <p id="text-help" class="text-sm text-gray-500">{{ __('messages.click_image_to_change') }}</p>
                 </div>
 
                 <div class="my-6">
@@ -34,8 +34,7 @@
                         @method('put')
 
                         <div>
-                            <label for="exampleFormControlInput1" class="block text-sm font-medium text-gray-700">Pilih Foto
-                                Profil Baru</label>
+                            <label for="exampleFormControlInput1" class="block text-sm font-medium text-gray-700">{{ __('messages.select_new_profile_photo') }}</label>
                             <input type="file" id="exampleFormControlInput1" name="img_path"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm file:border-0 file:bg-white file:py-2 file:px-4 file:text-gray-700 file:font-semibold file:rounded-md hover:file:bg-gray-100">
                             <input type="hidden" name="oldimg" value="{{ $data->img_path }}">
@@ -44,7 +43,7 @@
                         <div class="text-center">
                             <button type="submit"
                                 class="inline-flex justify-center items-center px-6 py-2 bg-blue-600 text-white text-sm font-semibold rounded-md shadow hover:bg-blue-700 transition">
-                                Ganti Foto Profil
+                                {{ __('messages.change_profile_photo') }}
                             </button>
                         </div>
                     </form>
@@ -53,18 +52,18 @@
                 {{-- SECTION VALUE PROFIL --}}
                 <div class="space-y-4">
                     <div>
-                        <label for="nim" class="block text-sm font-medium text-gray-700">NIM</label>
+                        <label for="nim" class="block text-sm font-medium text-gray-700">{{ __('messages.student_id_number') }}</label>
                         <input type="text" id="nim" name="nim" readonly
                             value="{{ $data->registration_number }}"
                             class="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-200 text-gray-800 focus:outline-none">
                     </div>
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+                        <label for="name" class="block text-sm font-medium text-gray-700">{{ __('messages.full_name') }}</label>
                         <input type="text" id="name" name="name" readonly value="{{ $data->name }}"
                             class="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-200 text-gray-800 focus:outline-none">
                     </div>
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <label for="email" class="block text-sm font-medium text-gray-700">{{ __('messages.email') }}</label>
                         <input type="text" id="email" name="email" readonly value="{{ $data->email }}"
                             class="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-200 text-gray-800 focus:outline-none">
                     </div>

@@ -33,7 +33,7 @@ class SupervisorAssessmentController extends Controller
         $penilaian = WebSetting::where('name', '=', 'Periode Penilaian')->firstOrFail();
 
         return view('pembimbing.penilaian', [
-            'title' => 'Penilaian',
+            'title' => __('messages.assessment'),
             'mahasiswa' => $is_assessment,
             'penilaian' => $penilaian
         ]);
@@ -51,29 +51,29 @@ class SupervisorAssessmentController extends Controller
             ->get();
 
 
-        $data = Student::selectRaw("students.name, students.registration_number, 
+        $data = Student::selectRaw("students.name, students.registration_number,
         COALESCE(
             (SELECT ROUND((SUM(assessments.score)/(subjects.max_score*COUNT(assesment_aspects.id))*100), 2) AS nilai
-            FROM assessments 
+            FROM assessments
             JOIN assesment_aspects ON assesment_aspects.id = assessments.assesment_aspect_id
             JOIN subjects ON subjects.id = assessments.subject_id
-            WHERE subjects.id = 1 AND assessments.student_id = students.id), 
+            WHERE subjects.id = 1 AND assessments.student_id = students.id),
             '-'
         ) AS matakuliah1,
         COALESCE(
             (SELECT ROUND((SUM(assessments.score)/(subjects.max_score*COUNT(assesment_aspects.id))*100), 2) AS nilai
-            FROM assessments 
+            FROM assessments
             JOIN assesment_aspects ON assesment_aspects.id = assessments.assesment_aspect_id
             JOIN subjects ON subjects.id = assessments.subject_id
-            WHERE subjects.id = 2 AND assessments.student_id = students.id), 
+            WHERE subjects.id = 2 AND assessments.student_id = students.id),
             '-'
         ) AS matakuliah2,
         COALESCE(
             (SELECT ROUND((SUM(assessments.score)/(subjects.max_score*COUNT(assesment_aspects.id))*100), 2) AS nilai
-            FROM assessments 
+            FROM assessments
             JOIN assesment_aspects ON assesment_aspects.id = assessments.assesment_aspect_id
             JOIN subjects ON subjects.id = assessments.subject_id
-            WHERE subjects.id = 3 AND assessments.student_id = students.id), 
+            WHERE subjects.id = 3 AND assessments.student_id = students.id),
             '-'
         ) AS matakuliah3")
             ->leftJoin('assessments', 'students.id', '=', 'assessments.student_id')
@@ -88,7 +88,7 @@ class SupervisorAssessmentController extends Controller
 
         $pdf = Pdf::loadView('pembimbing.print-penilaian', [
             'data' => $data,
-            'title' => 'Cetak Penilaian'
+            'title' => __('messages.print_assessment')
         ]);
 
         return $pdf->stream('penilaian.pdf');
@@ -100,7 +100,7 @@ class SupervisorAssessmentController extends Controller
 
         if ($penilaian->is_enable == true) {
             return view('pembimbing.penilaian-details', [
-                'title' => 'Penilaian',
+                'title' => __('messages.assessment'),
                 'data' => Student::with('company')->where('registration_number', '=', $registration_number)->firstOrFail(),
                 'mpk' => Subject::whereIn('id', function ($query) {
                     $query->select('subject_id')->from('assesment_aspects');
@@ -131,7 +131,7 @@ class SupervisorAssessmentController extends Controller
 
 
         return view('pembimbing.penilaian-show', [
-            'title' => 'Penilaian',
+            'title' => __('messages.assessment'),
             'data' => Student::with('company')->where('registration_number', '=', $registration_number)->firstOrFail(),
             'matakuliah' => $subjects
         ]);
@@ -154,7 +154,7 @@ class SupervisorAssessmentController extends Controller
 
 
         return view('pembimbing.penilaian-edit', [
-            'title' => 'Penilaian',
+            'title' => __('messages.assessment'),
             'data' => Student::where('registration_number', '=', $registration_number)->firstOrFail(),
             'assessment' => $assesment,
             'mpks' => $subjects
@@ -164,23 +164,23 @@ class SupervisorAssessmentController extends Controller
     public function store(Request $request)
     {
         if (empty($request->lecturer_id)) {
-            return redirect()->back()->with('error', 'Dosen pembimbing wajib dipilih!');
+            return redirect()->back()->with('error', __('messages.error_lecturer_required'));
         }
 
         if (empty($request->student_id)) {
-            return redirect()->back()->with('error', 'Mahasiswa wajib dipilih!');
+            return redirect()->back()->with('error', __('messages.error_student_required'));
         }
 
         if (empty($request->subject_id) || !is_array($request->subject_id) || count($request->subject_id) < 1) {
-            return redirect()->back()->with('error', 'Mata Kuliah wajib dipilih!');
+            return redirect()->back()->with('error', __('messages.error_subject_required'));
         }
 
         if (empty($request->assesment_aspect_id) || !is_array($request->assesment_aspect_id) || count($request->assesment_aspect_id) < 1) {
-            return redirect()->back()->with('error', 'Aspek Penilaian wajib dipilih!');
+            return redirect()->back()->with('error', __('messages.error_assessment_aspect_required'));
         }
 
         if (empty($request->score) || !is_array($request->score) || count($request->score) < 1) {
-            return redirect()->back()->with('error', 'Skor penilaian wajib diisi!');
+            return redirect()->back()->with('error', __('messages.error_score_required'));
         }
 
         // Validasi bahwa jumlah array sama
@@ -188,16 +188,16 @@ class SupervisorAssessmentController extends Controller
             count($request->subject_id) != count($request->assesment_aspect_id) ||
             count($request->subject_id) != count($request->score)
         ) {
-            return redirect()->back()->with('error', 'Jumlah data mata kuliah, aspek penilaian, dan skor harus sama!');
+            return redirect()->back()->with('error', __('messages.error_data_count_mismatch_store'));
         }
 
         // Validasi setiap skor adalah angka dan dalam rentang yang valid
         foreach ($request->score as $score) {
             if (empty($score) || !is_numeric($score)) {
-                return redirect()->back()->with('error', 'Setiap skor harus berupa angka!');
+                return redirect()->back()->with('error', __('messages.error_score_must_be_numeric'));
             }
             if ($score < 0 || $score > 100) {
-                return redirect()->back()->with('error', 'Skor harus berada dalam rentang 0-100!');
+                return redirect()->back()->with('error', __('messages.error_score_range'));
             }
         }
 
@@ -219,29 +219,29 @@ class SupervisorAssessmentController extends Controller
             $item->save();
         }
 
-        return redirect()->intended('/penilaian')->with('success', 'Data penilaian berhasil disimpan!');
+        return redirect()->intended('/penilaian')->with('success', __('messages.success_assessment_saved'));
     }
 
     public function update(Request $request)
     {
         if (empty($request->student_id)) {
-            return redirect()->back()->with('error', 'Mahasiswa wajib dipilih!');
+            return redirect()->back()->with('error', __('messages.error_student_required'));
         }
 
         if (empty($request->assessment_id) || !is_array($request->assessment_id) || count($request->assessment_id) < 1) {
-            return redirect()->back()->with('error', 'ID Assessment wajib ada!');
+            return redirect()->back()->with('error', __('messages.error_assessment_id_required'));
         }
 
         if (empty($request->subject_id) || !is_array($request->subject_id) || count($request->subject_id) < 1) {
-            return redirect()->back()->with('error', 'Mata Kuliah wajib dipilih!');
+            return redirect()->back()->with('error', __('messages.error_subject_required'));
         }
 
         if (empty($request->assesment_aspect_id) || !is_array($request->assesment_aspect_id) || count($request->assesment_aspect_id) < 1) {
-            return redirect()->back()->with('error', 'Aspek Penilaian wajib dipilih!');
+            return redirect()->back()->with('error', __('messages.error_assessment_aspect_required'));
         }
 
         if (empty($request->score) || !is_array($request->score) || count($request->score) < 1) {
-            return redirect()->back()->with('error', 'Skor penilaian wajib diisi!');
+            return redirect()->back()->with('error', __('messages.error_score_required'));
         }
 
         // Validasi bahwa jumlah array sama
@@ -250,23 +250,23 @@ class SupervisorAssessmentController extends Controller
             count($request->assessment_id) != count($request->assesment_aspect_id) ||
             count($request->assessment_id) != count($request->score)
         ) {
-            return redirect()->back()->with('error', 'Jumlah data assessment ID, mata kuliah, aspek penilaian, dan skor harus sama!');
+            return redirect()->back()->with('error', __('messages.error_data_count_mismatch'));
         }
 
         // Validasi setiap skor adalah angka dan dalam rentang yang valid
         foreach ($request->score as $score) {
             if (empty($score) || !is_numeric($score)) {
-                return redirect()->back()->with('error', 'Setiap skor harus berupa angka!');
+                return redirect()->back()->with('error', __('messages.error_score_must_be_numeric'));
             }
             if ($score < 0 || $score > 100) {
-                return redirect()->back()->with('error', 'Skor harus berada dalam rentang 0-100!');
+                return redirect()->back()->with('error', __('messages.error_score_range'));
             }
         }
 
         // Validasi setiap assessment_id adalah angka
         foreach ($request->assessment_id as $assessmentId) {
             if (empty($assessmentId) || !is_numeric($assessmentId)) {
-                return redirect()->back()->with('error', 'ID Assessment harus berupa angka!');
+                return redirect()->back()->with('error', __('messages.error_assessment_id_numeric'));
             }
         }
 
@@ -277,7 +277,7 @@ class SupervisorAssessmentController extends Controller
             $assessment = Assessment::find($data['assessment_id'][$key]);
 
             if (!$assessment) {
-                return redirect()->back()->with('error', 'Data assessment dengan ID ' . $data['assessment_id'][$key] . ' tidak ditemukan!');
+                return redirect()->back()->with('error', __('messages.error_assessment_not_found', ['id' => $data['assessment_id'][$key]]));
             }
 
             // Validasi apakah data sesuai dengan assessment yang akan diupdate
@@ -289,10 +289,10 @@ class SupervisorAssessmentController extends Controller
 
                 $assessment->update(['score' => $score]);
             } else {
-                return redirect()->back()->with('error', 'Data tidak konsisten untuk assessment ID ' . $data['assessment_id'][$key] . '!');
+                return redirect()->back()->with('error', __('messages.error_data_inconsistent', ['id' => $data['assessment_id'][$key]]));
             }
         }
 
-        return redirect('/penilaian')->with('success', 'Data penilaian berhasil diperbarui!');
+        return redirect('/penilaian')->with('success', __('messages.success_assessment_updated'));
     }
 }

@@ -72,19 +72,7 @@
                                         {{ __('messages.class') }}
                                     </th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        {{ __('messages.company') }}
-                                    </th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                         {{ __('messages.division') }}
-                                    </th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        {{ __('messages.address') }}
-                                    </th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        {{ __('messages.internship_start_date') }}
-                                    </th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        {{ __('messages.internship_end_date') }}
                                     </th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                         {{ __('messages.internship_type') }}
@@ -115,27 +103,7 @@
                                         </td>
                                         <td>
                                             <p class="text-xs text-secondary mb-0">
-                                                {{ $item->student->company['name'] ?? 'N/A' }}
-                                            </p>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs text-secondary mb-0">
                                                 {{ $item->student['division'] ?? 'N/A' }}
-                                            </p>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs text-secondary mb-0">
-                                                {{ $item->student->company['address'] ?? 'N/A' }}
-                                            </p>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs text-secondary mb-0">
-                                                {{ $item->student['internship_start_date'] ? \Carbon\Carbon::parse($item->student['internship_start_date'])->format('d M Y') : 'N/A' }}
-                                            </p>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs text-secondary mb-0">
-                                                {{ $item->student['internship_end_date'] ? \Carbon\Carbon::parse($item->student['internship_end_date'])->format('d M Y') : 'N/A' }}
                                             </p>
                                         </td>
                                         <td>

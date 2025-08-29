@@ -7,20 +7,20 @@
         <div class="row">
             <div class="col-6">
                 <div class="mb-3">
-                    <label for="name" class="form-label">Asistensi</label>
-                    <select class="form-select" aria-label="Default select example" name="validation_status">
-                        <option selected>Pilih Validasi</option>
-                        <option value="Disetujui">Setuju</option>
-                        <option value="Ditolak">Tolak</option>
+                    <label for="validation_status" class="form-label">{{ __('messages.assistance') }}</label>
+                    <select class="form-select" aria-label="{{ __('messages.select_validation') }}" name="validation_status" id="validation_status">
+                        <option selected>{{ __('messages.select_validation') }}</option>
+                        <option value="Disetujui">{{ __('messages.approved') }}</option>
+                        <option value="Ditolak">{{ __('messages.rejected') }}</option>
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="name" class="form-label">Tanggapan</label>
+                    <label for="information" class="form-label">{{ __('messages.response') }}</label>
                     <input type="hidden" name="id" value="{{ $laporan->id }}">
-                    <textarea class="form-control" name="information" id="information" rows="3"></textarea>
+                    <textarea class="form-control" name="information" id="information" rows="3" placeholder="{{ __('messages.enter_response_placeholder') }}"></textarea>
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">{{ __('messages.submit') }}</button>
     </form>
 @endsection

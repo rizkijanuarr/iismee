@@ -22,15 +22,15 @@
         <div class="hidden lg:flex lg:space-x-8">
             <a href="{{ url('mahasiswa') }}"
                 class="text-sm font-semibold {{ $active == 'mahasiswa' ? 'text-pink-600 border-b-2 border-pink-600' : 'text-gray-700' }} hover:text-pink-600 hover:underline">
-                Home
+                {{ __('messages.home') }}
             </a>
             <a href="{{ url('logbook') }}"
                 class="text-sm font-semibold {{ $active == 'logbook' ? 'text-pink-600 border-b-2 border-pink-600' : 'text-gray-700' }} hover:text-pink-600 hover:underline">
-                Logbook
+                {{ __('messages.logbook') }}
             </a>
             <a href="{{ url('laporan') }}"
                 class="text-sm font-semibold {{ $active == 'laporan' ? 'text-pink-600 border-b-2 border-pink-600' : 'text-gray-700' }} hover:text-pink-600 hover:underline">
-                Laporan
+                {{ __('messages.report') }}
             </a>
         </div>
 
@@ -50,11 +50,11 @@
                     class="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-50"
                     @click.away="open = false">
                     <a href="{{ route('profile-user') }}"
-                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-pink-600 hover:underline">Profil</a>
+                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-pink-600 hover:underline">{{ __('messages.profile') }}</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit"
-                            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-pink-600 hover:underline">Logout</button>
+                            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-pink-600 hover:underline">{{ __('messages.logout') }}</button>
                     </form>
                 </div>
             </div>
@@ -64,18 +64,18 @@
 
     <!-- Mobile menu -->
     <div id="mobile-menu" class="lg:hidden hidden px-4 pb-4 space-y-2 bg-white shadow-md">
-        <a href="{{ url('mahasiswa') }}" class="block text-sm font-semibold text-gray-700 hover:text-blue-600">Home</a>
+        <a href="{{ url('mahasiswa') }}" class="block text-sm font-semibold text-gray-700 hover:text-blue-600">{{ __('messages.home') }}</a>
         <a href="{{ url('logbook') }}"
-            class="block text-sm font-semibold text-gray-700 hover:text-blue-600">Logbook</a>
+            class="block text-sm font-semibold text-gray-700 hover:text-blue-600">{{ __('messages.logbook') }}</a>
         <a href="{{ url('laporan') }}"
-            class="block text-sm font-semibold text-gray-700 hover:text-blue-600">Laporan</a>
+            class="block text-sm font-semibold text-gray-700 hover:text-blue-600">{{ __('messages.report') }}</a>
         <hr />
         <a href="{{ route('profile-user') }}"
-            class="block text-sm font-semibold text-gray-700 hover:text-blue-600">Profil</a>
+            class="block text-sm font-semibold text-gray-700 hover:text-blue-600">{{ __('messages.profile') }}</a>
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit"
-                class="w-full text-left text-sm font-semibold text-gray-700 hover:text-blue-600">Logout</button>
+                class="w-full text-left text-sm font-semibold text-gray-700 hover:text-blue-600">{{ __('messages.logout') }}</button>
         </form>
     </div>
 </header>

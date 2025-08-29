@@ -10,20 +10,20 @@
 
         {{-- SECTION INFORMASI LOGBOOK --}}
         <div class="bg-white shadow-2xl hover:shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-shadow rounded-2xl p-6 mb-4">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">📋 Informasi Magang</h2>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">📋 {{ __('messages.internship_information') }}</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 @php
                     $fields = [
-                        'NIM' => $data->registration_number ?? 'Belum ada NIM',
-                        'Nama' => $data->name ?? 'Belum ada Nama',
-                        'Kelas' => $data->class ?? 'Belum ada Kelas',
-                        'Perusahaan' => $data->company->company_name ?? 'Belum ada Perusahaan',
-                        'Divisi' => $data->division ?? 'Belum ada Divisi',
-                        'Tipe Magang' => $data->internship_type ?? 'Belum ada Tipe Magang',
-                        'Tgl. Mulai' => $data->date_start ?? 'Belum ada Tanggal Mulai',
-                        'Tgl. Selesai' => $data->date_end ?? 'Belum ada Tanggal Selesai',
-                        'Pembimbing' => $data->internship->lecturer->name ?? 'Belum ada Pembimbing',
+                        __('messages.nim') => $data->registration_number ?? __('messages.no_nim_available'),
+                        __('messages.name') => $data->name ?? __('messages.no_name_available'),
+                        __('messages.class') => $data->class ?? __('messages.no_class_available'),
+                        __('messages.company') => $data->company->company_name ?? __('messages.no_company_available'),
+                        __('messages.division') => $data->division ?? __('messages.no_division_available'),
+                        __('messages.internship_type') => $data->internship_type ?? __('messages.no_internship_type_available'),
+                        __('messages.start_date') => $data->date_start ?? __('messages.no_start_date_available'),
+                        __('messages.end_date') => $data->date_end ?? __('messages.no_end_date_available'),
+                        __('messages.supervisor') => $data->internship->lecturer->name ?? __('messages.no_supervisor_available'),
                     ];
                 @endphp
 
@@ -41,7 +41,7 @@
         <div class="bg-white shadow-2xl hover:shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-shadow rounded-2xl p-6 mb-4">
 
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 border-b pb-2">
-                <h2 class="text-xl font-semibold text-gray-800">🏅 Sertifikat Magang</h2>
+                <h2 class="text-xl font-semibold text-gray-800">🏅 {{ __('messages.internship_certificate') }}</h2>
                 @php
                     $sertifikat = \App\Models\Document::where('student_id', $data->id)
                         ->where('type', 'Sertifikat Magang')
@@ -51,22 +51,20 @@
                 @if ($sertifikat)
                     <a target="_blank" href="{{ asset('storage/' . $sertifikat->document_path) }}"
                         class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-md transition hover:no-underline hover:text-white">
-                        <i class="fas fa-eye"></i> Lihat Sertifikat Magang
+                        <i class="fas fa-eye"></i> {{ __('messages.view_internship_certificate') }}
                     </a>
                 @endif
             </div>
 
             <p class="text-sm text-gray-700 bg-blue-100 border border-blue-200 rounded-lg p-3 mb-4">
-                <strong> 💡 Perhatian:</strong> Selama periode Magang berlangsung, mahasiswa
-                <span class="font-semibold">diwajibkan melampirkan Sertifikat Magang</span>
-                sebagai salah satu syarat administratif.
+                <strong> 💡 {{ __('messages.attention') }}:</strong> {{ __('messages.internship_certificate_requirement') }}
             </p>
 
             <form action="{{ url('upload-dokumen') }}" method="POST" enctype="multipart/form-data" id="uploadForm"
                 class="flex flex-col md:flex-row items-stretch gap-3">
                 @csrf
                 <input type="hidden" name="student_id" value="{{ $data->id }}">
-                <input type="hidden" name="type" value="Sertifikat Magang">
+                <input type="hidden" name="type" value="{{ __('messages.internship_certificate_type') }}">
 
                 <input type="file" name="document_path" accept=".pdf,.png,.jpg,.jpeg,.svg"
                     class="flex-1 text-sm text-gray-600 border border-gray-200 rounded-lg bg-gray-100 file:mr-4 file:py-2 file:px-4
@@ -76,23 +74,21 @@
 
                 <button type="submit"
                     class="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow transition">
-                    Submit
+                    {{ __('messages.submit') }}
                 </button>
             </form>
 
-            <p class="text-xs text-gray-400 mt-2">PDF — max 2MB</p>
+            <p class="text-xs text-gray-400 mt-2">{{ __('messages.pdf_max_2mb') }}</p>
         </div>
 
 
         {{-- SECTION KONVERSI MATAKULIAH --}}
         <div class="bg-white shadow-2xl hover:shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-shadow rounded-2xl p-6 mb-4">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 border-b pb-2">
-                <h2 class="text-xl font-semibold text-gray-800 ">📚 Daftar MK</h2>
+                <h2 class="text-xl font-semibold text-gray-800 ">📚 {{ __('messages.subject_list') }}</h2>
             </div>
             <p class="text-sm text-gray-700 bg-blue-100 border border-blue-200 rounded-lg p-3 mb-4">
-                <strong>💡 Perhatian:</strong> Jika Anda bertanya mengapa masih kosong data MK,
-                <strong>karena Dosen Pembimbing belum melakukan penilaian.</strong>
-                Harap <strong>cek secara berkala</strong> serta <strong>berkabar ke dosen pembimbing kalian</strong>!
+                <strong>💡 {{ __('messages.attention') }}:</strong> {{ __('messages.subject_data_notice') }}
             </p>
 
 
@@ -100,12 +96,12 @@
                 <table class="min-w-full text-sm text-left text-gray-700 border border-gray-200 rounded-lg">
                     <thead class="bg-gray-100 text-xs uppercase text-gray-500">
                         <tr>
-                            <th class="px-4 py-3">No.</th>
-                            <th class="px-4 py-3">Nama Mata Kuliah</th>
-                            <th class="px-4 py-3">DPMK</th>
-                            <th class="px-4 py-3">Skor</th>
-                            <th class="px-4 py-3">Nilai Angka</th>
-                            <th class="px-4 py-3">Nilai Huruf</th>
+                            <th class="px-4 py-3">{{ __('messages.no') }}</th>
+                            <th class="px-4 py-3">{{ __('messages.subject_name') }}</th>
+                            <th class="px-4 py-3">{{ __('messages.dpmk') }}</th>
+                            <th class="px-4 py-3">{{ __('messages.score') }}</th>
+                            <th class="px-4 py-3">{{ __('messages.numeric_grade') }}</th>
+                            <th class="px-4 py-3">{{ __('messages.letter_grade') }}</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
@@ -123,7 +119,7 @@
                         @else
                             <tr>
                                 <td colspan="6" class="px-4 py-6 text-center text-sm font-bold text-red-600">
-                                    Belum ada data yang tersedia.
+                                    {{ __('messages.no_data_available') }}
                                 </td>
                             </tr>
                         @endif

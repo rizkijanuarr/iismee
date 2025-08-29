@@ -13,7 +13,7 @@
                         </div>
                         <div class="col-8 col-md-9">
                             <div class="numbers">
-                                <p class="text-sm mb-0 text-capitalize font-weight-bold">Jumlah Mahasiswa</p>
+                                <p class="text-sm mb-0 text-capitalize font-weight-bold">{{ __('messages.dashboard_students_count') }}</p>
                                 <h5 class="font-weight-bolder mb-0">
                                     {{ $mahasiswa }}
                                 </h5>
@@ -31,12 +31,9 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="d-flex flex-column h-100">
-                                <p class="mb-1 pt-2 text-bold">IISMEE</p>
-                                <h5 class="font-weight-bolder">Internship Information System of Mechanical Enginering
-                                    Education</h5>
-                                <p class="mb-5">Merupakan sebuah sistem informasi berbasis web yang digunakan untuk
-                                    program magang mahasiswa Pendidikan Teknik Mesin Unesa
-                                </p>
+                                <p class="mb-1 pt-2 text-bold">{{ __('messages.dashboard_system_name') }}</p>
+                                <h5 class="font-weight-bolder">{{ __('messages.dashboard_system_fullname') }}</h5>
+                                <p class="mb-5">{{ __('messages.dashboard_description') }}</p>
                             </div>
                         </div>
                         <div class="col-lg-5 ms-auto text-center mt-5 mt-lg-0">

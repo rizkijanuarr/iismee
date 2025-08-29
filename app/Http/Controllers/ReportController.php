@@ -16,7 +16,7 @@ class ReportController extends Controller
         $mhs = Student::with('internship.lecturer')->where('email', '=', auth()->user()->email)->firstOrFail();
 
         return view('mahasiswa.laporan', [
-            'title' => 'Laporan',
+            'title' => __('messages.report'),
             'data' => Student::with('internship.lecturer')->where('email', '=', auth()->user()->email)->firstOrFail(),
             'laporan' => Report::where('student_id', '=', $mhs->id)->get()
         ]);
@@ -30,18 +30,18 @@ class ReportController extends Controller
             'document_path' => 'required|file|mimes:pdf|max:2048',
             'student_id' => 'required|exists:students,id'
         ], [
-            'document_path.required' => 'File laporan harus diupload!',
-            'document_path.file' => 'File yang diupload harus berupa dokumen!',
-            'document_path.mimes' => 'File harus berformat PDF!',
-            'document_path.max' => 'Ukuran file maksimal 2MB!',
-            'student_id.required' => 'Student ID tidak valid!',
-            'student_id.exists' => 'Data mahasiswa tidak ditemukan!'
+            'document_path.required' => __('messages.report_file_required'),
+            'document_path.file' => __('messages.file_must_be_document'),
+            'document_path.mimes' => __('messages.file_must_be_pdf'),
+            'document_path.max' => __('messages.file_max_2mb'),
+            'student_id.required' => __('messages.invalid_student_id'),
+            'student_id.exists' => __('messages.student_data_not_found')
         ]);
 
         try {
             // Cek apakah file PDF kosong
             if ($request->file('document_path')->getSize() == 0) {
-                return redirect()->back()->with('error', 'File PDF tidak boleh kosong!');
+                return redirect()->back()->with('error', __('messages.pdf_file_empty'));
             }
 
             // Get original filename untuk logging/debugging
@@ -79,10 +79,10 @@ class ReportController extends Controller
                 // Update existing report
                 $existingReport->update([
                     'document_path' => $filePath,
-                    'name' => 'Laporan', // Hardcoded
-                    'type' => 'PDF', // Hardcoded
-                    'validation_status' => 'Terverifikasi', // Hardcoded
-                    'information' => 'Laporan ini telah diverifikasi' // Hardcoded
+                    'name' => __('messages.report'),
+                    'type' => 'PDF',
+                    'validation_status' => __('messages.verified'),
+                    'information' => __('messages.report_verified_info')
                 ]);
 
                 return redirect()->intended('/laporan')->with('success', 'Laporan berhasil di unggah dan telah terverifikasi!');
@@ -93,10 +93,10 @@ class ReportController extends Controller
                 // Create new report
                 Report::create([
                     'student_id' => $request->student_id,
-                    'name' => 'Laporan', // Hardcoded
-                    'type' => 'PDF', // Hardcoded
-                    'validation_status' => 'Terverifikasi', // Hardcoded
-                    'information' => 'Laporan ini telah diverifikasi', // Hardcoded
+                    'name' => __('messages.report'),
+                    'type' => 'PDF',
+                    'validation_status' => __('messages.verified'),
+                    'information' => __('messages.report_verified_info'),
                     'document_path' => $filePath
                 ]);
 
@@ -104,7 +104,7 @@ class ReportController extends Controller
             }
         } catch (\Exception $e) {
 
-            return redirect()->back()->with('error', 'Gagal mengupload laporan. Silakan coba lagi!');
+            return redirect()->back()->with('error', __('messages.report_upload_failed'));
         }
     }
 
@@ -125,9 +125,9 @@ class ReportController extends Controller
 
             $report->delete();
 
-            return redirect()->back()->with('success', 'Laporan berhasil dihapus!');
+            return redirect()->back()->with('success', __('messages.report_delete_success'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menghapus laporan. Silakan coba lagi!');
+            return redirect()->back()->with('error', __('messages.report_delete_failed'));
         }
     }
 }

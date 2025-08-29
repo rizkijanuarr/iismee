@@ -3,7 +3,7 @@
     <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
+                <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">{{ __('messages.pages') }}</a></li>
                 <li class="breadcrumb-item text-sm text-dark active" aria-current="page">{{ $title }}</li>
             </ol>
             <h6 class="font-weight-bolder mb-0">{{ $title }}</h6>
@@ -20,7 +20,7 @@
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
                             <a class="dropdown-item" href="{{ url('gantiPassword') }}">
-                                <i class="fas fa-key fa-sm me-2"></i>Ubah Password
+                                <i class="fas fa-key fa-sm me-2"></i>{{ __('messages.change_password') }}
                             </a>
                         </li>
                         <hr>
@@ -28,7 +28,7 @@
                             <form action="{{ url('logout') }}" method="POST">
                                 @csrf
                                 <button type="submit" class="dropdown-item">
-                                    <i class="fas fa-sign-out-alt fa-sm me-2"></i>Logout
+                                    <i class="fas fa-sign-out-alt fa-sm me-2"></i>{{ __('messages.logout') }}
                                 </button>
                             </form>
                         </li>

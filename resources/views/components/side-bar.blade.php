@@ -36,7 +36,7 @@
                                 </g>
                             </svg>
                         </div>
-                        <span class="nav-link-text ms-1">Dashboard</span>
+                        <span class="nav-link-text ms-1">{{ __('messages.dashboard') }}</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -189,7 +189,7 @@
                                 </g>
                             </svg>
                         </div>
-                        <span class="nav-link-text ms-1">Dashboard</span>
+                        <span class="nav-link-text ms-1">{{ __('messages.dashboard') }}</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -236,7 +236,7 @@
                                     </g>
                                 </svg>
                             </div>
-                            <span class="nav-link-text ms-1">Dashboard</span>
+                            <span class="nav-link-text ms-1">{{ __('messages.dashboard') }}</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -252,7 +252,7 @@
                                         d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
                                 </svg>
                             </div>
-                            <span class="nav-link-text ms-1">Penilaian</span>
+                            <span class="nav-link-text ms-1">{{ __('messages.sidebar_assessment') }}</span>
                         </a>
                     </li>
                 @endif

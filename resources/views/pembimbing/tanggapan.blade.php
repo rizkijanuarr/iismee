@@ -7,12 +7,12 @@
         <div class="row">
             <div class="col-6">
                 <div class="mb-3">
-                    <label for="name" class="form-label">Tanggapan</label>
+                    <label for="response" class="form-label">{{ __('messages.response') }}</label>
                     <input type="hidden" name="id" value="{{ $logbook->id }}">
-                    <textarea class="form-control" name="response" id="response" rows="3"></textarea>
+                    <textarea class="form-control" name="response" id="response" rows="3" placeholder="{{ __('messages.enter_response_placeholder') }}"></textarea>
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">{{ __('messages.submit') }}</button>
     </form>
 @endsection
